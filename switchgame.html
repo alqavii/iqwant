@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reaction Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+      padding: 20px;
+    }
+
+    .score {
+      font-size: 24px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .timers {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .box-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .box {
+      border: 2px solid #ccc;
+      padding: 20px;
+      margin: 10px;
+      font-size: 24px;
+      font-weight: bold;
+      min-height: 100px;
+      min-width: 800px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .content-left {
+      flex: 1;
+      font-size: 36px;
+      text-align: center;
+    }
+
+    .content-right {
+      flex: 1;
+      font-size: 36px;
+      text-align: center;
+      font-family: 'Arial';
+      padding-left: 10px;
+    }
+
+    .question {
+      font-size: 14px;
+      color: grey;
+      margin-top: 5px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      margin: 50px 0;
+      position: relative;
+      top: -20px;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin: 0 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      position: relative;
+    }
+
+    #yes-button {
+      background-color: green;
+      color: white;
+    }
+
+    #no-button {
+      background-color: red;
+      color: white;
+    }
+
+    #yes-button::after {
+      content: "→";
+      font-size: 24px;
+      color: white;
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    #no-button::after {
+      content: "←";
+      font-size: 24px;
+      color: white;
+      position: absolute;
+      left: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="score">
+      Right: <span id="right-score">0</span> | Wrong: <span id="wrong-score">0</span>
+    </div>
+    <div class="timers">
+      Game Timer: <span id="game-timer">0</span>s | Question Timer: <span id="question-timer">0</span>s
+    </div>
+    <div class="box-container">
+      <div id="top-box" class="box">
+        <div class="content-left" id="top-math"></div>
+        <div class="content-right" id="top-arrows"></div>
+      </div>
+      <div id="top-question" class="question">Is the result odd?</div>
+    </div>
+    <div class="box-container">
+      <div id="bottom-box" class="box">
+        <div class="content-left" id="bottom-math"></div>
+        <div class="content-right" id="bottom-arrows"></div>
+      </div>
+      <div id="bottom-question" class="question">Are the arrows identical?</div>
+    </div>
+    <div class="buttons">
+      <button id="no-button">No</button>
+      <button id="yes-button">Yes</button>
+    </div>
+  </div>
+
+  <script>
+    const topMath = document.getElementById("top-math");
+    const topArrows = document.getElementById("top-arrows");
+    const bottomMath = document.getElementById("bottom-math");
+    const bottomArrows = document.getElementById("bottom-arrows");
+    const yesButton = document.getElementById("yes-button");
+    const noButton = document.getElementById("no-button");
+    const rightScoreEl = document.getElementById("right-score");
+    const wrongScoreEl = document.getElementById("wrong-score");
+    const gameTimerEl = document.getElementById("game-timer");
+    const questionTimerEl = document.getElementById("question-timer");
+
+    let rightScore = 0;
+    let wrongScore = 0;
+    let answer = false;
+    let isOddTask = false; // Determines which question is being asked
+    let rounds = 0;
+    const maxRounds = 35;
+
+    let gameStartTime = Date.now();
+    let questionStartTime = Date.now();
+    let questionTimes = [];
+
+    const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    const generateTask = () => {
+      const num1 = getRandomInt(1, 20);
+      const num2 = getRandomInt(1, 20);
+      const arrows1 = Array.from({ length: 4 }, () => (Math.random() < 0.5 ? "←" : "→"));
+      const identical = Math.random() < 0.5;
+      const arrows2 = identical
+        ? [...arrows1]
+        : Array.from({ length: 4 }, () => (Math.random() < 0.5 ? "←" : "→"));
+
+      const mathTask = `${num1} + ${num2}`;
+      const arrowTask = `${arrows1.join(" ")} | ${arrows2.join(" ")}`;
+
+      return { mathTask, arrowTask, isOdd: (num1 + num2) % 2 !== 0, identical };
+    };
+
+    const displayTask = () => {
+      questionStartTime = Date.now();
+      const { mathTask, arrowTask, isOdd, identical } = generateTask();
+      const showOnTop = Math.random() < 0.5;
+
+      const randomizePosition = Math.random() < 0.5;
+
+      const leftContent = randomizePosition ? mathTask : arrowTask;
+      const rightContent = randomizePosition ? arrowTask : mathTask;
+
+      isOddTask = showOnTop; // If on top, check for odd; if on bottom, check for identical
+
+      if (showOnTop) {
+        topMath.textContent = leftContent;
+        topArrows.textContent = rightContent;
+        bottomMath.textContent = "";
+        bottomArrows.textContent = "";
+        answer = isOdd; // Answer depends on odd calculation
+      } else {
+        bottomMath.textContent = leftContent;
+        bottomArrows.textContent = rightContent;
+        topMath.textContent = "";
+        topArrows.textContent = "";
+        answer = identical; // Answer depends on arrows being identical
+      }
+    };
+
+    const handleAnswer = (userAnswer) => {
+      if (rounds >= maxRounds) return;
+
+      const questionEndTime = Date.now();
+      const questionTime = (questionEndTime - questionStartTime) / 1000;
+      questionTimes.push({ time: questionTime, taskType: isOddTask ? "Odd" : "Arrow" });
+
+      if (userAnswer === answer) {
+        rightScore++;
+      } else {
+        wrongScore++;
+      }
+
+      rightScoreEl.textContent = rightScore;
+      wrongScoreEl.textContent = wrongScore;
+
+      rounds++;
+
+      if (rounds < maxRounds) {
+        displayTask();
+      } else {
+        showResults();
+      }
+    };
+
+    const showResults = () => {
+      const gameEndTime = Date.now();
+      const totalGameTime = (gameEndTime - gameStartTime) / 1000;
+      const correctPercentage = ((rightScore / maxRounds) * 100).toFixed(2);
+
+      const oddTimes = questionTimes.filter(q => q.taskType === "Odd").map(q => q.time);
+      const arrowTimes = questionTimes.filter(q => q.taskType === "Arrow").map(q => q.time);
+      const avgOddTime = (oddTimes.reduce((a, b) => a + b, 0) / oddTimes.length || 0).toFixed(2);
+      const avgArrowTime = (arrowTimes.reduce((a, b) => a + b, 0) / arrowTimes.length || 0).toFixed(2);
+      const avgQuestionTime = (questionTimes.reduce((a, b) => a + b.time, 0) / questionTimes.length || 0).toFixed(2);
+
+      const results = questionTimes
+        .map((q, index) => `Question ${index + 1} (${q.taskType}): ${q.time.toFixed(2)}s`)
+        .join("<br>");
+
+      document.body.innerHTML = `
+        <h1>Game Over!</h1>
+        <p>Total Game Time: ${totalGameTime.toFixed(2)}s</p>
+        <p>Average Time Per Question: ${avgQuestionTime}s</p>
+        <p>Average Odd Question Time: ${avgOddTime}s</p>
+        <p>Average Arrow Question Time: ${avgArrowTime}s</p>
+        <p>Correct Percentage: ${correctPercentage}%</p>
+        <h2>Question Times:</h2>
+        <p>${results}</p>
+      `;
+    };
+
+    const updateTimers = () => {
+      const now = Date.now();
+      gameTimerEl.textContent = ((now - gameStartTime) / 1000).toFixed(1);
+      questionTimerEl.textContent = ((now - questionStartTime) / 1000).toFixed(1);
+      requestAnimationFrame(updateTimers);
+    };
+
+    yesButton.addEventListener("click", () => handleAnswer(true));
+    noButton.addEventListener("click", () => handleAnswer(false));
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") handleAnswer(true);
+      if (event.key === "ArrowLeft") handleAnswer(false);
+    });
+
+    displayTask();
+    updateTimers();
+  </script>
+</body>
+</html>

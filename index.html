@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IQwant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baskervville:wght@700&family=DM+Sans:opsz,wght@9..40,100..1000&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    font-family: 'DM Sans', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background-color: #05060a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    color: white;
+    overflow: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;   bottom: 0;
+    background: linear-gradient(160deg, rgba(66, 9, 109, 0.25), rgba(27, 5, 66, 0.15), rgba(93, 39, 218, 0.25));
+    background-size: 400% 400%;
+    animation: gradientShift 30s ease infinite;
+    z-index: 0;
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  #stars {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+    background-size: 200px 200px;
+    animation: starMove 5000s linear infinite;
+    z-index: 0;
+  }
+
+  @keyframes starMove {
+    from { background-position: 0 0; }
+    to { background-position: -10000px 5000px; }
+  }
+
+  header {
+    padding: 40px 20px 20px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 {
+    font-size: 4rem;
+    font-weight: 800;
+    display: inline-block;
+    cursor: pointer;
+    transition: text-shadow 0.5 ease;
+  }
+
+  .iq {
+    background: linear-gradient(90deg, #6d28d9, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: subtleGlowPurple 7s ease-in-out infinite;
+  }
+
+  .want {
+    color: white;
+    animation: subtleGlowWhite 7s ease-in-out infinite;
+  }
+
+  @keyframes subtleGlowPurple {
+    0%, 100% { text-shadow: 0 0 20px rgba(139,92,246,0.7); }
+    50% { text-shadow: 0 0 14px rgba(139,92,246,0.3); }
+  }
+
+  @keyframes subtleGlowWhite {
+    0%, 100% { text-shadow: 0 0 5px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.8); }
+    50% { text-shadow: 0 0 5px rgba(255,255,255,0.4), 0 0 20px rgba(255,255,255,0.4); }
+  }
+
+  header:hover .iq, header h1:hover .iq {
+    text-shadow: 0 0 15px rgba(109,40,217,1), 0 0 10px rgba(139,92,246,1);
+    animation: titleGlow 5s ease-in-out infinite;
+    text-size-adjust: 1.3;
+    }
+
+  header:hover .want, header h1:hover .want {
+    text-shadow: 0 0 15px rgba(255,255,255,1), 0 0 10px rgba(255,255,255,1);
+  }
+
+  @keyframes titleGlow {
+    0%, 100% { text-shadow: 0 0 20px rgba(139,92,246,0.8); }
+    50% { text-shadow: 0 0 15px rgba(139,92,246,1), 0 0 30px rgba(139,92,246,1); }
+  }
+
+ 
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    padding: 40px;
+    width: 100%;
+    max-width: 1100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    backdrop-filter: blur(25px) saturate(130%);
+    -webkit-backdrop-filter: blur(25px) saturate(130%);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.5s ease, box-shadow 0.5s ease-in-out;
+    box-shadow: 0 0 5px rgba(139,92,246,0.2);
+    animation: cardGlow 230s ease-in-out infinite;
+  }
+  
+  @keyframes cardGlow {
+    0%, 100% { box-shadow: 0 0 20px rgba(139,92,246,0.7); }
+    50% { box-shadow: 0 0 14px rgba(139,92,246,0.3); }
+  }
+
+  .card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 15px;
+  }
+
+  .card h2 {
+    font-size: 1.2rem;
+    font-weight: 00;
+    text-shadow: 0 0 3px rgba(255,255,255,0.2);
+  }
+
+  .card:hover {
+    transform: translateY(-10px) scale(1.03);
+  }
+
+</style>
+</head>
+<body>
+  <div id="stars"></div>
+  <header>
+    <h1><span class="iq">IQ</span><span class="want">want</span></h1>
+  </header>
+  <div class="card-container">
+    <div class="card" onclick="location.href='simongame.html'">
+      <img src="https://picsum.photos/400/300?random=1" alt="Shape Reaction Game" />
+      <h2>Shape Reaction Game</h2>
+    </div>
+    <div class="card" onclick="location.href='pincode.html'">
+      <img src="https://picsum.photos/400/300?random=2" alt="Memory Game" />
+      <h2>Memory Game</h2>
+    </div>
+    <div class="card" onclick="location.href='switchgame.html'">
+      <img src="https://picsum.photos/400/300?random=3" alt="Switch Game" />
+      <h2>Switch Game</h2>
+    </div>
+  </div>
+</body>
+</html>

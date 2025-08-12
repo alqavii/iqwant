@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shape Reaction Game</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: orange;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #score {
+            font-size: 2rem;
+            color: white;
+            margin-top: 20px;
+        }
+        #shape {
+            position: absolute;
+            width: 40vmin;
+            height: 40vmin;
+            display: none;
+            background-color: white;
+        }
+        #crosshair {
+            position: absolute;
+            width: 4.5px;
+            height: 35px;
+            background-color: white;
+            z-index: 10;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #crosshair::before {
+            content: '';
+            position: absolute;
+            width: 35px;
+            height: 4.5px;
+            background-color: white;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #slider-label, #game-duration-label {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        #start-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: blue;
+            border: none;
+            cursor: pointer;
+        }
+        #statistics {
+            display: none;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="score">Score: 0</div>
+    <div id="crosshair"></div>
+    <div id="shape"></div>
+    <div id="controls">
+        <div id="slider-label">Flashing Duration: 375ms</div>
+        <input type="range" id="duration-slider" min="25" max="500" value="375" step="25">
+        <div id="game-duration-label">Game Duration: 30s</div>
+        <input type="range" id="game-duration-slider" min="10" max="120" value="30" step="5">
+        <button id="start-button">Start Game</button>
+    </div>
+    <div id="statistics">
+        <p>Game Over!</p>
+        <p>Shapes Shown: <span id="shapes-shown">0</span></p>
+        <p>Correct Answers: <span id="correct-answers">0</span></p>
+        <p>Wrong Answers: <span id="wrong-answers">0</span></p>
+        <p>Correct Percentage: <span id="correct-percentage">0</span>%</p>
+        <p>Average Time Per Shape: <span id="average-time">0</span> ms</p>
+    </div>
+    <script>
+        const shape = document.getElementById('shape');
+        const scoreDisplay = document.getElementById('score');
+        const flashSlider = document.getElementById('duration-slider');
+        const flashSliderLabel = document.getElementById('slider-label');
+        const durationSlider = document.getElementById('game-duration-slider');
+        const durationSliderLabel = document.getElementById('game-duration-label');
+        const startButton = document.getElementById('start-button');
+        const statistics = document.getElementById('statistics');
+        const shapesShownElem = document.getElementById('shapes-shown');
+        const correctAnswersElem = document.getElementById('correct-answers');
+        const wrongAnswersElem = document.getElementById('wrong-answers');
+        const correctPercentageElem = document.getElementById('correct-percentage');
+        const averageTimeElem = document.getElementById('average-time');
+
+        let score = 0;
+        let flashDuration = parseInt(flashSlider.value);
+        let gameDuration = parseInt(durationSlider.value) * 1000; // Convert to milliseconds
+        let gameInterval;
+        let shapesShown = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let startTime;
+        let totalReactionTime = 0;
+
+        flashSlider.addEventListener('input', () => {
+            flashDuration = parseInt(flashSlider.value);
+            flashSliderLabel.textContent = `Flashing Duration: ${flashDuration}ms`;
+        });
+
+        durationSlider.addEventListener('input', () => {
+            gameDuration = parseInt(durationSlider.value) * 1000;
+            durationSliderLabel.textContent = `Game Duration: ${durationSlider.value}s`;
+        });
+
+        function randomPosition() {
+            const position = Math.random() > 0.5 ? 'left' : 'right';
+            shape.style.top = '50%';
+            shape.style.transform = 'translate(-50%, -50%)';
+            shape.style.left = position === 'left' ? '25%' : '75%';
+        }
+
+        function randomShape() {
+            const isCircle = Math.random() > 0.5;
+            shape.style.borderRadius = isCircle ? '50%' : '0';
+            shape.dataset.type = isCircle ? 'circle' : 'square';
+        }
+
+        function showShape() {
+            randomPosition();
+            randomShape();
+            shape.style.display = 'block';
+            shapesShown++;
+            startTime = Date.now();
+
+            const hideTimeout = setTimeout(() => {
+                shape.style.display = 'none';
+                if (gameInterval) startGame();
+            }, flashDuration); // Shape appears for duration set by slider
+
+            shape.dataset.hideTimeout = hideTimeout;
+        }
+
+        function startGame() {
+            gameInterval = setTimeout(() => {
+                showShape();
+            }, 500); // Delay between shapes
+        }
+
+        function endGame() {
+            clearTimeout(gameInterval);
+            shape.style.display = 'none';
+
+            const correctPercentage = correctAnswers > 0 ? ((correctAnswers / shapesShown) * 100).toFixed(2) : 0;
+            const averageTime = correctAnswers > 0 ? (totalReactionTime / correctAnswers).toFixed(2) : 0;
+
+            shapesShownElem.textContent = shapesShown;
+            correctAnswersElem.textContent = correctAnswers;
+            wrongAnswersElem.textContent = wrongAnswers;
+            correctPercentageElem.textContent = correctPercentage;
+            averageTimeElem.textContent = averageTime;
+
+            statistics.style.display = 'block';
+        }
+
+        startButton.addEventListener('click', () => {
+            score = 0;
+            shapesShown = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            totalReactionTime = 0;
+            statistics.style.display = 'none';
+            scoreDisplay.textContent = `Score: ${score}`;
+            setTimeout(endGame, gameDuration);
+            startGame();
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (shape.style.display === 'block') {
+                const type = shape.dataset.type;
+                clearTimeout(shape.dataset.hideTimeout); // Prevent auto-hide if key is pressed
+
+                const reactionTime = Date.now() - startTime;
+                totalReactionTime += reactionTime;
+
+                if ((event.key === 'ArrowLeft' && type === 'square') ||
+                    (event.key === 'ArrowRight' && type === 'circle')) {
+                    correctAnswers++;
+                    scoreDisplay.textContent = `Score: ${++score}`;
+                    console.log('Correct!');
+                } else {
+                    wrongAnswers++;
+                    scoreDisplay.textContent = `Score: ${--score}`;
+                    console.log('Wrong!');
+                }
+
+                
+                shape.style.display = 'none';
+                if (gameInterval) startGame();
+            }
+        });
+    </script>
+</body>
+</html>

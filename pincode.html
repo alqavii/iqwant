@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .box {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .hidden {
+      color: transparent;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+    }
+    .slider-container {
+      margin: 20px;
+    }
+    .slider-label {
+      font-size: 16px;
+    }
+    .mode-buttons {
+      margin: 20px;
+    }
+    .results-table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    .results-table th, .results-table td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    .results-table th {
+      background-color: #f9f9f9;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Memory Game</h1>
+  <div class="container" id="boxes">
+    <!-- Boxes will be dynamically created here -->
+  </div>
+  <div class="slider-container">
+    <label for="speedSlider" class="slider-label">Flashing Speed: <span id="speedValue">0.5</span>s</label>
+    <input type="range" id="speedSlider" min="0.3" max="1.5" step="0.1" value="0.5">
+  </div>
+  <div class="slider-container">
+    <label for="boxSlider" class="slider-label">Number of Boxes: <span id="boxValue">8</span></label>
+    <input type="range" id="boxSlider" min="5" max="8" step="1" value="8">
+  </div>
+  <div class="mode-buttons">
+    <button id="normalModeBtn">Normal Mode</button>
+    <button id="reverseModeBtn">Reverse Mode</button>
+    <button id="sortedModeBtn">Sorted Mode</button>
+  </div>
+  <button id="startBtn">Start</button>
+  <div id="inputSection" style="display:none;">
+    <input type="text" id="userInput" placeholder="Enter the number" maxlength="8" />
+    <button id="submitBtn">Submit</button>
+  </div>
+  <button id="resultsBtn">View Results</button>
+  <p id="result"></p>
+
+  <script>
+    const boxesContainer = document.getElementById('boxes');
+    const startBtn = document.getElementById('startBtn');
+    const inputSection = document.getElementById('inputSection');
+    const userInput = document.getElementById('userInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const result = document.getElementById('result');
+    const speedSlider = document.getElementById('speedSlider');
+    const speedValue = document.getElementById('speedValue');
+    const boxSlider = document.getElementById('boxSlider');
+    const boxValue = document.getElementById('boxValue');
+    const normalModeBtn = document.getElementById('normalModeBtn');
+    const reverseModeBtn = document.getElementById('reverseModeBtn');
+    const sortedModeBtn = document.getElementById('sortedModeBtn');
+    const resultsBtn = document.getElementById('resultsBtn');
+
+    let randomNumber = "";
+    let flashingSpeed = 500;
+    let numberOfBoxes = 8;
+    let currentMode = "normal"; // Modes: normal, reverse, sorted
+    let startTime = null;
+    let results = { normal: [], reverse: [], sorted: [] };
+
+    // Update speed value when slider changes
+    speedSlider.addEventListener('input', () => {
+      flashingSpeed = speedSlider.value * 1000;
+      speedValue.textContent = speedSlider.value;
+    });
+
+    // Update number of boxes when slider changes
+    boxSlider.addEventListener('input', () => {
+      numberOfBoxes = parseInt(boxSlider.value, 10);
+      boxValue.textContent = boxSlider.value;
+      createBoxes();
+    });
+
+    // Switch modes
+    normalModeBtn.addEventListener('click', () => {
+      currentMode = "normal";
+      result.textContent = "Mode: Normal";
+    });
+
+    reverseModeBtn.addEventListener('click', () => {
+      currentMode = "reverse";
+      result.textContent = "Mode: Reverse";
+    });
+
+    sortedModeBtn.addEventListener('click', () => {
+      currentMode = "sorted";
+      result.textContent = "Mode: Sorted";
+    });
+
+    function createBoxes() {
+      boxesContainer.innerHTML = "";
+      for (let i = 0; i < numberOfBoxes; i++) {
+        const box = document.createElement('div');
+        box.classList.add('box', 'hidden');
+        boxesContainer.appendChild(box);
+      }
+    }
+
+    function generateRandomNumber() {
+      randomNumber = "";
+      for (let i = 0; i < numberOfBoxes; i++) {
+        randomNumber += Math.floor(Math.random() * 10).toString();
+      }
+    }
+
+    function displaySequence(callback) {
+      const boxes = document.querySelectorAll('.box');
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index > 0) {
+          boxes[index - 1].classList.add('hidden');
+        }
+        if (index < numberOfBoxes) {
+          boxes[index].textContent = randomNumber[index];
+          boxes[index].classList.remove('hidden');
+          index++;
+        } else {
+          clearInterval(interval);
+          boxes[index - 1].classList.add('hidden');
+          inputSection.style.display = 'block';
+          if (callback) callback();
+        }
+      }, flashingSpeed);
+    }
+
+    function transformNumber() {
+      if (currentMode === "reverse") {
+        return randomNumber.split('').reverse().join('');
+      } else if (currentMode === "sorted") {
+        return randomNumber.split('').sort((a, b) => b - a).join('');
+      }
+      return randomNumber; // Normal mode
+    }
+
+    function startGame() {
+      generateRandomNumber();
+      inputSection.style.display = 'none';
+      userInput.value = "";
+      result.textContent = "";
+      startTime = new Date();
+      displaySequence(() => inputSection.style.display = 'block');
+    }
+
+    startBtn.addEventListener('click', startGame);
+
+    submitBtn.addEventListener('click', () => {
+      const expectedNumber = transformNumber();
+      const endTime = new Date();
+      const timeTaken = (endTime - startTime) / 1000; // Time in seconds
+      const isCorrect = userInput.value === expectedNumber;
+
+      results[currentMode].push({ timeTaken, isCorrect });
+
+      if (isCorrect) {
+        result.textContent = "Correct! Well done!";
+        result.style.color = 'green';
+        setTimeout(startGame, 1000); // Restart the game after 1 second
+      } else {
+        result.textContent = `Incorrect! The correct number was ${expectedNumber}.`;
+        result.style.color = 'red';
+        setTimeout(startGame, 5000); // Restart the game after 5 seconds
+      }
+    });
+
+    resultsBtn.addEventListener('click', () => {
+      document.body.innerHTML = "<h1>Results</h1>";
+      for (const mode in results) {
+        const modeResults = results[mode];
+        const totalAttempts = modeResults.length;
+        const correctAttempts = modeResults.filter(r => r.isCorrect).length;
+        const averageTime = modeResults.reduce((sum, r) => sum + r.timeTaken, 0) / totalAttempts || 0;
+
+        document.body.innerHTML += `<h2>${mode.charAt(0).toUpperCase() + mode.slice(1)} Mode</h2>`;
+        document.body.innerHTML += `<p>Average Time: ${averageTime.toFixed(2)}s</p>`;
+        document.body.innerHTML += `<p>Percentage Correct: ${(correctAttempts / totalAttempts * 100 || 0).toFixed(2)}%</p>`;
+        document.body.innerHTML += `<table class='results-table'><tr><th>Attempt</th><th>Time Taken (s)</th><th>Result</th></tr>`;
+
+        modeResults.forEach((r, i) => {
+          document.body.innerHTML += `<tr><td>${i + 1}</td><td>${r.timeTaken.toFixed(2)}</td><td>${r.isCorrect ? "Correct" : "Incorrect"}</td></tr>`;
+        });
+
+        document.body.innerHTML += "</table>";
+      }
+    });
+
+    // Initialize boxes on page load
+    createBoxes();
+  </script>
+</body>
+</html>
