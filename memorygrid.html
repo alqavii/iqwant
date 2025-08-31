@@ -283,6 +283,7 @@
       clearStatus();
       const total = gridSize * gridSize;
       const count = Math.min(parseInt(countEl.value, 10), total);
+      const flashMs = parseInt(flashEl.value, 10);
       if (modeEl.value === 'pattern') {
         // pick cells
         const picks = pickUnique(count, total);
