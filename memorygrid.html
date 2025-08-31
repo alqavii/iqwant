@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IQwant — Memory Grid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baskervville:wght@700&family=DM+Sans:opsz,wght@9..40,100..1000&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05060a;
+      --glass: rgba(255,255,255,0.08);
+      --primary: #8b5cf6;
+      --primary-strong: #6d28d9;
+      --ok: #22c55e;
+      --bad: #ef4444;
+      --text: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'DM Sans', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header { padding: 24px 16px 8px; text-align:center; }
+    header h1 { margin: 0; font-weight: 800; letter-spacing: 0.4px; }
+    .iq { background: linear-gradient(90deg, var(--primary-strong), var(--primary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .want { color: #fff; }
+
+    .wrap {
+      width: min(1100px, 92vw);
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+      padding: 16px 16px 36px;
+    }
+    @media (max-width: 900px) {
+      .wrap { grid-template-columns: 1fr; }
+    }
+
+    .panel, .board-wrap, .scoreboard { 
+      background: var(--glass);
+      border-radius: 16px;
+      backdrop-filter: blur(25px) saturate(130%);
+      -webkit-backdrop-filter: blur(25px) saturate(130%);
+      box-shadow: 0 0 20px rgba(139,92,246,0.25);
+    }
+
+    .panel { padding: 16px; }
+    .panel h2 { margin: 6px 0 12px; font-size: 1.1rem; opacity: 0.9; }
+    .row { margin: 10px 0; display:flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .row label { font-size: 0.95rem; opacity: 0.9; }
+    select, input[type="range"], button { width: 100%; }
+    select, button { 
+      background: rgba(255,255,255,0.10);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    button { cursor: pointer; transition: transform .08s ease, background .2s ease; }
+    button:hover { background: rgba(255,255,255,0.15); }
+    button:active { transform: translateY(1px); }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .hint { font-size: 0.85rem; opacity: 0.75; margin-top: 8px; }
+
+    .scoreboard { padding: 12px 16px; display:flex; gap: 16px; align-items: center; justify-content: space-between; }
+    .score { display:flex; gap: 16px; }
+    .score div { background: rgba(255,255,255,0.10); padding: 8px 12px; border-radius: 10px; }
+    .score strong { color: var(--primary); }
+
+    .board-wrap { padding: 16px; display:flex; flex-direction: column; gap: 12px; }
+    .board { display: grid; gap: 8px; align-self: center; }
+    .cell {
+      width: 64px; height: 64px; border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      display:flex; align-items:center; justify-content:center;
+      font-size: 28px; user-select: none; cursor: pointer;
+      transition: background .15s ease, transform .08s ease, border-color .15s ease;
+    }
+    .cell:active { transform: scale(0.98); }
+    .cell.on { background: rgba(139,92,246,0.25); border-color: rgba(139,92,246,0.5); }
+    .cell.correct { outline: 2px solid var(--ok); }
+    .cell.wrong { outline: 2px solid var(--bad); }
+
+    .status { min-height: 22px; font-size: 0.95rem; opacity: 0.9; text-align:center; }
+    .status.ok { color: var(--ok); }
+    .status.err { color: var(--bad); }
+
+    .legend { font-size: 0.85rem; opacity: 0.7; text-align:center; }
+
+    .back { position: absolute; left: 12px; top: 12px; }
+    .back a { color: #ddd; text-decoration: none; padding: 8px 10px; border-radius: 10px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); }
+  </style>
+</head>
+<body>
+  <div class="back"><a href="index.html">← Back</a></div>
+  <header>
+    <h1><span class="iq">IQ</span><span class="want">want</span> — Memory Grid</h1>
+  </header>
+
+  <div class="wrap">
+    <div class="panel">
+      <h2>Setup</h2>
+      <div class="row">
+        <label for="mode">Game Mode</label>
+        <select id="mode">
+          <option value="pattern">Mode 1 — Pattern Recall</option>
+          <option value="odd">Mode 2 — Odd Arrow</option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="size">Grid Size</label>
+        <select id="size">
+          <option value="4">4 × 4</option>
+          <option value="5">5 × 5</option>
+        </select>
+      </div>
+      <div class="row" style="flex-direction:column; align-items:stretch;">
+        <label for="count">Items to flash: <span id="countLabel">5</span></label>
+        <input id="count" type="range" min="1" max="16" value="5" />
+      </div>
+      <div class="actions">
+        <button id="startBtn">Start Round</button>
+        <button id="resetScoresBtn" title="Clear saved best scores">Reset Scores</button>
+      </div>
+      <div class="hint" id="hint">Pattern flashes first; then recreate it exactly.</div>
+    </div>
+
+    <div class="board-wrap">
+      <div class="scoreboard">
+        <div class="score">
+          <div>Round: <strong id="round">0</strong></div>
+          <div>Score: <strong id="score">0</strong></div>
+          <div>Best: <strong id="best">0</strong></div>
+        </div>
+        <div class="modeLabel" id="modeLabel">Mode 1</div>
+      </div>
+      <div class="status" id="status"></div>
+      <div class="board" id="board"></div>
+      <div class="legend" id="legend">Click cells to set crosses. Submit when ready.</div>
+      <div class="actions">
+        <button id="submitBtn">Submit</button>
+        <button id="nextBtn" disabled>Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const boardEl = document.getElementById('board');
+    const modeEl = document.getElementById('mode');
+    const sizeEl = document.getElementById('size');
+    const countEl = document.getElementById('count');
+    const countLabelEl = document.getElementById('countLabel');
+    const startBtn = document.getElementById('startBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const statusEl = document.getElementById('status');
+    const legendEl = document.getElementById('legend');
+    const hintEl = document.getElementById('hint');
+    const roundEl = document.getElementById('round');
+    const scoreEl = document.getElementById('score');
+    const bestEl = document.getElementById('best');
+    const modeLabelEl = document.getElementById('modeLabel');
+
+    const ARROWS = ['↗', '↘', '↙', '↖'];
+    const KEY_BEST = {
+      pattern: 'iqwant_memory_pattern_best',
+      odd: 'iqwant_memory_odd_best'
+    };
+
+    let gridSize = 4;
+    let phase = 'idle'; // idle | showing | input | reveal | wait
+    let targetCells = new Set(); // indices for pattern mode
+    let arrowMap = new Map(); // index -> arrowIdx for odd mode
+    let changedIndex = null; // for odd mode
+    let score = 0;
+    let round = 0;
+    let best = 0;
+
+    function rngInt(max) { return Math.floor(Math.random() * max); }
+    function pickUnique(n, max) {
+      const set = new Set();
+      while (set.size < n && set.size < max) set.add(rngInt(max));
+      return Array.from(set);
+    }
+
+    function loadBest() {
+      const k = KEY_BEST[modeEl.value];
+      best = parseInt(localStorage.getItem(k) || '0', 10);
+      bestEl.textContent = best;
+    }
+    function saveBest() {
+      const k = KEY_BEST[modeEl.value];
+      if (score > best) {
+        best = score;
+        localStorage.setItem(k, String(best));
+        bestEl.textContent = best;
+      }
+    }
+
+    function setupBoard() {
+      boardEl.innerHTML = '';
+      boardEl.style.gridTemplateColumns = `repeat(${gridSize}, 64px)`;
+      const total = gridSize * gridSize;
+      for (let i = 0; i < total; i++) {
+        const div = document.createElement('div');
+        div.className = 'cell';
+        div.dataset.idx = String(i);
+        div.addEventListener('click', onCellClick);
+        boardEl.appendChild(div);
+      }
+    }
+
+    function setCountMax() {
+      const total = gridSize * gridSize;
+      countEl.max = String(total);
+      if (parseInt(countEl.value, 10) > total) countEl.value = String(total);
+      countLabelEl.textContent = countEl.value;
+    }
+
+    function setModeExplainer() {
+      const mode = modeEl.value;
+      if (mode === 'pattern') {
+        hintEl.textContent = 'Pattern flashes first; then recreate it exactly.';
+        legendEl.textContent = 'Click cells to set crosses. Submit when ready.';
+        modeLabelEl.textContent = 'Mode 1';
+      } else {
+        hintEl.textContent = 'Arrows flash; one direction changes. Find the changed one!';
+        legendEl.textContent = 'Click the single tile that changed direction.';
+        modeLabelEl.textContent = 'Mode 2';
+      }
+      loadBest();
+    }
+
+    function clearStatus() { statusEl.textContent = ''; statusEl.className = 'status'; }
+    function setOk(msg) { statusEl.textContent = msg; statusEl.className = 'status ok'; }
+    function setErr(msg) { statusEl.textContent = msg; statusEl.className = 'status err'; }
+
+    function renderPatternPreview(indices) {
+      const cells = boardEl.querySelectorAll('.cell');
+      cells.forEach(c => c.textContent = '');
+      indices.forEach(i => {
+        const cell = cells[i];
+        if (cell) cell.textContent = '✕';
+      });
+    }
+
+    function clearBoardVisuals() {
+      const cells = boardEl.querySelectorAll('.cell');
+      cells.forEach(c => { c.textContent=''; c.classList.remove('on','correct','wrong'); });
+    }
+
+    function onCellClick(e) {
+      const idx = parseInt(e.currentTarget.dataset.idx, 10);
+      if (modeEl.value === 'pattern') {
+        if (phase !== 'input') return;
+        e.currentTarget.classList.toggle('on');
+        e.currentTarget.textContent = e.currentTarget.classList.contains('on') ? '✕' : '';
+      } else {
+        // Odd mode — only clickable during reveal/wait to guess changed tile
+        if (phase !== 'reveal') return;
+        checkOddGuess(idx);
+      }
+    }
+
+    function startRound() {
+      round += 1; roundEl.textContent = round;
+      clearStatus();
+      const total = gridSize * gridSize;
+      const count = Math.min(parseInt(countEl.value, 10), total);
+      if (modeEl.value === 'pattern') {
+        // pick cells
+        const picks = pickUnique(count, total);
+        targetCells = new Set(picks);
+        phase = 'showing';
+        clearBoardVisuals();
+        renderPatternPreview(picks);
+        // flash, then clear and wait for input
+        setTimeout(() => {
+          clearBoardVisuals();
+          phase = 'input';
+          setOk('Recreate the pattern, then Submit.');
+        }, Math.max(900, 250 * count));
+      } else {
+        // odd mode
+        const positions = pickUnique(count, total);
+        arrowMap = new Map(); changedIndex = null;
+        positions.forEach(p => arrowMap.set(p, rngInt(ARROWS.length)));
+        phase = 'showing';
+        // show arrows initial
+        const cells = boardEl.querySelectorAll('.cell');
+        clearBoardVisuals();
+        positions.forEach(i => { const c = cells[i]; if (c) c.textContent = ARROWS[arrowMap.get(i)]; });
+        setTimeout(() => {
+          // hide briefly, then show again with one changed
+          clearBoardVisuals();
+          setTimeout(() => {
+            const changePick = positions[rngInt(positions.length)];
+            changedIndex = changePick;
+            // choose a new direction different from original
+            const orig = arrowMap.get(changePick);
+            let newDir = rngInt(ARROWS.length);
+            if (newDir === orig) newDir = (newDir + 1) % ARROWS.length;
+            const cells2 = boardEl.querySelectorAll('.cell');
+            // render all arrows again
+            positions.forEach(i => {
+              const val = i === changePick ? newDir : arrowMap.get(i);
+              const cell = cells2[i];
+              cell.textContent = ARROWS[val];
+            });
+            phase = 'reveal';
+            setOk('One arrow changed direction. Click it!');
+          }, 350);
+        }, Math.max(900, 250 * count));
+      }
+      nextBtn.disabled = true;
+    }
+
+    function submitPattern() {
+      if (modeEl.value !== 'pattern' || phase !== 'input') return;
+      const cells = boardEl.querySelectorAll('.cell');
+      // collect user on
+      const userOn = new Set();
+      cells.forEach((c, i) => { if (c.classList.contains('on')) userOn.add(i); });
+      // validate exact match: no extras, no misses
+      let ok = (userOn.size === targetCells.size);
+      if (ok) {
+        for (const i of targetCells) { if (!userOn.has(i)) { ok = false; break; } }
+      }
+      if (!ok) {
+        // reset round and score as per spec: any wrong resets
+        score = 0; scoreEl.textContent = score; saveBest();
+        setErr('Wrong! Round reset. Try again.');
+        // visual feedback
+        cells.forEach((c, i) => {
+          if (targetCells.has(i) && !userOn.has(i)) c.classList.add('wrong');
+          if (!targetCells.has(i) && userOn.has(i)) c.classList.add('wrong');
+        });
+        phase = 'idle';
+        nextBtn.disabled = false; // allow trying again
+        return;
+      }
+      // correct
+      score += 1; scoreEl.textContent = score; saveBest();
+      setOk('Correct!');
+      // mark correct
+      cells.forEach((c, i) => { if (targetCells.has(i)) c.classList.add('correct'); });
+      phase = 'idle';
+      nextBtn.disabled = false;
+    }
+
+    function checkOddGuess(idx) {
+      const cells = boardEl.querySelectorAll('.cell');
+      if (idx === changedIndex) {
+        score += 1; scoreEl.textContent = score; saveBest();
+        setOk('Correct! That one changed.');
+        cells[idx].classList.add('correct');
+      } else {
+        score = 0; scoreEl.textContent = score; saveBest();
+        setErr('Nope — that didn\'t change.');
+        cells[idx].classList.add('wrong');
+        if (changedIndex != null) cells[changedIndex].classList.add('correct');
+      }
+      phase = 'idle';
+      nextBtn.disabled = false;
+    }
+
+    // Event wiring
+    sizeEl.addEventListener('change', () => {
+      gridSize = parseInt(sizeEl.value, 10);
+      setupBoard();
+      setCountMax();
+      clearBoardVisuals();
+    });
+    countEl.addEventListener('input', () => { countLabelEl.textContent = countEl.value; });
+    modeEl.addEventListener('change', () => { setModeExplainer(); clearBoardVisuals(); });
+    startBtn.addEventListener('click', () => { startRound(); });
+    submitBtn.addEventListener('click', () => { submitPattern(); });
+    nextBtn.addEventListener('click', () => { startRound(); });
+    document.getElementById('resetScoresBtn').addEventListener('click', () => {
+      localStorage.removeItem(KEY_BEST.pattern);
+      localStorage.removeItem(KEY_BEST.odd);
+      loadBest();
+      setOk('Scores reset.');
+    });
+
+    // Init
+    setupBoard();
+    setCountMax();
+    setModeExplainer();
+    round = 0; score = 0; roundEl.textContent = '0'; scoreEl.textContent = '0';
+  </script>
+</body>
+</html>
+
