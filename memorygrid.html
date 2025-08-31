@@ -128,6 +128,10 @@
         <label for="count">Items to flash: <span id="countLabel">5</span></label>
         <input id="count" type="range" min="1" max="16" value="5" />
       </div>
+      <div class="row" style="flex-direction:column; align-items:stretch;">
+        <label for="flash">Flash duration: <span id="flashLabel">1200</span> ms</label>
+        <input id="flash" type="range" min="300" max="3000" step="50" value="1200" />
+      </div>
       <div class="actions">
         <button id="startBtn">Start Round</button>
         <button id="resetScoresBtn" title="Clear saved best scores">Reset Scores</button>
@@ -160,6 +164,8 @@
     const sizeEl = document.getElementById('size');
     const countEl = document.getElementById('count');
     const countLabelEl = document.getElementById('countLabel');
+    const flashEl = document.getElementById('flash');
+    const flashLabelEl = document.getElementById('flashLabel');
     const startBtn = document.getElementById('startBtn');
     const submitBtn = document.getElementById('submitBtn');
     const nextBtn = document.getElementById('nextBtn');
@@ -261,6 +267,7 @@
 
     function onCellClick(e) {
       const idx = parseInt(e.currentTarget.dataset.idx, 10);
+      const flashMs = parseInt(flashEl.value, 10);
       if (modeEl.value === 'pattern') {
         if (phase !== 'input') return;
         e.currentTarget.classList.toggle('on');
@@ -289,7 +296,7 @@
           clearBoardVisuals();
           phase = 'input';
           setOk('Recreate the pattern, then Submit.');
-        }, Math.max(900, 250 * count));
+        }, flashMs);
       } else {
         // odd mode
         const positions = pickUnique(count, total);
@@ -320,7 +327,7 @@
             phase = 'reveal';
             setOk('One arrow changed direction. Click it!');
           }, 350);
-        }, Math.max(900, 250 * count));
+        }, flashMs);
       }
       nextBtn.disabled = true;
     }
@@ -382,6 +389,7 @@
       clearBoardVisuals();
     });
     countEl.addEventListener('input', () => { countLabelEl.textContent = countEl.value; });
+    flashEl.addEventListener('input', () => { flashLabelEl.textContent = flashEl.value; });
     modeEl.addEventListener('change', () => { setModeExplainer(); clearBoardVisuals(); });
     startBtn.addEventListener('click', () => { startRound(); });
     submitBtn.addEventListener('click', () => { submitPattern(); });
@@ -401,4 +409,3 @@
   </script>
 </body>
 </html>
-
