@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IQwant — Memory Grid</title>
+  <title>IQwant - Memory Grid</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baskervville:wght@700&family=DM+Sans:opsz,wght@9..40,100..1000&display=swap" rel="stylesheet">
@@ -102,9 +102,9 @@
   </style>
 </head>
 <body>
-  <div class="back"><a href="index.html">← Back</a></div>
+  <div class="back"><a href="index.html">< Back</a></div>
   <header>
-    <h1><span class="iq">IQ</span><span class="want">want</span> — Memory Grid</h1>
+    <h1><span class="iq">IQ</span><span class="want">want</span> - Memory Grid</h1>
   </header>
 
   <div class="wrap">
@@ -113,8 +113,8 @@
       <div class="row">
         <label for="mode">Game Mode</label>
         <select id="mode">
-          <option value="pattern">Mode 1 — Pattern Recall</option>
-          <option value="odd">Mode 2 — Odd Arrow</option>
+          <option value="pattern">Mode 1 - Pattern Recall</option>
+          <option value="odd">Mode 2 - Odd Arrow</option>
         </select>
       </div>
       <div class="row">
@@ -177,7 +177,7 @@
     const bestEl = document.getElementById('best');
     const modeLabelEl = document.getElementById('modeLabel');
 
-    const ARROWS = ['↗', '↘', '↙', '↖'];
+    const ARROWS = ['\u2197', '\u2198', '\u2199', '\u2196'];
     const KEY_BEST = {
       pattern: 'iqwant_memory_pattern_best',
       odd: 'iqwant_memory_odd_best'
@@ -256,7 +256,7 @@
       cells.forEach(c => c.textContent = '');
       indices.forEach(i => {
         const cell = cells[i];
-        if (cell) cell.textContent = '✕';
+        if (cell) cell.textContent = '\u2715';
       });
     }
 
@@ -267,11 +267,10 @@
 
     function onCellClick(e) {
       const idx = parseInt(e.currentTarget.dataset.idx, 10);
-      const flashMs = parseInt(flashEl.value, 10);
       if (modeEl.value === 'pattern') {
         if (phase !== 'input') return;
         e.currentTarget.classList.toggle('on');
-        e.currentTarget.textContent = e.currentTarget.classList.contains('on') ? '✕' : '';
+        e.currentTarget.textContent = e.currentTarget.classList.contains('on') ? '\u2715' : '';
       } else {
         // Odd mode — only clickable during reveal/wait to guess changed tile
         if (phase !== 'reveal') return;
