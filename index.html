@@ -3,582 +3,478 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IQwant - The Quantitative & Commodities Trading Prep Platform</title>
+  <title>IQwant — Quantitative & Commodities Trading Assessments</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #05060a;
-      --glass: rgba(255, 255, 255, 0.07);
-      --glass-hover: rgba(255, 255, 255, 0.12);
-      --border: rgba(255, 255, 255, 0.1);
-      --border-hover: rgba(139, 92, 246, 0.5);
-      --primary: #8b5cf6;
-      --primary-strong: #6d28d9;
-      --accent: #38bdf8;
-      --gold: #f59e0b;
-      --green: #22c55e;
-      --red: #ef4444;
-      --text: #ffffff;
-      --subtext: #94a3b8;
+      --bg: #090a0d;
+      --surface: #101217;
+      --surface-hover: #15181f;
+      --surface-card: #0d0f13;
+      --border: #1b1f27;
+      --border-hover: #2d3340;
+      --text: #ededed;
+      --text-muted: #848b98;
+      --text-dim: #4f5664;
+      --accent: #5e6ad2;
+      --accent-soft: rgba(94, 106, 210, 0.12);
+      --font-mono: 'JetBrains Mono', monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at 50% 10%, rgba(109, 40, 217, 0.22), transparent 60%),
-                  radial-gradient(circle at 85% 85%, rgba(56, 189, 248, 0.12), transparent 50%),
-                  radial-gradient(circle at 15% 75%, rgba(245, 158, 11, 0.1), transparent 50%);
-      pointer-events: none;
-      z-index: 0;
+    header {
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(9, 10, 13, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
     }
 
-    nav {
-      width: 100%;
-      max-width: 1240px;
-      padding: 22px 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-      z-index: 10;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      font-size: 2rem;
-      font-weight: 800;
-    }
-    .brand .iq {
-      background: linear-gradient(90deg, #a78bfa, #8b5cf6);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 25px rgba(139, 92, 246, 0.5);
-    }
-    .brand .want { color: #fff; }
-
-    .nav-links { display: flex; gap: 20px; align-items: center; }
-    .nav-links a {
-      color: var(--subtext);
-      text-decoration: none;
-      font-size: 0.95rem;
-      font-weight: 600;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: #fff; }
-    .btn-nav-cta {
-      background: rgba(139, 92, 246, 0.2);
-      border: 1px solid var(--primary);
-      color: #c4b5fd !important;
-      padding: 8px 18px;
-      border-radius: 20px;
-      transition: all 0.2s !important;
-    }
-    .btn-nav-cta:hover {
-      background: var(--primary);
-      color: white !important;
-      box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
-    }
-
-    .container {
-      width: min(1200px, 94vw);
-      position: relative;
-      z-index: 1;
-      padding: 40px 0 100px;
-      display: flex;
-      flex-direction: column;
-      gap: 48px;
-    }
-
-    /* Hero Section */
-    .hero {
-      text-align: center;
-      max-width: 880px;
+    .nav-container {
+      max-width: 1140px;
       margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    .hero-badge {
-      display: inline-flex;
+
+    .brand {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 18px;
-      background: rgba(139, 92, 246, 0.15);
-      border: 1px solid var(--primary);
-      border-radius: 30px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #c4b5fd;
+    }
+    .brand-tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      padding: 2px 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+    .nav-links a:hover {
+      color: var(--text);
+    }
+    .nav-cta {
+      padding: 6px 14px;
+      background: var(--text);
+      color: var(--bg) !important;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: opacity 0.15s ease;
+    }
+    .nav-cta:hover { opacity: 0.9; }
+
+    main {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 56px 24px 96px;
+    }
+
+    .hero {
+      margin-bottom: 56px;
+      max-width: 680px;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-dim);
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 20px;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
     }
     .hero h1 {
-      font-size: 3.5rem;
-      font-weight: 900;
-      letter-spacing: -1px;
-      line-height: 1.15;
-      margin-bottom: 20px;
-    }
-    .hero h1 span.gradient {
-      background: linear-gradient(135deg, #a78bfa, #8b5cf6, #38bdf8);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 14px;
     }
     .hero p {
-      color: var(--subtext);
-      font-size: 1.2rem;
+      font-size: 1.05rem;
+      color: var(--text-muted);
       line-height: 1.6;
-      margin-bottom: 30px;
     }
 
-    .stats-pills {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .stat-pill {
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      color: #cbd5e1;
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
-      gap: 8px;
-    }
-    .stat-pill strong { color: #f8fafc; font-weight: 700; }
-
-    /* Section Headers */
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
       gap: 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding-bottom: 16px;
     }
-    .section-title h2 { font-size: 1.8rem; font-weight: 800; color: white; margin-bottom: 4px; }
-    .section-title p { color: var(--subtext); font-size: 0.95rem; }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
 
-    /* Cards Grid */
-    .cards-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
     }
 
     .card {
-      background: var(--glass);
+      background: var(--surface-card);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      backdrop-filter: blur(25px) saturate(130%);
-      -webkit-backdrop-filter: blur(25px) saturate(130%);
-      padding: 20px;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      flex-direction: column;
+      border-radius: 10px;
+      padding: 22px;
       text-decoration: none;
       color: inherit;
-      position: relative;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 160px;
+      transition: background 0.15s ease, border-color 0.15s ease;
     }
     .card:hover {
-      transform: translateY(-6px) scale(1.01);
+      background: var(--surface-hover);
       border-color: var(--border-hover);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(139, 92, 246, 0.25);
     }
 
-    .card-img-wrap {
-      width: 100%;
-      height: 160px;
-      border-radius: 14px;
-      overflow: hidden;
-      margin-bottom: 16px;
-      background: rgba(0,0,0,0.3);
-      position: relative;
-    }
-    .card-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.4s ease;
-    }
-    .card:hover .card-img-wrap img {
-      transform: scale(1.05);
-    }
-
-    .card-tag {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(255,255,255,0.15);
-      backdrop-filter: blur(8px);
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #cbd5e1;
-    }
-    .card-tag.optiver { color: #c4b5fd; border-color: var(--primary); }
-    .card-tag.citadel { color: #f87171; border-color: var(--red); }
-    .card-tag.janestreet { color: #7dd3fc; border-color: var(--accent); }
-    .card-tag.comm { color: #fde68a; border-color: var(--gold); }
-
-    .card h3 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 6px;
-    }
-    .card p {
-      font-size: 0.88rem;
-      color: var(--subtext);
-      line-height: 1.5;
-      flex-grow: 1;
-    }
-
-    .card-footer {
+    .card-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 16px;
-      padding-top: 12px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      font-size: 0.8rem;
+      margin-bottom: 12px;
+    }
+    .card-firm {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .card-badge {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
       font-weight: 600;
-      color: var(--primary);
+      color: var(--text);
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
     }
-    .card:hover .card-footer { color: #c4b5fd; }
-
-    /* Commodities Feature Showcase */
-    .comm-banner {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(180, 83, 9, 0.05));
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      border-radius: 24px;
-      padding: 32px;
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 28px;
-      align-items: center;
+    .card-desc {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.5;
     }
-    @media (max-width: 850px) { .comm-banner { grid-template-columns: 1fr; } }
 
-    .comm-banner h3 { font-size: 2rem; font-weight: 800; color: #f59e0b; margin-bottom: 10px; }
-    .comm-banner p { color: #cbd5e1; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; }
-    .comm-topics {
+    .card-action {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 24px;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      transition: color 0.15s ease;
     }
-    .comm-pill {
-      background: rgba(0,0,0,0.4);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      padding: 5px 12px;
-      border-radius: 16px;
-      font-size: 0.8rem;
-      color: #fde68a;
+    .card:hover .card-action {
+      color: var(--text);
     }
-    .btn-gold {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: #05060a;
-      font-weight: 800;
-      font-size: 1rem;
-      padding: 14px 28px;
-      border-radius: 14px;
-      text-decoration: none;
-      display: inline-block;
-      box-shadow: 0 0 25px rgba(245, 158, 11, 0.4);
-      transition: all 0.2s;
-    }
-    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 0 35px rgba(245, 158, 11, 0.6); }
 
-    /* Footer */
-    footer {
-      width: 100%;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 30px 20px;
-      text-align: center;
-      color: var(--subtext);
+    /* Commodities Feature Bar */
+    .feature-strip {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+    .feature-content h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .feature-content p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      max-width: 620px;
+    }
+    .feature-btn {
+      padding: 9px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border-hover);
+      color: var(--text);
+      text-decoration: none;
       font-size: 0.85rem;
+      font-weight: 500;
+      border-radius: 6px;
+      white-space: nowrap;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .feature-btn:hover {
+      background: var(--surface-hover);
+      border-color: #404859;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 1.85rem; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html" class="brand">
-      <span class="iq">IQ</span><span class="want">want</span>
-    </a>
-    <div class="nav-links">
-      <a href="#simulators">Simulators</a>
-      <a href="questions.html">Question Banks</a>
-      <a href="questions.html?category=commodities">Commodities Desk</a>
-      <a href="companies.html">Company Guides</a>
-      <a href="optiver80.html" class="btn-nav-cta">Practice 80 in 8</a>
-    </div>
-  </nav>
 
-  <div class="container">
-    <!-- Hero Banner -->
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        IQwant
+        <span class="brand-tag">v2.1</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#assessments">Assessments</a>
+        <a href="questions.html">Question Bank</a>
+        <a href="questions.html?category=commodities">Commodities</a>
+        <a href="companies.html">Firms</a>
+        <a href="optiver80.html" class="nav-cta">Practice 80 in 8</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
     <div class="hero">
-      <div class="hero-badge">
-        <span>⚡ Built for 2026/2027 Trading Cycles</span>
-      </div>
-      <h1>Master Assessments for <br><span class="gradient">Top Quant & Commodity Firms</span></h1>
-      <p>The all-in-one preparation engine featuring exact simulators for the Optiver 80 in 8, Pymetrics BART balloon risk tasks, Jane Street market making, cognitive switch games, and high-yield technical question banks.</p>
-
-      <div class="stats-pills">
-        <div class="stat-pill">🎯 <strong>Optiver 80 in 8</strong> (Negative Marking)</div>
-        <div class="stat-pill">🎈 <strong>BART Balloon Task</strong> (Pymetrics / Citadel)</div>
-        <div class="stat-pill">🎲 <strong>Market Making</strong> (Jane Street / SIG)</div>
-        <div class="stat-pill">🛢️ <strong>Commodity Arbitrage</strong> (Trafigura / Glencore)</div>
-      </div>
+      <div class="hero-eyebrow">Quantitative Assessment Suite</div>
+      <h1>Assessments, simulators, and technical intelligence for trading roles.</h1>
+      <p>A focused platform for quantitative market making, algorithmic prop desks, and physical commodities merchants.</p>
     </div>
 
-    <!-- Section 1: Assessment Simulators -->
-    <div id="simulators">
-      <div class="section-header">
-        <div class="section-title">
-          <h2>Interactive Assessment Simulators</h2>
-          <p>Faithful digital recreations of high-stakes screening tests and gamified psychometrics.</p>
+    <!-- SIMULATORS SECTION -->
+    <div class="section-label" id="assessments">Standard Assessment Simulators</div>
+    <div class="grid">
+
+      <!-- Optiver 80 in 8 -->
+      <a href="optiver80.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Optiver · Flow Traders</span>
+            <span class="card-badge">80 Qs / 8 min</span>
+          </div>
+          <div class="card-title">80 in 8 Mental Arithmetic</div>
+          <div class="card-desc">Speed arithmetic with strict negative marking (+1 / −1 / 0). Evaluates speed, accuracy, and skipping discipline.</div>
         </div>
-      </div>
+        <div class="card-action">Launch simulator →</div>
+      </a>
 
-      <div class="cards-grid" style="margin-top: 24px;">
-        <!-- Optiver 80 in 8 -->
-        <a href="optiver80.html" class="card">
-          <div class="card-img-wrap">
-            <span class="card-tag optiver">Optiver / Flow Traders</span>
-            <img src="assets/optiver80.svg" alt="Optiver 80 in 8" />
+      <!-- BART Balloon Risk -->
+      <a href="balloon.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Citadel · Pymetrics · IMC</span>
+            <span class="card-badge">30 Rounds</span>
           </div>
-          <h3>Optiver 80 in 8</h3>
-          <p>80 mental arithmetic questions in 8 minutes with strict +1 / -1 / 0 negative marking, missing operand algebra, and benchmark analytics.</p>
-          <div class="card-footer">
-            <span>Launch Simulator</span>
-            <span>→</span>
-          </div>
-        </a>
-
-        <!-- BART Balloon Risk Task -->
-        <a href="balloon.html" class="card">
-          <div class="card-img-wrap">
-            <span class="card-tag citadel">Citadel / Optiver / IMC</span>
-            <img src="assets/balloon.svg" alt="Balloon Risk Task" />
-          </div>
-          <h3>BART Balloon Risk Task</h3>
-          <p>The Pymetrics 12-games staple. 30 probabilistic balloons to test your risk appetite, loss chasing, and Expected Value (EV) discipline.</p>
-          <div class="card-footer">
-            <span>Play Assessment</span>
-            <span>→</span>
-          </div>
-        </a>
-
-        <!-- Market Making Game -->
-        <a href="marketmaking.html" class="card">
-          <div class="card-img-wrap">
-            <span class="card-tag janestreet">Jane Street / SIG / Optiver</span>
-            <img src="assets/marketmaking.svg" alt="Market Making Game" />
-          </div>
-          <h3>Market Making Pit</h3>
-          <p>Interactive 2-way market quoting ([Bid] @ [Ask]) with hidden distributions, Bayesian info reveals, inventory skewing, and adverse selection.</p>
-          <div class="card-footer">
-            <span>Enter the Pit</span>
-            <span>→</span>
-          </div>
-        </a>
-
-        <!-- Switch Challenge -->
-        <a href="switchgame.html" class="card">
-          <div class="card-img-wrap">
-            <span class="card-tag optiver">Optiver / SHL Verify</span>
-            <img src="assets/switch.svg" alt="Switch Game" />
-          </div>
-          <h3>Switch Challenge</h3>
-          <p>SHL inductive task switching. Alternates between mathematical parity (Odd/Even) and directional arrow symmetry under intense time pressure.</p>
-          <div class="card-footer">
-            <span>Test Agility</span>
-            <span>→</span>
-          </div>
-        </a>
-
-        <!-- Memory Grid -->
-        <a href="memorygrid.html" class="card">
-          <div class="card-img-wrap">
-            <span class="card-tag optiver">Optiver / SHL</span>
-            <img src="assets/memorygrid.svg" alt="Memory Grid" />
-          </div>
-          <h3>Memory Grid</h3>
-          <p>Working memory and spatial orientation test. Recall flash tile positions and identify orientation changes on dynamic matrices.</p>
-          <div class="card-footer">
-            <span>Play Grid</span>
-            <span>→</span>
-          </div>
-        </a>
-
-        <!-- Working Memory Digits -->
-        <a href="pincode.html" class="card">
-          <div class="card-img-wrap">
-            <span class="card-tag citadel">Pymetrics / Optiver</span>
-            <img src="assets/pincode.svg" alt="Memory Game" />
-          </div>
-          <h3>Digits Span Memory</h3>
-          <p>Rapid numerical flash memory trainer supporting Forward Digit Span, Reverse Span, and Descending Order Span modes.</p>
-          <div class="card-footer">
-            <span>Train Memory</span>
-            <span>→</span>
-          </div>
-        </a>
-
-        <!-- Shape Reaction Speed -->
-        <a href="simongame.html" class="card">
-          <div class="card-img-wrap">
-            <span class="card-tag optiver">Optiver Zap</span>
-            <img src="assets/simon.svg" alt="Shape Reaction" />
-          </div>
-          <h3>Shape Reaction (Zap)</h3>
-          <p>Sub-millisecond visual reaction testing across shape types and peripheral vision coordinates with false alarm penalties.</p>
-          <div class="card-footer">
-            <span>Test Reflexes</span>
-            <span>→</span>
-          </div>
-        </a>
-
-        <!-- Company Guide Card -->
-        <a href="companies.html" class="card">
-          <div class="card-img-wrap">
-            <span class="card-tag">Hiring Intelligence</span>
-            <img src="assets/companies.svg" alt="Company Assessments" />
-          </div>
-          <h3>Company Assessment Directory</h3>
-          <p>Detailed stage-by-stage hiring pipelines, cutoffs, and culture guides for Optiver, Jane Street, Citadel, Trafigura, Glencore, and Vitol.</p>
-          <div class="card-footer">
-            <span>Explore Firms</span>
-            <span>→</span>
-          </div>
-        </a>
-      </div>
-    </div>
-
-    <!-- Section 2: Commodities Desk Spotlight -->
-    <div class="comm-banner">
-      <div>
-        <span class="card-tag comm" style="position:static; display:inline-block; margin-bottom:12px;">Special Focus Desk</span>
-        <h3>Physical & Financial Commodities Hub</h3>
-        <p>Comprehensive technical and case study prep for commodity trading giants (Trafigura, Glencore, Vitol, Gunvor, BP/Shell, Cargill). Master everything from storage tank arbitrage in contango to 3:2:1 crack spreads, demurrage logistics, and LNG boil-off routing.</p>
-        
-        <div class="comm-topics">
-          <span class="comm-pill">Contango vs. Backwardation</span>
-          <span class="comm-pill">Cash-and-Carry Full Carry</span>
-          <span class="comm-pill">3:2:1 Crack Spreads</span>
-          <span class="comm-pill">Clean Spark Spreads</span>
-          <span class="comm-pill">Incoterms & Demurrage</span>
-          <span class="comm-pill">LNG Geographic Arb</span>
-          <span class="comm-pill">Soybean Crush Spreads</span>
+          <div class="card-title">BART Balloon Risk Task</div>
+          <div class="card-desc">Measures risk-taking propensity, loss aversion, and post-burst consistency under stochastic payoff curves.</div>
         </div>
+        <div class="card-action">Start assessment →</div>
+      </a>
 
-        <a href="questions.html" class="btn-gold">Explore Commodities Question Bank →</a>
-      </div>
-
-      <div style="text-align:center;">
-        <img src="assets/commodities.svg" alt="Commodities Hub" style="width:100%; max-width:340px; border-radius:16px; border:1px solid rgba(245,158,11,0.3); box-shadow:0 0 30px rgba(245,158,11,0.2);" />
-      </div>
-    </div>
-
-    <!-- Section 3: Question Banks Overview -->
-    <div>
-      <div class="section-header">
-        <div class="section-title">
-          <h2>Technical Interview Question Banks</h2>
-          <p>Curated problems with step-by-step solutions, trader intuition, and mental math shortcuts.</p>
+      <!-- Market Making Game -->
+      <a href="marketmaking.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Jane Street · SIG</span>
+            <span class="card-badge">Order Book</span>
+          </div>
+          <div class="card-title">Market Making Pit</div>
+          <div class="card-desc">Quote two-way markets [Bid] @ [Ask] on uncertain distributions while managing adverse selection and inventory skew.</div>
         </div>
-        <a href="questions.html" style="color:var(--accent); font-weight:700; text-decoration:none;">View All Questions →</a>
-      </div>
+        <div class="card-action">Enter trading pit →</div>
+      </a>
 
-      <div class="cards-grid" style="margin-top: 24px;">
-        <a href="questions.html" class="card">
-          <div class="card-img-wrap">
-            <span class="card-tag">Probability & Maths</span>
-            <img src="assets/questions.svg" alt="Math Bank" />
+      <!-- Switch Challenge -->
+      <a href="switchgame.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Optiver · SHL Interactive</span>
+            <span class="card-badge">Executive Function</span>
           </div>
-          <h3>Probability & Statistics</h3>
-          <p>Bayes' rule, conditional expectation, stopping times, Markov chains, random walks, and dice/card combinatorics.</p>
-          <div class="card-footer">
-            <span>Browse Problems</span>
-            <span>→</span>
-          </div>
-        </a>
+          <div class="card-title">Switch Challenge</div>
+          <div class="card-desc">Evaluates task-switching latency by alternating rule evaluations between arithmetic parity and arrow symmetry.</div>
+        </div>
+        <div class="card-action">Run test →</div>
+      </a>
 
-        <a href="questions.html" class="card">
-          <div class="card-img-wrap">
-            <span class="card-tag">Derivatives</span>
-            <img src="assets/marketmaking.svg" alt="Quant Finance" />
+      <!-- Memory Grid -->
+      <a href="memorygrid.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Optiver · SHL</span>
+            <span class="card-badge">Spatial Memory</span>
           </div>
-          <h3>Quant Finance & Greeks</h3>
-          <p>Option Greeks intuition (Delta, Gamma, Vega, Theta), Black-Scholes dynamics, put-call parity arbitrage, and vol smile/skew.</p>
-          <div class="card-footer">
-            <span>Browse Problems</span>
-            <span>→</span>
-          </div>
-        </a>
+          <div class="card-title">Memory Grid</div>
+          <div class="card-desc">Flash spatial recall on dynamic matrix grids. Tracks pattern retention and rotation change recognition.</div>
+        </div>
+        <div class="card-action">Start grid →</div>
+      </a>
 
-        <a href="questions.html" class="card">
-          <div class="card-img-wrap">
-            <span class="card-tag">Brainteasers</span>
-            <img src="assets/sequences.svg" alt="Brainteasers" />
+      <!-- Digits Span -->
+      <a href="pincode.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Citadel · Pymetrics</span>
+            <span class="card-badge">Working Memory</span>
           </div>
-          <h3>Logic & Brainteasers</h3>
-          <p>100 prisoners problem, ants on polygons, coin-weighing logic, optimal stopping, and mental geometry puzzles.</p>
-          <div class="card-footer">
-            <span>Browse Problems</span>
-            <span>→</span>
-          </div>
-        </a>
+          <div class="card-title">Digits Memory Span</div>
+          <div class="card-desc">Forward, reverse, and sorted sequence retention measuring short-term phonological loop and working memory capacity.</div>
+        </div>
+        <div class="card-action">Open trainer →</div>
+      </a>
 
-        <a href="questions.html" class="card">
-          <div class="card-img-wrap">
-            <span class="card-tag">Culture & Mindset</span>
-            <img src="assets/companies.svg" alt="Behavioral Fit" />
+      <!-- Shape Reaction Zap -->
+      <a href="simongame.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Optiver Zap</span>
+            <span class="card-badge">Latency Test</span>
           </div>
-          <h3>Trading Fit & Behavioral</h3>
-          <p>Handling tilt, managing losses, EV process vs outcome bias, and answering "Why trading vs tech or banking?".</p>
-          <div class="card-footer">
-            <span>Browse Frameworks</span>
-            <span>→</span>
+          <div class="card-title">Reaction Speed (Zap)</div>
+          <div class="card-desc">Sub-millisecond visual reaction testing across peripheral vision coordinates with false alarm penalties.</div>
+        </div>
+        <div class="card-action">Test latency →</div>
+      </a>
+
+      <!-- Companies Directory -->
+      <a href="companies.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Hiring Intelligence</span>
+            <span class="card-badge">12 Firms</span>
           </div>
-        </a>
-      </div>
+          <div class="card-title">Company Assessment Profiles</div>
+          <div class="card-desc">Stage-by-stage pipelines, cutoffs, culture profiles, and test formats for Optiver, Jane Street, Citadel, Trafigura, and Vitol.</div>
+        </div>
+        <div class="card-action">View profiles →</div>
+      </a>
+
     </div>
-  </div>
+
+    <!-- COMMODITIES SPOTLIGHT STRIP -->
+    <div class="section-label">Commodities Trading Hub</div>
+    <div class="feature-strip">
+      <div class="feature-content">
+        <h3>Physical & Financial Commodities</h3>
+        <p>In-depth case studies on contango/backwardation storage arbitrage, 3:2:1 crack spreads, clean spark spreads, tanker chartering logistics, and LNG boil-off routing.</p>
+      </div>
+      <a href="questions.html?category=commodities" class="feature-btn">Open Commodities Cases →</a>
+    </div>
+
+    <!-- QUESTION BANKS -->
+    <div class="section-label">Technical Question Banks</div>
+    <div class="grid">
+      <a href="questions.html?category=commodities" class="card">
+        <div>
+          <div class="card-meta"><span class="card-firm">Energy · Metals · Ags</span></div>
+          <div class="card-title">Commodities Economics</div>
+          <div class="card-desc">Cash-and-carry, refinery yields, laytime/demurrage, pipeline differentials, and basis risk.</div>
+        </div>
+        <div class="card-action">Browse 11 cases →</div>
+      </a>
+
+      <a href="questions.html?category=probability" class="card">
+        <div>
+          <div class="card-meta"><span class="card-firm">Probability · Stochastics</span></div>
+          <div class="card-title">Probability & Mathematics</div>
+          <div class="card-desc">Bayes' rule, conditional expectation, stopping times, Markov chains, and random walks.</div>
+        </div>
+        <div class="card-action">Browse questions →</div>
+      </a>
+
+      <a href="questions.html?category=finance" class="card">
+        <div>
+          <div class="card-meta"><span class="card-firm">Derivatives · Volatility</span></div>
+          <div class="card-title">Quant Finance & Greeks</div>
+          <div class="card-desc">Black-Scholes mechanics, Delta-neutral Gamma scalping, put-call parity, and volatility skew.</div>
+        </div>
+        <div class="card-action">Browse questions →</div>
+      </a>
+
+      <a href="questions.html?category=brainteasers" class="card">
+        <div>
+          <div class="card-meta"><span class="card-firm">Logic · Problem Solving</span></div>
+          <div class="card-title">Logic & Brainteasers</div>
+          <div class="card-desc">100 prisoners hat parity, ants on an N-gon, and balance scale optimization.</div>
+        </div>
+        <div class="card-action">Browse questions →</div>
+      </a>
+    </div>
+  </main>
 
   <footer>
-    <p>IQwant — Quantitative & Commodities Trading Interview Preparation Platform. Built for elite candidates aiming for top trading houses.</p>
+    IQwant — Minimalist quantitative assessment simulator. Built for market making and commodity trading preparation.
   </footer>
+
 </body>
 </html>

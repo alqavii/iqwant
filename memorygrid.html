@@ -1,172 +1,448 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IQwant - Memory Grid</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IQwant — Memory Grid & Orientation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baskervville:wght@700&family=DM+Sans:opsz,wght@9..40,100..1000&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #05060a;
-      --glass: rgba(255,255,255,0.08);
-      --primary: #8b5cf6;
-      --primary-strong: #6d28d9;
-      --ok: #22c55e;
-      --bad: #ef4444;
-      --text: #ffffff;
+      --bg: #090a0d;
+      --surface: #101217;
+      --surface-card: #0d0f13;
+      --surface-hover: #15181f;
+      --border: #1b1f27;
+      --border-hover: #2d3340;
+      --text: #ededed;
+      --text-muted: #848b98;
+      --text-dim: #4f5664;
+      --green: #2fa872;
+      --red: #df4a56;
+      --accent: #ededed;
+      --font-mono: 'JetBrains Mono', monospace;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      margin: 0;
-      font-family: 'DM Sans', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(9, 10, 13, 0.85);
+      backdrop-filter: blur(12px);
+    }
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--text); }
+
+    main {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .grid-layout { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 16px;
+      color: var(--text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+    .field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .field-val {
+      font-family: var(--font-mono);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    select, input[type="range"] {
+      width: 100%;
+    }
+
+    select {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 9px 12px;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    select:focus {
+      border-color: var(--border-hover);
+    }
+
+    input[type="range"] {
+      accent-color: #ededed;
+      cursor: pointer;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 9px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      border: 1px solid transparent;
+    }
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+      border: 1px solid var(--text);
+    }
+    .btn-primary:hover {
+      background: #ffffff;
+    }
+    .btn-secondary {
+      background: var(--surface);
+      border-color: var(--border);
+      color: var(--text-muted);
+    }
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--surface-hover);
+      color: var(--text);
+      border-color: var(--border-hover);
+    }
+    .btn-secondary:disabled, .btn-primary:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .hint-box {
+      margin-top: 18px;
+      padding: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Scoreboard */
+    .scoreboard {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .stat-group {
+      display: flex;
+      gap: 20px;
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      margin-bottom: 2px;
+    }
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .mode-pill {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    /* Board Area */
+    .board-stage {
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap: 16px;
+      padding: 16px 0;
     }
-    header { padding: 24px 16px 8px; text-align:center; }
-    header h1 { margin: 0; font-weight: 800; letter-spacing: 0.4px; }
-    .iq { background: linear-gradient(90deg, var(--primary-strong), var(--primary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-    .want { color: #fff; }
 
-    .wrap {
-      width: min(1100px, 92vw);
+    .status-msg {
+      min-height: 24px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      text-align: center;
+    }
+    .status-msg.ok { color: var(--green); }
+    .status-msg.err { color: var(--red); }
+
+    .board {
       display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 20px;
-      padding: 16px 16px 36px;
-    }
-    @media (max-width: 900px) {
-      .wrap { grid-template-columns: 1fr; }
+      gap: 10px;
+      justify-content: center;
+      margin: 10px 0;
     }
 
-    .panel, .board-wrap, .scoreboard { 
-      background: var(--glass);
-      border-radius: 16px;
-      backdrop-filter: blur(25px) saturate(130%);
-      -webkit-backdrop-filter: blur(25px) saturate(130%);
-      box-shadow: 0 0 20px rgba(139,92,246,0.25);
-    }
-
-    .panel { padding: 16px; }
-    .panel h2 { margin: 6px 0 12px; font-size: 1.1rem; opacity: 0.9; }
-    .row { margin: 10px 0; display:flex; align-items: center; justify-content: space-between; gap: 10px; }
-    .row label { font-size: 0.95rem; opacity: 0.9; }
-    select, input[type="range"], button { width: 100%; }
-    select, button { 
-      background: rgba(255,255,255,0.10);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 10px;
-      padding: 10px 12px;
-    }
-    button { cursor: pointer; transition: transform .08s ease, background .2s ease; }
-    button:hover { background: rgba(255,255,255,0.15); }
-    button:active { transform: translateY(1px); }
-    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-    .hint { font-size: 0.85rem; opacity: 0.75; margin-top: 8px; }
-
-    .scoreboard { padding: 12px 16px; display:flex; gap: 16px; align-items: center; justify-content: space-between; }
-    .score { display:flex; gap: 16px; }
-    .score div { background: rgba(255,255,255,0.10); padding: 8px 12px; border-radius: 10px; }
-    .score strong { color: var(--primary); }
-
-    .board-wrap { padding: 16px; display:flex; flex-direction: column; gap: 12px; }
-    .board { display: grid; gap: 8px; align-self: center; }
     .cell {
-      width: 64px; height: 64px; border-radius: 12px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      display:flex; align-items:center; justify-content:center;
-      font-size: 28px; user-select: none; cursor: pointer;
-      transition: background .15s ease, transform .08s ease, border-color .15s ease;
+      width: 64px;
+      height: 64px;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 26px;
+      color: var(--text);
+      user-select: none;
+      cursor: pointer;
+      transition: background 0.12s ease, border-color 0.12s ease, transform 0.08s ease;
     }
-    .cell:active { transform: scale(0.98); }
-    .cell.on { background: rgba(139,92,246,0.25); border-color: rgba(139,92,246,0.5); }
-    .cell.correct { outline: 2px solid var(--ok); }
-    .cell.wrong { outline: 2px solid var(--bad); }
+    .cell:hover {
+      border-color: var(--border-hover);
+      background: var(--surface-hover);
+    }
+    .cell:active {
+      transform: scale(0.96);
+    }
+    .cell.on {
+      background: #181d26;
+      border-color: #3e4859;
+      color: #ffffff;
+    }
+    .cell.correct {
+      background: rgba(47, 168, 114, 0.14) !important;
+      border-color: var(--green) !important;
+      color: var(--green) !important;
+    }
+    .cell.wrong {
+      background: rgba(223, 74, 86, 0.14) !important;
+      border-color: var(--red) !important;
+      color: var(--red) !important;
+    }
 
-    .status { min-height: 22px; font-size: 0.95rem; opacity: 0.9; text-align:center; }
-    .status.ok { color: var(--ok); }
-    .status.err { color: var(--bad); }
+    .legend-text {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-align: center;
+    }
 
-    .legend { font-size: 0.85rem; opacity: 0.7; text-align:center; }
+    .board-actions {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      max-width: 320px;
+      margin-top: 12px;
+    }
+    .board-actions button {
+      flex: 1;
+    }
 
-    .back { position: absolute; left: 12px; top: 12px; }
-    .back a { color: #ddd; text-decoration: none; padding: 8px 10px; border-radius: 10px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); }
+    .info-strip {
+      margin-top: 36px;
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--text-dim);
+      border-radius: 6px;
+      padding: 18px 22px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .info-strip strong { color: var(--text); }
   </style>
 </head>
 <body>
-  <nav style="width:100%; max-width:1150px; padding:16px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); width:100%;">
-    <a href="index.html" style="display:flex; align-items:center; text-decoration:none; font-size:1.6rem; font-weight:800;">
-      <span class="iq">IQ</span><span class="want">want</span>
-    </a>
-    <div style="display:flex; gap:16px; align-items:center;">
-      <a href="index.html" style="color:var(--text); opacity:0.8; text-decoration:none; font-size:0.9rem; font-weight:600;">← All Games</a>
-      <a href="optiver80.html" style="color:var(--text); opacity:0.8; text-decoration:none; font-size:0.9rem; font-weight:600;">80 in 8</a>
-      <a href="balloon.html" style="color:var(--text); opacity:0.8; text-decoration:none; font-size:0.9rem; font-weight:600;">Balloon BART</a>
-      <a href="questions.html" style="color:var(--text); opacity:0.8; text-decoration:none; font-size:0.9rem; font-weight:600;">Questions</a>
-    </div>
-  </nav>
   <header>
-    <h1><span class="iq">IQ</span><span class="want">want</span> - Memory Grid</h1>
+    <div class="nav-container">
+      <a href="index.html" class="brand">IQwant</a>
+      <div class="nav-links">
+        <a href="index.html">← All Modules</a>
+        <a href="optiver80.html">80 in 8</a>
+        <a href="balloon.html">Balloon BART</a>
+        <a href="questions.html">Question Bank</a>
+        <a href="companies.html">Firms</a>
+      </div>
+    </div>
   </header>
 
-  <div class="wrap">
-    <div class="panel">
-      <h2>Setup</h2>
-      <div class="row">
-        <label for="mode">Game Mode</label>
-        <select id="mode">
-          <option value="pattern">Mode 1 - Pattern Recall</option>
-          <option value="odd">Mode 2 - Odd Arrow</option>
-        </select>
+  <main>
+    <div class="eyebrow">Psychometric Spatial Memory &bull; SHL / Pymetrics / Optiver</div>
+    <h1>Memory Grid &amp; Orientation</h1>
+    <p class="lead">Assess visual-spatial recall and rapid directional orientation changes under strict working memory latency constraints.</p>
+
+    <div class="grid-layout">
+      <!-- Config Panel -->
+      <div class="card">
+        <div class="card-title">
+          <span>Configuration</span>
+        </div>
+
+        <div class="field">
+          <label for="mode">Assessment Mode</label>
+          <select id="mode">
+            <option value="pattern">Mode 1 — Spatial Pattern Recall</option>
+            <option value="odd">Mode 2 — Orientation Shift</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="size">Grid Geometry</label>
+          <select id="size">
+            <option value="4">4 &times; 4 (16 cells)</option>
+            <option value="5">5 &times; 5 (25 cells)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="count">Items to Flash: <span class="field-val" id="countLabel">5</span></label>
+          <input id="count" type="range" min="1" max="16" value="5" />
+        </div>
+
+        <div class="field">
+          <label for="flash">Flash Exposure: <span class="field-val" id="flashLabel">1200</span> ms</label>
+          <input id="flash" type="range" min="300" max="3000" step="50" value="1200" />
+        </div>
+
+        <div class="btn-row">
+          <button id="startBtn" class="btn-primary">Start Round</button>
+          <button id="resetScoresBtn" class="btn-secondary" title="Clear saved best scores">Reset Best</button>
+        </div>
+
+        <div class="hint-box" id="hint">Pattern flashes first; then recreate it exactly from visual memory.</div>
       </div>
-      <div class="row">
-        <label for="size">Grid Size</label>
-        <select id="size">
-          <option value="4">4 × 4</option>
-          <option value="5">5 × 5</option>
-        </select>
+
+      <!-- Board Panel -->
+      <div class="card">
+        <div class="scoreboard">
+          <div class="stat-group">
+            <div class="stat-item">
+              <span class="stat-label">Round</span>
+              <span class="stat-value" id="round">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Streak</span>
+              <span class="stat-value" id="score">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Best</span>
+              <span class="stat-value" id="best">0</span>
+            </div>
+          </div>
+          <div class="mode-pill" id="modeLabel">Mode 1</div>
+        </div>
+
+        <div class="board-stage">
+          <div class="status-msg" id="status">Press "Start Round" to begin</div>
+          <div class="board" id="board"></div>
+          <div class="legend-text" id="legend">Click cells to set marks. Submit when ready.</div>
+          <div class="board-actions">
+            <button id="submitBtn" class="btn-primary">Submit</button>
+            <button id="nextBtn" class="btn-secondary" disabled>Next Round</button>
+          </div>
+        </div>
       </div>
-      <div class="row" style="flex-direction:column; align-items:stretch;">
-        <label for="count">Items to flash: <span id="countLabel">5</span></label>
-        <input id="count" type="range" min="1" max="16" value="5" />
-      </div>
-      <div class="row" style="flex-direction:column; align-items:stretch;">
-        <label for="flash">Flash duration: <span id="flashLabel">1200</span> ms</label>
-        <input id="flash" type="range" min="300" max="3000" step="50" value="1200" />
-      </div>
-      <div class="actions">
-        <button id="startBtn">Start Round</button>
-        <button id="resetScoresBtn" title="Clear saved best scores">Reset Scores</button>
-      </div>
-      <div class="hint" id="hint">Pattern flashes first; then recreate it exactly.</div>
     </div>
 
-    <div class="board-wrap">
-      <div class="scoreboard">
-        <div class="score">
-          <div>Round: <strong id="round">0</strong></div>
-          <div>Score: <strong id="score">0</strong></div>
-          <div>Best: <strong id="best">0</strong></div>
-        </div>
-        <div class="modeLabel" id="modeLabel">Mode 1</div>
-      </div>
-      <div class="status" id="status"></div>
-      <div class="board" id="board"></div>
-      <div class="legend" id="legend">Click cells to set crosses. Submit when ready.</div>
-      <div class="actions">
-        <button id="submitBtn">Submit</button>
-        <button id="nextBtn" disabled>Next</button>
-      </div>
+    <div class="info-strip">
+      <strong>Psychometric Assessment Framework:</strong> In quantitative trading recruitment, spatial recall tasks evaluate working memory capacity (Cowan's K and Miller's 7&plusmn;2 bounds) without verbal intermediary encoding. Mode 1 measures pure positional retention under temporal decay. Mode 2 isolates mental rotation and parallel feature comparison, tracking susceptibility to inattentional blindness and lateral visual interference.
     </div>
-  </div>
+  </main>
 
   <script>
     const boardEl = document.getElementById('board');
@@ -194,10 +470,10 @@
     };
 
     let gridSize = 4;
-    let phase = 'idle'; // idle | showing | input | reveal | wait
-    let targetCells = new Set(); // indices for pattern mode
-    let arrowMap = new Map(); // index -> arrowIdx for odd mode
-    let changedIndex = null; // for odd mode
+    let phase = 'idle'; // idle | showing | input | reveal
+    let targetCells = new Set();
+    let arrowMap = new Map();
+    let changedIndex = null;
     let score = 0;
     let round = 0;
     let best = 0;
@@ -246,33 +522,42 @@
     function setModeExplainer() {
       const mode = modeEl.value;
       if (mode === 'pattern') {
-        hintEl.textContent = 'Pattern flashes first; then recreate it exactly.';
-        legendEl.textContent = 'Click cells to set crosses. Submit when ready.';
-        modeLabelEl.textContent = 'Mode 1';
+        hintEl.textContent = 'Pattern flashes first; then recreate it exactly from memory.';
+        legendEl.textContent = 'Click cells to toggle marks. Submit when ready.';
+        modeLabelEl.textContent = 'Mode 1: Pattern';
+        submitBtn.style.display = 'inline-block';
       } else {
-        hintEl.textContent = 'Arrows flash; one direction changes. Find the changed one!';
-        legendEl.textContent = 'Click the single tile that changed direction.';
-        modeLabelEl.textContent = 'Mode 2';
+        hintEl.textContent = 'Arrows flash; one direction changes. Spot and click the changed arrow.';
+        legendEl.textContent = 'Click the single tile whose arrow changed direction.';
+        modeLabelEl.textContent = 'Mode 2: Orientation';
+        submitBtn.style.display = 'none';
       }
       loadBest();
     }
 
-    function clearStatus() { statusEl.textContent = ''; statusEl.className = 'status'; }
-    function setOk(msg) { statusEl.textContent = msg; statusEl.className = 'status ok'; }
-    function setErr(msg) { statusEl.textContent = msg; statusEl.className = 'status err'; }
+    function clearStatus() { statusEl.textContent = ''; statusEl.className = 'status-msg'; }
+    function setOk(msg) { statusEl.textContent = msg; statusEl.className = 'status-msg ok'; }
+    function setErr(msg) { statusEl.textContent = msg; statusEl.className = 'status-msg err'; }
+    function setNeutral(msg) { statusEl.textContent = msg; statusEl.className = 'status-msg'; }
 
     function renderPatternPreview(indices) {
       const cells = boardEl.querySelectorAll('.cell');
       cells.forEach(c => c.textContent = '');
       indices.forEach(i => {
         const cell = cells[i];
-        if (cell) cell.textContent = '\u2715';
+        if (cell) {
+          cell.textContent = '\u2715';
+          cell.classList.add('on');
+        }
       });
     }
 
     function clearBoardVisuals() {
       const cells = boardEl.querySelectorAll('.cell');
-      cells.forEach(c => { c.textContent=''; c.classList.remove('on','correct','wrong'); });
+      cells.forEach(c => {
+        c.textContent = '';
+        c.classList.remove('on', 'correct', 'wrong');
+      });
     }
 
     function onCellClick(e) {
@@ -282,60 +567,64 @@
         e.currentTarget.classList.toggle('on');
         e.currentTarget.textContent = e.currentTarget.classList.contains('on') ? '\u2715' : '';
       } else {
-        // Odd mode — only clickable during reveal/wait to guess changed tile
         if (phase !== 'reveal') return;
         checkOddGuess(idx);
       }
     }
 
     function startRound() {
-      round += 1; roundEl.textContent = round;
+      round += 1;
+      roundEl.textContent = round;
       clearStatus();
       const total = gridSize * gridSize;
       const count = Math.min(parseInt(countEl.value, 10), total);
       const flashMs = parseInt(flashEl.value, 10);
+
       if (modeEl.value === 'pattern') {
-        // pick cells
         const picks = pickUnique(count, total);
         targetCells = new Set(picks);
         phase = 'showing';
         clearBoardVisuals();
         renderPatternPreview(picks);
-        // flash, then clear and wait for input
+        setNeutral('Memorize the pattern...');
+
         setTimeout(() => {
           clearBoardVisuals();
           phase = 'input';
-          setOk('Recreate the pattern, then Submit.');
+          setNeutral('Recreate pattern, then click Submit.');
         }, flashMs);
       } else {
-        // odd mode
         const positions = pickUnique(count, total);
-        arrowMap = new Map(); changedIndex = null;
+        arrowMap = new Map();
+        changedIndex = null;
         positions.forEach(p => arrowMap.set(p, rngInt(ARROWS.length)));
         phase = 'showing';
-        // show arrows initial
+
         const cells = boardEl.querySelectorAll('.cell');
         clearBoardVisuals();
-        positions.forEach(i => { const c = cells[i]; if (c) c.textContent = ARROWS[arrowMap.get(i)]; });
+        positions.forEach(i => {
+          const c = cells[i];
+          if (c) c.textContent = ARROWS[arrowMap.get(i)];
+        });
+        setNeutral('Memorize arrow directions...');
+
         setTimeout(() => {
-          // hide briefly, then show again with one changed
           clearBoardVisuals();
           setTimeout(() => {
             const changePick = positions[rngInt(positions.length)];
             changedIndex = changePick;
-            // choose a new direction different from original
             const orig = arrowMap.get(changePick);
             let newDir = rngInt(ARROWS.length);
             if (newDir === orig) newDir = (newDir + 1) % ARROWS.length;
+
             const cells2 = boardEl.querySelectorAll('.cell');
-            // render all arrows again
             positions.forEach(i => {
               const val = i === changePick ? newDir : arrowMap.get(i);
               const cell = cells2[i];
-              cell.textContent = ARROWS[val];
+              if (cell) cell.textContent = ARROWS[val];
             });
             phase = 'reveal';
-            setOk('One arrow changed direction. Click it!');
+            setNeutral('One arrow changed direction. Click it!');
           }, 350);
         }, flashMs);
       }
@@ -345,32 +634,37 @@
     function submitPattern() {
       if (modeEl.value !== 'pattern' || phase !== 'input') return;
       const cells = boardEl.querySelectorAll('.cell');
-      // collect user on
       const userOn = new Set();
       cells.forEach((c, i) => { if (c.classList.contains('on')) userOn.add(i); });
-      // validate exact match: no extras, no misses
+
       let ok = (userOn.size === targetCells.size);
       if (ok) {
-        for (const i of targetCells) { if (!userOn.has(i)) { ok = false; break; } }
+        for (const i of targetCells) {
+          if (!userOn.has(i)) { ok = false; break; }
+        }
       }
+
       if (!ok) {
-        // reset round and score as per spec: any wrong resets
-        score = 0; scoreEl.textContent = score; saveBest();
-        setErr('Wrong! Round reset. Try again.');
-        // visual feedback
+        score = 0;
+        scoreEl.textContent = score;
+        saveBest();
+        setErr('Incorrect. Streak reset. Click Next Round to try again.');
         cells.forEach((c, i) => {
           if (targetCells.has(i) && !userOn.has(i)) c.classList.add('wrong');
           if (!targetCells.has(i) && userOn.has(i)) c.classList.add('wrong');
         });
         phase = 'idle';
-        nextBtn.disabled = false; // allow trying again
+        nextBtn.disabled = false;
         return;
       }
-      // correct
-      score += 1; scoreEl.textContent = score; saveBest();
-      setOk('Correct!');
-      // mark correct
-      cells.forEach((c, i) => { if (targetCells.has(i)) c.classList.add('correct'); });
+
+      score += 1;
+      scoreEl.textContent = score;
+      saveBest();
+      setOk('Correct pattern!');
+      cells.forEach((c, i) => {
+        if (targetCells.has(i)) c.classList.add('correct');
+      });
       phase = 'idle';
       nextBtn.disabled = false;
     }
@@ -378,12 +672,16 @@
     function checkOddGuess(idx) {
       const cells = boardEl.querySelectorAll('.cell');
       if (idx === changedIndex) {
-        score += 1; scoreEl.textContent = score; saveBest();
-        setOk('Correct! That one changed.');
+        score += 1;
+        scoreEl.textContent = score;
+        saveBest();
+        setOk('Correct! That arrow changed orientation.');
         cells[idx].classList.add('correct');
       } else {
-        score = 0; scoreEl.textContent = score; saveBest();
-        setErr('Nope — that didn\'t change.');
+        score = 0;
+        scoreEl.textContent = score;
+        saveBest();
+        setErr('Incorrect. That arrow remained unchanged.');
         cells[idx].classList.add('wrong');
         if (changedIndex != null) cells[changedIndex].classList.add('correct');
       }
@@ -391,7 +689,7 @@
       nextBtn.disabled = false;
     }
 
-    // Event wiring
+    // Event listeners
     sizeEl.addEventListener('change', () => {
       gridSize = parseInt(sizeEl.value, 10);
       setupBoard();
@@ -400,7 +698,7 @@
     });
     countEl.addEventListener('input', () => { countLabelEl.textContent = countEl.value; });
     flashEl.addEventListener('input', () => { flashLabelEl.textContent = flashEl.value; });
-    modeEl.addEventListener('change', () => { setModeExplainer(); clearBoardVisuals(); });
+    modeEl.addEventListener('change', () => { setModeExplainer(); clearBoardVisuals(); clearStatus(); });
     startBtn.addEventListener('click', () => { startRound(); });
     submitBtn.addEventListener('click', () => { submitPattern(); });
     nextBtn.addEventListener('click', () => { startRound(); });
@@ -408,14 +706,17 @@
       localStorage.removeItem(KEY_BEST.pattern);
       localStorage.removeItem(KEY_BEST.odd);
       loadBest();
-      setOk('Scores reset.');
+      setNeutral('Best scores reset.');
     });
 
-    // Init
+    // Initialize
     setupBoard();
     setCountMax();
     setModeExplainer();
-    round = 0; score = 0; roundEl.textContent = '0'; scoreEl.textContent = '0';
+    round = 0;
+    score = 0;
+    roundEl.textContent = '0';
+    scoreEl.textContent = '0';
   </script>
 </body>
 </html>

@@ -3,119 +3,118 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IQwant - Shape Reaction Speed (Optiver Zap)</title>
+  <title>IQwant — Reaction Speed (Zap)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #05060a;
-      --glass: rgba(255, 255, 255, 0.08);
-      --border: rgba(255, 255, 255, 0.12);
-      --primary: #8b5cf6;
-      --primary-strong: #6d28d9;
-      --accent: #38bdf8;
-      --ok: #22c55e;
-      --bad: #ef4444;
-      --text: #ffffff;
-      --subtext: #94a3b8;
+      --bg: #090a0d;
+      --surface: #101217;
+      --surface-card: #0d0f13;
+      --surface-hover: #15181f;
+      --border: #1b1f27;
+      --border-hover: #2d3340;
+      --text: #ededed;
+      --text-muted: #848b98;
+      --text-dim: #4f5664;
+      --green: #2fa872;
+      --red: #df4a56;
+      --font-mono: 'JetBrains Mono', monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(9, 10, 13, 0.85);
+      backdrop-filter: blur(12px);
+    }
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      position: relative;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at 50% 20%, rgba(245, 158, 11, 0.12), transparent 60%),
-                  radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15), transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    nav {
-      width: 100%;
-      max-width: 1200px;
-      padding: 20px 24px;
-      display: flex;
       justify-content: space-between;
-      align-items: center;
-      position: relative;
-      z-index: 10;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
       text-decoration: none;
-      font-size: 1.8rem;
-      font-weight: 800;
     }
-    .brand .iq {
-      background: linear-gradient(90deg, #a78bfa, #8b5cf6);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .brand .want { color: #fff; }
-    .nav-links { display: flex; gap: 16px; align-items: center; }
-    .nav-links a { color: var(--subtext); text-decoration: none; font-size: 0.95rem; font-weight: 600; }
-    .nav-links a:hover { color: #fff; }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--text); }
 
-    .container {
-      width: min(920px, 94vw);
-      position: relative;
-      z-index: 1;
-      padding: 30px 0 60px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 24px;
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
     }
 
-    .glass-card {
-      background: var(--glass);
+    .panel {
+      background: var(--surface-card);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      backdrop-filter: blur(20px) saturate(140%);
-      -webkit-backdrop-filter: blur(20px) saturate(140%);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(139, 92, 246, 0.15);
+      border-radius: 10px;
       padding: 32px;
-      width: 100%;
       text-align: center;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 4px 14px;
-      background: rgba(245, 158, 11, 0.2);
-      border: 1px solid #f59e0b;
-      border-radius: 30px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #fde68a;
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
     }
 
-    .game-arena {
+    .info-strip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--text-dim);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      text-align: left;
+    }
+    .info-strip strong { color: var(--text); }
+
+    .arena-box {
       position: relative;
-      height: 380px;
-      background: rgba(0,0,0,0.4);
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
+      height: 320px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
       margin: 20px 0;
       overflow: hidden;
       display: flex;
@@ -123,171 +122,174 @@
       justify-content: center;
     }
 
-    .crosshair {
+    .crosshair-v {
       position: absolute;
-      width: 4px;
-      height: 36px;
-      background: rgba(255,255,255,0.4);
-      z-index: 5;
+      width: 2px;
+      height: 24px;
+      background: var(--text-dim);
     }
-    .crosshair::before {
-      content: '';
+    .crosshair-h {
       position: absolute;
-      width: 36px;
-      height: 4px;
-      background: rgba(255,255,255,0.4);
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      width: 24px;
+      height: 2px;
+      background: var(--text-dim);
     }
 
-    .target-shape {
+    .target-elem {
       position: absolute;
-      width: 140px;
-      height: 140px;
+      width: 100px;
+      height: 100px;
       display: none;
-      box-shadow: 0 0 30px rgba(255,255,255,0.3);
-      transition: transform 0.05s ease;
+      border: 1px solid rgba(255,255,255,0.15);
     }
-    .shape-circle { border-radius: 50%; background: #38bdf8; }
-    .shape-square { border-radius: 12px; background: #a855f7; }
+    .shape-circ { border-radius: 50%; background: #405068; }
+    .shape-sq { border-radius: 4px; background: #504868; }
 
-    .game-hud {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      margin-bottom: 16px;
+    .hud-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+      text-align: center;
     }
-    .hud-item { display: flex; flex-direction: column; align-items: center; }
-    .hud-item .title { font-size: 0.75rem; text-transform: uppercase; color: var(--subtext); letter-spacing: 1px; }
-    .hud-item .val { font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 800; }
+    .hud-item .hud-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+    .hud-item .hud-val {
+      font-family: var(--font-mono);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--text);
+    }
 
-    .btn-action {
-      background: linear-gradient(135deg, var(--primary), var(--primary-strong));
-      color: white;
-      font-size: 1.2rem;
-      font-weight: 800;
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--text);
+      color: var(--bg);
+      font-size: 0.95rem;
+      font-weight: 600;
       border: none;
-      border-radius: 14px;
-      padding: 16px 36px;
+      border-radius: 6px;
       cursor: pointer;
-      box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
-      transition: all 0.2s;
+      transition: opacity 0.15s ease;
     }
-    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 0 35px rgba(139, 92, 246, 0.6); }
+    .btn-submit:hover { opacity: 0.9; }
 
-    .control-keys-hint {
+    .keys-strip {
       display: flex;
       justify-content: center;
-      gap: 20px;
+      gap: 12px;
       margin-top: 14px;
     }
     .key-badge {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px;
-      padding: 8px 16px;
-      font-size: 0.9rem;
-      color: #e2e8f0;
-      font-family: 'JetBrains Mono', monospace;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
     }
 
     #endScreen { display: none; }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html" class="brand">
-      <span class="iq">IQ</span><span class="want">want</span>
-    </a>
-    <div class="nav-links">
-      <a href="index.html">← All Games</a>
-      <a href="optiver80.html">80 in 8</a>
-      <a href="switchgame.html">Switch Challenge</a>
-      <a href="questions.html">Question Banks</a>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">IQwant</a>
+      <div class="nav-links">
+        <a href="index.html">← Dashboard</a>
+        <a href="optiver80.html">80 in 8</a>
+        <a href="questions.html">Question Bank</a>
+      </div>
     </div>
-  </nav>
+  </header>
 
-  <div class="container">
-    <div id="setupScreen" class="glass-card">
-      <span class="badge">Visual Reaction Test</span>
-      <h1>Shape Reaction Speed (Optiver Zap)</h1>
-      <p style="color:var(--subtext); max-width:600px; margin: 0 auto 20px; line-height:1.5;">
-        Simulates the Optiver Zap assessment. Shapes flash rapidly on the left or right of the crosshair. Your goal is to react immediately to the shape's side and type.
-      </p>
+  <main>
+    <!-- SETUP -->
+    <div id="setupScreen" class="panel">
+      <div class="eyebrow">Visual Reflex Assessment</div>
+      <h1>Reaction Speed (Optiver Zap)</h1>
+      <p class="lead">Simulates visual stimulus reaction testing. Evaluates peripheral reaction speed, response latency, and false alarm inhibition.</p>
 
-      <div style="background:rgba(0,0,0,0.3); padding:20px; border-radius:14px; margin-bottom:24px; text-align:left; color:var(--subtext); line-height:1.6; border-left:4px solid #f59e0b;">
-        <strong style="color:white;">Instructions:</strong>
-        <ul style="list-style:inside disc; margin-top:8px;">
-          <li>Focus your eyes on the central crosshair.</li>
-          <li>When a shape flashes on the <strong>LEFT</strong>, press <strong>[Left Arrow]</strong> or <strong>[A]</strong>.</li>
-          <li>When a shape flashes on the <strong>RIGHT</strong>, press <strong>[Right Arrow]</strong> or <strong>[D]</strong>.</li>
-          <li>If the shape is a <strong>Circle</strong>, press <strong>[Spacebar]</strong> instead!</li>
-          <li>Test duration: 30 seconds. Speed and sub-300ms reaction times determine score.</li>
-        </ul>
+      <div class="info-strip">
+        <strong>Input Rules:</strong><br>
+        • Focus vision on central crosshair.<br>
+        • If shape appears on <strong>Left</strong>: press <strong>[←] or [A]</strong>.<br>
+        • If shape appears on <strong>Right</strong>: press <strong>[→] or [D]</strong>.<br>
+        • If shape is a <strong>Circle</strong>: press <strong>[Spacebar]</strong>.<br>
+        • Duration: 30 seconds.
       </div>
 
-      <button class="btn-action" onclick="startGame()">Start Reaction Sprint</button>
+      <button class="btn-submit" onclick="startGame()">Start Test</button>
     </div>
 
     <!-- LIVE GAME -->
-    <div id="gameScreen" class="glass-card" style="display:none;">
-      <div class="game-hud">
+    <div id="gameScreen" class="panel" style="display:none;">
+      <div class="hud-bar">
         <div class="hud-item">
-          <span class="title">Score</span>
-          <span class="val" style="color:var(--ok)" id="liveScore">0</span>
+          <div class="hud-label">Score</div>
+          <div class="hud-val" id="liveScore">0</div>
         </div>
         <div class="hud-item">
-          <span class="title">Time Left</span>
-          <span class="val" style="color:var(--accent)" id="liveTimer">30s</span>
+          <div class="hud-label">Time Remaining</div>
+          <div class="hud-val" id="liveTimer">30s</div>
         </div>
         <div class="hud-item">
-          <span class="title">Avg Reaction</span>
-          <span class="val" style="color:var(--primary)" id="liveAvgTime">0 ms</span>
-        </div>
-      </div>
-
-      <div class="game-arena" id="arena">
-        <div class="crosshair"></div>
-        <div id="targetShape" class="target-shape"></div>
-      </div>
-
-      <div class="control-keys-hint">
-        <div class="key-badge">LEFT SHAPE: [←] or [A]</div>
-        <div class="key-badge" style="color:#38bdf8; border-color:#38bdf8;">ANY CIRCLE: [SPACE]</div>
-        <div class="key-badge">RIGHT SHAPE: [→] or [D]</div>
-      </div>
-    </div>
-
-    <!-- END SCREEN -->
-    <div id="endScreen" class="glass-card">
-      <span class="badge">Assessment Result</span>
-      <h1 id="endTitle">Fast Latency Reaction</h1>
-      <p style="color:var(--subtext); margin-bottom:24px;">Summary of your reaction time distribution and accuracy under visual pressure.</p>
-
-      <div class="game-hud" style="justify-content:space-around; margin-bottom:28px;">
-        <div class="hud-item">
-          <span class="title">Accuracy</span>
-          <span class="val" style="color:var(--ok);" id="resAcc">0%</span>
-        </div>
-        <div class="hud-item">
-          <span class="title">Mean Latency</span>
-          <span class="val" style="color:var(--accent);" id="resMeanLatency">0 ms</span>
-        </div>
-        <div class="hud-item">
-          <span class="title">Hits / Total</span>
-          <span class="val" style="color:var(--primary);" id="resHits">0 / 0</span>
+          <div class="hud-label">Mean Latency</div>
+          <div class="hud-val" id="liveAvgTime">0 ms</div>
         </div>
       </div>
 
-      <div style="display:flex; justify-content:center; gap:16px;">
-        <button class="btn-action" style="max-width:240px;" onclick="location.reload()">Try Again</button>
-        <button class="btn-action" style="max-width:240px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2);" onclick="location.href='index.html'">Back to Hub</button>
+      <div class="arena-box">
+        <div class="crosshair-v"></div>
+        <div class="crosshair-h"></div>
+        <div id="targetShape" class="target-elem"></div>
+      </div>
+
+      <div class="keys-strip">
+        <div class="key-badge">LEFT: [← / A]</div>
+        <div class="key-badge">CIRCLE: [SPACE]</div>
+        <div class="key-badge">RIGHT: [→ / D]</div>
       </div>
     </div>
-  </div>
+
+    <!-- END RESULTS -->
+    <div id="endScreen" class="panel">
+      <div class="eyebrow">Session Ended</div>
+      <h1 id="endTitle" style="font-size:1.4rem; margin-bottom:20px;">Latency Profile</h1>
+
+      <div class="hud-bar" style="margin-bottom:28px;">
+        <div class="hud-item">
+          <div class="hud-label">Accuracy</div>
+          <div class="hud-val" id="resAcc">0%</div>
+        </div>
+        <div class="hud-item">
+          <div class="hud-label">Mean Latency</div>
+          <div class="hud-val" id="resMeanLatency">0 ms</div>
+        </div>
+        <div class="hud-item">
+          <div class="hud-label">Hits / Total</div>
+          <div class="hud-val" id="resHits">0 / 0</div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:12px;">
+        <button class="btn-submit" style="max-width:200px;" onclick="location.reload()">Retry Test</button>
+        <button class="btn-submit" style="max-width:200px; background:var(--surface); border:1px solid var(--border-hover); color:var(--text);" onclick="location.href='index.html'">Dashboard</button>
+      </div>
+    </div>
+  </main>
 
   <script>
     let score = 0;
@@ -327,7 +329,7 @@
 
     function scheduleNextShape() {
       if (timeLeft <= 0) return;
-      const delay = Math.floor(Math.random() * 800) + 400; // 400ms - 1200ms
+      const delay = Math.floor(Math.random() * 800) + 400;
       setTimeout(showShape, delay);
     }
 
@@ -336,7 +338,7 @@
       currentSide = Math.random() < 0.5 ? 'left' : 'right';
       currentIsCircle = Math.random() < 0.4;
 
-      shapeEl.className = currentIsCircle ? 'target-shape shape-circle' : 'target-shape shape-square';
+      shapeEl.className = currentIsCircle ? 'target-elem shape-circ' : 'target-elem shape-sq';
       shapeEl.style.left = currentSide === 'left' ? '20%' : '80%';
       shapeEl.style.top = '50%';
       shapeEl.style.transform = 'translate(-50%, -50%)';
@@ -346,7 +348,6 @@
       flashStartTime = Date.now();
       totalShown++;
 
-      // Disappear after 400ms if no response
       setTimeout(() => {
         if (isShapeVisible) {
           isShapeVisible = false;
@@ -354,12 +355,11 @@
           wrongCount++;
           scheduleNextShape();
         }
-      }, 450);
+      }, 420);
     }
 
     function handleInput(key) {
       if (!isShapeVisible) {
-        // False alarm penalty
         score = Math.max(0, score - 5);
         document.getElementById('liveScore').textContent = score;
         return;
@@ -369,12 +369,7 @@
       isShapeVisible = false;
       shapeEl.style.display = 'none';
 
-      let isCorrect = false;
-      if (currentIsCircle) {
-        isCorrect = (key === 'space');
-      } else {
-        isCorrect = (key === currentSide);
-      }
+      let isCorrect = currentIsCircle ? (key === 'space') : (key === currentSide);
 
       if (isCorrect) {
         correctCount++;
@@ -394,11 +389,9 @@
 
     window.addEventListener('keydown', (e) => {
       if (document.getElementById('gameScreen').style.display !== 'block') return;
-      if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
-        handleInput('left');
-      } else if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') {
-        handleInput('right');
-      } else if (e.code === 'Space') {
+      if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') handleInput('left');
+      else if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') handleInput('right');
+      else if (e.code === 'Space') {
         e.preventDefault();
         handleInput('space');
       }
@@ -418,16 +411,8 @@
       document.getElementById('resHits').textContent = `${correctCount} / ${totalShown}`;
 
       const title = document.getElementById('endTitle');
-      if (meanLat < 300 && acc >= 85) {
-        title.textContent = '⚡ Optiver Zap Ready (Top 5% Reflexes)';
-        title.style.color = '#4ade80';
-      } else if (meanLat < 380 && acc >= 70) {
-        title.textContent = 'Solid Reaction Latency';
-        title.style.color = '#38bdf8';
-      } else {
-        title.textContent = 'High Visual Latency / High False Alarm Rate';
-        title.style.color = '#ef4444';
-      }
+      if (meanLat < 300 && acc >= 85) title.textContent = 'High Speed Latency Profile';
+      else title.textContent = 'Session Complete';
     }
   </script>
 </body>

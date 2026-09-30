@@ -3,175 +3,166 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IQwant - Quant & Commodities Question Bank</title>
+  <title>IQwant — Question Bank</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #05060a;
-      --card-bg: rgba(255, 255, 255, 0.05);
-      --glass: rgba(255, 255, 255, 0.07);
-      --border: rgba(255, 255, 255, 0.1);
-      --primary: #8b5cf6;
-      --primary-light: #c084fc;
-      --accent: #38bdf8;
-      --gold: #f59e0b;
-      --green: #22c55e;
-      --red: #ef4444;
-      --text: #ffffff;
-      --subtext: #94a3b8;
+      --bg: #090a0d;
+      --surface: #101217;
+      --surface-card: #0d0f13;
+      --surface-hover: #15181f;
+      --border: #1b1f27;
+      --border-hover: #2d3340;
+      --text: #ededed;
+      --text-muted: #848b98;
+      --text-dim: #4f5664;
+      --accent: #5e6ad2;
+      --green: #2fa872;
+      --red: #df4a56;
+      --amber: #d99036;
+      --font-mono: 'JetBrains Mono', monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(9, 10, 13, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      position: relative;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at 20% 15%, rgba(139, 92, 246, 0.15), transparent 50%),
-                  radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.12), transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    nav {
-      width: 100%;
-      max-width: 1240px;
-      padding: 20px 24px;
-      display: flex;
       justify-content: space-between;
-      align-items: center;
-      position: relative;
-      z-index: 10;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
       text-decoration: none;
-      font-size: 1.8rem;
-      font-weight: 800;
     }
-    .brand .iq {
-      background: linear-gradient(90deg, #a78bfa, #8b5cf6);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .brand .want { color: #fff; }
-    .nav-links { display: flex; gap: 16px; align-items: center; }
-    .nav-links a { color: var(--subtext); text-decoration: none; font-size: 0.95rem; font-weight: 600; }
-    .nav-links a:hover, .nav-links a.active { color: #fff; }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
 
-    .container {
-      width: min(1200px, 94vw);
-      position: relative;
-      z-index: 1;
-      padding: 30px 0 80px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 48px 24px 96px;
     }
 
-    .hero-banner {
-      text-align: center;
-      margin-bottom: 10px;
+    .hero-banner { margin-bottom: 32px; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
     }
-    .hero-banner h1 { font-size: 2.6rem; font-weight: 800; margin-bottom: 8px; }
-    .hero-banner p { color: var(--subtext); font-size: 1.1rem; max-width: 780px; margin: 0 auto; line-height: 1.5; }
+    .hero-banner h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .hero-banner p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
 
-    /* Category Nav Pills */
+    /* Filters row */
     .filter-bar {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin: 16px 0;
+      gap: 8px;
+      margin-bottom: 20px;
     }
     .filter-btn {
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--surface);
       border: 1px solid var(--border);
-      color: var(--subtext);
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-size: 0.9rem;
-      font-weight: 700;
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      transition: all 0.15s ease;
+      font-family: inherit;
     }
-    .filter-btn:hover, .filter-btn.active {
-      background: rgba(139, 92, 246, 0.25);
-      border-color: var(--primary);
-      color: #ffffff;
-      box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    .filter-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--text);
     }
-    .filter-btn.active.commodities {
-      background: rgba(245, 158, 11, 0.25);
-      border-color: var(--gold);
-      box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+    .filter-btn.active {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+      font-weight: 600;
     }
 
-    /* Search & Stats Bar */
     .search-row {
       display: flex;
       gap: 16px;
       align-items: center;
-      background: var(--glass);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px 20px;
-      backdrop-filter: blur(15px);
+      margin-bottom: 24px;
     }
     .search-input {
       flex: 1;
-      background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      color: white;
-      font-size: 0.95rem;
-      padding: 10px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 0.875rem;
+      padding: 10px 14px;
       outline: none;
+      font-family: inherit;
+      transition: border-color 0.15s ease;
     }
-    .search-input:focus { border-color: var(--primary); }
-    .stats-counter { font-size: 0.9rem; color: var(--subtext); white-space: nowrap; }
+    .search-input:focus { border-color: var(--border-hover); }
+    .stats-counter {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
 
-    /* Question Cards List */
     .questions-grid {
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
 
     .q-card {
-      background: var(--glass);
+      background: var(--surface-card);
       border: 1px solid var(--border);
-      border-radius: 18px;
-      backdrop-filter: blur(20px);
-      padding: 24px;
-      transition: all 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+      border-radius: 8px;
+      padding: 22px;
+      transition: border-color 0.15s ease;
     }
     .q-card:hover {
-      border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      border-color: var(--border-hover);
     }
 
     .q-top-row {
@@ -179,173 +170,137 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
+      margin-bottom: 12px;
     }
     .q-badges {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-    .tag {
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .tag-category { background: rgba(139, 92, 246, 0.2); border: 1px solid var(--primary); color: #c084fc; }
-    .tag-comm { background: rgba(245, 158, 11, 0.2); border: 1px solid var(--gold); color: #fbbf24; }
-    .tag-math { background: rgba(56, 189, 248, 0.2); border: 1px solid var(--accent); color: #7dd3fc; }
-    .tag-diff-easy { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
-    .tag-diff-med { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-    .tag-diff-hard { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-    .tag-firm { background: rgba(255, 255, 255, 0.08); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15); }
-
-    .q-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 1.4;
-    }
-    .q-prompt {
-      font-size: 0.98rem;
-      color: #cbd5e1;
-      line-height: 1.6;
-    }
-    .q-prompt strong { color: #f8fafc; }
-    .code-block {
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.9rem;
-      color: #38bdf8;
-      margin: 8px 0;
-      overflow-x: auto;
-    }
-
-    /* Collapsible Solution */
-    .solution-panel {
-      display: none;
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      border-radius: 12px;
-      padding: 18px 20px;
-      margin-top: 10px;
-      color: #e2e8f0;
-      font-size: 0.95rem;
-      line-height: 1.7;
-    }
-    .solution-panel.open { display: block; animation: fadeIn 0.25s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-
-    .solution-title {
-      font-size: 0.9rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--accent);
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
       gap: 6px;
     }
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .tag-diff-hard { color: var(--red); border-color: rgba(223, 74, 86, 0.3); }
+    .tag-diff-med { color: var(--amber); border-color: rgba(217, 144, 54, 0.3); }
+    .tag-diff-easy { color: var(--green); border-color: rgba(47, 168, 114, 0.3); }
+
+    .q-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    .q-prompt {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .q-prompt strong { color: var(--text); }
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      background: rgba(255,255,255,0.06);
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+
+    .solution-panel {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 18px 20px;
+      margin-top: 16px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .solution-panel.open { display: block; }
+    .solution-panel strong { color: var(--text); }
 
     .q-actions {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 6px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255,255,255,0.06);
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
     }
     .btn-toggle-sol {
-      background: rgba(139, 92, 246, 0.15);
-      border: 1px solid var(--primary);
-      color: #c4b5fd;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 700;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s;
+      font-family: var(--font-mono);
+      transition: all 0.15s ease;
     }
     .btn-toggle-sol:hover {
-      background: rgba(139, 92, 246, 0.3);
-      color: #ffffff;
+      border-color: var(--border-hover);
+      color: var(--text);
     }
     .mastered-label {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.85rem;
-      color: var(--subtext);
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
       cursor: pointer;
-      user-select: none;
     }
-    .mastered-label input { accent-color: var(--green); width: 16px; height: 16px; }
-
-    /* Special Spotlight Box for Commodities */
-    .spotlight-box {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(180, 83, 9, 0.05));
-      border: 1px solid rgba(245, 158, 11, 0.4);
-      border-radius: 18px;
-      padding: 24px;
-      margin-bottom: 8px;
-    }
-    .spotlight-box h3 { color: #f59e0b; font-size: 1.3rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-    .spotlight-box p { color: #e2e8f0; font-size: 0.95rem; line-height: 1.6; }
+    .mastered-label input { accent-color: var(--accent); }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html" class="brand">
-      <span class="iq">IQ</span><span class="want">want</span>
-    </a>
-    <div class="nav-links">
-      <a href="index.html">← All Games</a>
-      <a href="optiver80.html">80 in 8</a>
-      <a href="balloon.html">Balloon BART</a>
-      <a href="marketmaking.html">Market Making</a>
-      <a href="companies.html">Company Guides</a>
-    </div>
-  </nav>
 
-  <div class="container">
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">IQwant</a>
+      <div class="nav-links">
+        <a href="index.html">← Dashboard</a>
+        <a href="optiver80.html">80 in 8</a>
+        <a href="companies.html">Firms</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
     <div class="hero-banner">
-      <h1>Quant & Commodities Question Bank</h1>
-      <p>Curated bank of actual interview questions asked across top proprietary trading shops, quantitative hedge funds, and global commodity trading houses.</p>
+      <div class="eyebrow">Interview Library</div>
+      <h1>Technical & Case Study Question Bank</h1>
+      <p>Interview problems and worked trading cases across quantitative derivatives, probability, brainteasers, and physical commodity economics.</p>
     </div>
 
-    <div class="spotlight-box">
-      <h3>🌾 🛢️ Commodities Desk Focus Area</h3>
-      <p>Physical and financial commodity trading interviews (Trafigura, Glencore, Vitol, Gunvor, BP/Shell, Cargill) demand sharp mastery over <strong>forward curve dynamics (contango vs backwardation), cost-of-carry storage arbitrage, crack & spark spreads, physical logistics (Incoterms, demurrage), and seasonal weather demand</strong>. Filter by "Commodities" below to drill these dedicated cases.</p>
-    </div>
-
-    <!-- Filters -->
     <div class="filter-bar">
-      <button class="filter-btn active" onclick="setCategory('all')">All Questions (<span id="countAll">0</span>)</button>
-      <button class="filter-btn commodities" onclick="setCategory('commodities')">🛢️ Commodities (<span id="countComm">0</span>)</button>
-      <button class="filter-btn" onclick="setCategory('probability')">🎲 Probability & Maths (<span id="countProb">0</span>)</button>
-      <button class="filter-btn" onclick="setCategory('finance')">📈 Quant Finance & Greeks (<span id="countFin">0</span>)</button>
-      <button class="filter-btn" onclick="setCategory('brainteasers')">🧩 Logic & Brainteasers (<span id="countBrain">0</span>)</button>
-      <button class="filter-btn" onclick="setCategory('behavioral')">💼 Trading Fit & Behavioral (<span id="countBehav">0</span>)</button>
+      <button class="filter-btn active" onclick="setCategory('all')">All (<span id="countAll">0</span>)</button>
+      <button class="filter-btn" onclick="setCategory('commodities')">Commodities (<span id="countComm">0</span>)</button>
+      <button class="filter-btn" onclick="setCategory('probability')">Probability & Maths (<span id="countProb">0</span>)</button>
+      <button class="filter-btn" onclick="setCategory('finance')">Quant Finance (<span id="countFin">0</span>)</button>
+      <button class="filter-btn" onclick="setCategory('brainteasers')">Brainteasers (<span id="countBrain">0</span>)</button>
+      <button class="filter-btn" onclick="setCategory('behavioral')">Behavioral (<span id="countBehav">0</span>)</button>
     </div>
 
-    <!-- Search & Stats -->
     <div class="search-row">
-      <input type="text" id="searchInput" class="search-input" placeholder="Search by topic, formula, or firm (e.g. 'Trafigura', 'Crack Spread', 'Bayes', 'Contango')..." oninput="filterQuestions()">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search by topic, formula, or company (e.g. 'Trafigura', 'Crack Spread', 'Bayes')..." oninput="filterQuestions()">
       <span class="stats-counter" id="visibleCounter">Showing 0 questions</span>
     </div>
 
-    <!-- Questions Container -->
-    <div class="questions-grid" id="questionsContainer">
-      <!-- Populated via JS -->
-    </div>
-  </div>
+    <div class="questions-grid" id="questionsContainer"></div>
+  </main>
 
   <script>
     const QUESTIONS_DATA = [
@@ -744,7 +699,6 @@ Prisoner 100 has a 50% chance of survival (since their answer transmits parity i
 2. <strong>The Execution:</strong> Explain why you sized the bet appropriately according to Kelly criterion or bankroll management.<br>
 3. <strong>The Loss:</strong> Acknowledge that the negative tail event materialized.<br>
 4. <strong>The Reaction (No Tilt):</strong> Emphasize that you separated the <em>process</em> from the <em>outcome</em>. You didn't double down aggressively to 'chase losses' (tilt), nor did you become paralyzed by fear. You reviewed your assumptions, verified that the model had edge, and maintained disciplined execution.`
-      }
       },
       {
         id: "comm-08",
@@ -887,16 +841,15 @@ $M_{\\text{Total}} = 40,000 + 270,000 = <strong>310,000 tonnes of VLSFO</strong>
       }
 
       container.innerHTML = filtered.map(q => {
-        const catClass = q.category === 'commodities' ? 'tag-comm' : (q.category === 'probability' ? 'tag-math' : 'tag-category');
         const diffClass = q.difficulty === 'easy' ? 'tag-diff-easy' : (q.difficulty === 'medium' ? 'tag-diff-med' : 'tag-diff-hard');
 
         return `
           <div class="q-card" id="${q.id}">
             <div class="q-top-row">
               <div class="q-badges">
-                <span class="tag ${catClass}">${q.category}</span>
+                <span class="tag">${q.category}</span>
                 <span class="tag ${diffClass}">${q.difficulty}</span>
-                ${q.firms.map(f => `<span class="tag tag-firm">${f}</span>`).join('')}
+                ${q.firms.map(f => `<span class="tag">${f}</span>`).join('')}
               </div>
             </div>
 
@@ -904,17 +857,17 @@ $M_{\\text{Total}} = 40,000 + 270,000 = <strong>310,000 tonnes of VLSFO</strong>
             <div class="q-prompt">${q.prompt}</div>
 
             <div class="solution-panel" id="sol-${q.id}">
-              <div class="solution-title">💡 Detailed Technical Solution & Trader Intuition</div>
+              <div style="font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; color:var(--text-dim); margin-bottom:10px; letter-spacing:0.06em;">Technical Solution & Trading Intuition</div>
               <div>${q.solution}</div>
             </div>
 
             <div class="q-actions">
               <button class="btn-toggle-sol" onclick="toggleSolution('${q.id}')">
-                Reveal Solution & Intuition
+                Show solution
               </button>
               <label class="mastered-label">
                 <input type="checkbox" onchange="toggleMastered('${q.id}', this.checked)">
-                Mark Mastered
+                Mark mastered
               </label>
             </div>
           </div>
@@ -927,10 +880,10 @@ $M_{\\text{Total}} = 40,000 + 270,000 = <strong>310,000 tonnes of VLSFO</strong>
       const btn = event.currentTarget;
       if (panel.classList.contains('open')) {
         panel.classList.remove('open');
-        btn.textContent = 'Reveal Solution & Intuition';
+        btn.textContent = 'Show solution';
       } else {
         panel.classList.add('open');
-        btn.textContent = 'Hide Solution';
+        btn.textContent = 'Hide solution';
       }
     }
 

@@ -3,112 +3,118 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IQwant - Trading Companies Assessment Directory</title>
+  <title>IQwant — Company Assessment Profiles</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #05060a;
-      --glass: rgba(255, 255, 255, 0.07);
-      --border: rgba(255, 255, 255, 0.1);
-      --primary: #8b5cf6;
-      --accent: #38bdf8;
-      --gold: #f59e0b;
-      --green: #22c55e;
-      --red: #ef4444;
-      --text: #ffffff;
-      --subtext: #94a3b8;
+      --bg: #090a0d;
+      --surface: #101217;
+      --surface-card: #0d0f13;
+      --surface-hover: #15181f;
+      --border: #1b1f27;
+      --border-hover: #2d3340;
+      --text: #ededed;
+      --text-muted: #848b98;
+      --text-dim: #4f5664;
+      --accent: #5e6ad2;
+      --font-mono: 'JetBrains Mono', monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(9, 10, 13, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      position: relative;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at 15% 15%, rgba(139, 92, 246, 0.15), transparent 60%),
-                  radial-gradient(circle at 85% 85%, rgba(56, 189, 248, 0.12), transparent 60%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    nav {
-      width: 100%;
-      max-width: 1240px;
-      padding: 20px 24px;
-      display: flex;
       justify-content: space-between;
-      align-items: center;
-      position: relative;
-      z-index: 10;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
       text-decoration: none;
-      font-size: 1.8rem;
-      font-weight: 800;
     }
-    .brand .iq {
-      background: linear-gradient(90deg, #a78bfa, #8b5cf6);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .brand .want { color: #fff; }
-    .nav-links { display: flex; gap: 16px; align-items: center; }
-    .nav-links a { color: var(--subtext); text-decoration: none; font-size: 0.95rem; font-weight: 600; }
-    .nav-links a:hover, .nav-links a.active { color: #fff; }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
 
-    .container {
-      width: min(1200px, 94vw);
-      position: relative;
-      z-index: 1;
-      padding: 30px 0 80px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 48px 24px 96px;
     }
 
-    .hero-banner { text-align: center; margin-bottom: 8px; }
-    .hero-banner h1 { font-size: 2.6rem; font-weight: 800; margin-bottom: 8px; }
-    .hero-banner p { color: var(--subtext); font-size: 1.1rem; max-width: 780px; margin: 0 auto; line-height: 1.5; }
+    .hero-banner { margin-bottom: 32px; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .hero-banner h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .hero-banner p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
 
     .filter-tabs {
       display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin: 12px 0;
+      gap: 8px;
+      margin-bottom: 32px;
     }
     .tab-btn {
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--surface);
       border: 1px solid var(--border);
-      color: var(--subtext);
-      padding: 10px 24px;
-      border-radius: 30px;
-      font-size: 0.95rem;
-      font-weight: 700;
+      color: var(--text-muted);
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s;
+      font-family: inherit;
+      transition: all 0.15s ease;
     }
-    .tab-btn:hover, .tab-btn.active {
-      background: rgba(139, 92, 246, 0.25);
-      border-color: var(--primary);
-      color: white;
-      box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    .tab-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--text);
+    }
+    .tab-btn.active {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+      font-weight: 600;
     }
 
     .companies-list {
@@ -118,16 +124,14 @@
     }
 
     .firm-card {
-      background: var(--glass);
+      background: var(--surface-card);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      backdrop-filter: blur(20px);
+      border-radius: 8px;
       padding: 28px;
-      transition: all 0.2s ease;
+      transition: border-color 0.15s ease;
     }
     .firm-card:hover {
-      border-color: rgba(255,255,255,0.2);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      border-color: var(--border-hover);
     }
 
     .firm-header {
@@ -135,84 +139,120 @@
       justify-content: space-between;
       align-items: flex-start;
       flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      gap: 12px;
+      margin-bottom: 20px;
       padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
     }
-    .firm-title-group h2 { font-size: 1.6rem; font-weight: 800; color: white; margin-bottom: 4px; }
-    .firm-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+    .firm-title-group h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .firm-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
     .meta-tag {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      color: #cbd5e1;
-      font-weight: 600;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: var(--text-muted);
     }
 
     .pipeline-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-      margin: 16px 0;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
     }
     .pipeline-stage {
-      background: rgba(0,0,0,0.3);
-      border-radius: 12px;
-      padding: 16px;
-      border-left: 3px solid var(--primary);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
     }
-    .pipeline-stage.comm { border-left-color: var(--gold); }
-    .stage-num { font-size: 0.75rem; text-transform: uppercase; color: var(--subtext); font-weight: 700; margin-bottom: 4px; }
-    .stage-name { font-size: 1rem; font-weight: 700; color: white; margin-bottom: 6px; }
-    .stage-desc { font-size: 0.85rem; color: #94a3b8; line-height: 1.5; }
+    .stage-num {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+    .stage-name {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .stage-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
 
     .firm-details-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 16px;
+      gap: 16px;
     }
-    @media (max-width: 800px) {
+    @media (max-width: 720px) {
       .firm-details-grid { grid-template-columns: 1fr; }
     }
 
     .detail-box {
-      background: rgba(0,0,0,0.25);
-      border-radius: 12px;
-      padding: 16px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
     }
-    .detail-box h4 { font-size: 0.95rem; font-weight: 800; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .detail-box.gold h4 { color: var(--gold); }
-    .detail-box p, .detail-box ul { font-size: 0.9rem; color: #cbd5e1; line-height: 1.6; }
+    .detail-box h4 {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .detail-box p, .detail-box ul {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
     .detail-box ul { list-style: inside disc; }
+    .detail-box strong { color: var(--text); }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html" class="brand">
-      <span class="iq">IQ</span><span class="want">want</span>
-    </a>
-    <div class="nav-links">
-      <a href="index.html">← All Games</a>
-      <a href="optiver80.html">80 in 8</a>
-      <a href="balloon.html">Balloon BART</a>
-      <a href="marketmaking.html">Market Making</a>
-      <a href="questions.html">Question Banks</a>
-    </div>
-  </nav>
 
-  <div class="container">
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">IQwant</a>
+      <div class="nav-links">
+        <a href="index.html">← Dashboard</a>
+        <a href="optiver80.html">80 in 8</a>
+        <a href="questions.html">Question Bank</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
     <div class="hero-banner">
+      <div class="eyebrow">Hiring Intelligence</div>
       <h1>Trading Firm Assessment Directory</h1>
-      <p>Comprehensive breakdown of the exact online tests, gamified cognitive screens, technical interviews, and passing benchmarks across every tier-1 proprietary trading firm, market maker, and global physical commodity house.</p>
+      <p>Screening tests, assessment formats, interview pipelines, and cultural benchmarks across proprietary market makers and physical commodity houses.</p>
     </div>
 
     <div class="filter-tabs">
       <button class="tab-btn active" onclick="filterFirms('all')">All Firms</button>
-      <button class="tab-btn" onclick="filterFirms('market-maker')">Prop & Market Making</button>
+      <button class="tab-btn" onclick="filterFirms('market-maker')">Market Makers & Prop</button>
       <button class="tab-btn" onclick="filterFirms('commodities')">Physical Commodities</button>
     </div>
 
