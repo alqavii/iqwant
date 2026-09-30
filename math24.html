@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>IQwant — Number Box (24 Game)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090a0d;
+      --surface: #101217;
+      --surface-card: #0d0f13;
+      --surface-hover: #15181f;
+      --border: #1b1f27;
+      --border-hover: #2d3340;
+      --text: #ededed;
+      --text-muted: #848b98;
+      --text-dim: #4f5664;
+      --green: #2fa872;
+      --red: #df4a56;
+      --amber: #d99036;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(9, 10, 13, 0.85);
+      backdrop-filter: blur(12px);
+    }
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--text); }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-box {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .stat-val {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .game-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .target-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+    .target-val {
+      font-size: 2.5rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    /* 4 Numbers Display */
+    .numbers-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .num-tile {
+      width: 72px;
+      height: 72px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .num-tile:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-hover);
+    }
+    .num-tile.used {
+      opacity: 0.25;
+      pointer-events: none;
+      border-color: transparent;
+    }
+
+    /* Expression builder box */
+    .expr-box {
+      min-height: 56px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 20px;
+      padding: 0 16px;
+      letter-spacing: 0.05em;
+    }
+
+    /* Keypad */
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      max-width: 440px;
+      margin: 0 auto 24px;
+    }
+    .key-btn {
+      padding: 12px 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .key-btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-hover);
+    }
+
+    .action-row {
+      display: flex;
+      gap: 12px;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    .btn-submit {
+      flex: 2;
+      background: var(--text);
+      color: var(--bg);
+      border: 1px solid var(--text);
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-submit:hover { background: #ffffff; }
+
+    .btn-aux {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-aux:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+
+    .feedback-msg {
+      margin-top: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      min-height: 24px;
+    }
+    .feedback-msg.ok { color: var(--green); }
+    .feedback-msg.err { color: var(--red); }
+
+    .solution-hint {
+      margin-top: 24px;
+      padding: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: none;
+    }
+    .solution-hint.active { display: block; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">IQwant</a>
+      <div class="nav-links">
+        <a href="index.html">← All Modules</a>
+        <a href="optiver80.html">80 in 8</a>
+        <a href="beattheodds.html">Beat the Odds</a>
+        <a href="calibration.html">Calibration</a>
+        <a href="questions.html">Question Bank</a>
+        <a href="companies.html">Firms</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="eyebrow">Arithmetic Agility &bull; Optiver Zap-N Number Box / Akuna</div>
+    <h1>Number Box: Make 24</h1>
+    <p class="lead">Use all 4 numbers exactly once with arithmetic operations (+, −, ×, ÷) and brackets to make the target 24. Standard test in Optiver cognitive assessments.</p>
+
+    <div class="stat-strip">
+      <div class="stat-box">
+        <div class="stat-label">Solved</div>
+        <div class="stat-val" id="dispSolved">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Streak</div>
+        <div class="stat-val" id="dispStreak">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Timer</div>
+        <div class="stat-val" id="dispTimer">0.0s</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Avg Time</div>
+        <div class="stat-val" id="dispAvg">--</div>
+      </div>
+    </div>
+
+    <div class="game-card">
+      <div class="target-badge">Target Result</div>
+      <div class="target-val">24</div>
+
+      <div class="numbers-row" id="numbersContainer"></div>
+
+      <div class="expr-box" id="exprBox">Click numbers and operators...</div>
+
+      <div class="keypad">
+        <button class="key-btn" onclick="addToken('+')">+</button>
+        <button class="key-btn" onclick="addToken('-')">−</button>
+        <button class="key-btn" onclick="addToken('*')">×</button>
+        <button class="key-btn" onclick="addToken('/')">÷</button>
+        <button class="key-btn" onclick="addToken('(')">(</button>
+        <button class="key-btn" onclick="addToken(')')">)</button>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-submit" onclick="submitExpr()">Evaluate Expression</button>
+        <button class="btn-aux" onclick="clearExpr()">Clear</button>
+        <button class="btn-aux" onclick="giveUpAndShow()">Show Solution</button>
+        <button class="btn-aux" onclick="nextPuzzle()">Skip</button>
+      </div>
+
+      <div class="feedback-msg" id="feedbackMsg"></div>
+      <div class="solution-hint" id="solutionHint"></div>
+    </div>
+  </main>
+
+  <script>
+    // Valid 24-game card decks
+    const PUZZLES = [
+      [3, 8, 3, 3], // 8 / (3 - 8/3) is for 3,3,8,8. For 3,3,3,8: (3 + 3/3)*8 = 32 or (3 + 3)*3 + 8 = 26 or (3*3 - 3)*? wait:
+      [1, 5, 5, 5], // (5 - 1/5) * 5
+      [3, 3, 8, 8], // 8 / (3 - 8/3)
+      [4, 1, 8, 7], // (8 - 4) * (7 - 1)
+      [6, 4, 3, 2], // (6 - 2) * (4 + 3) = 28. Or 6 * (4 - (3 - 2)) = 18. Or 6 * 4 / (3 - 2) = 24
+      [2, 7, 7, 10], // (7 * 7 - 1) / 2
+      [5, 5, 7, 11], // (5 * 7 - 11) - ?
+      [4, 4, 10, 10], // (10 * 10 - 4) / 4
+      [2, 8, 8, 8], // (8 + 8) * (8 - 2)
+      [3, 5, 7, 9], // (7 - 5) * 9 + 3
+      [1, 4, 5, 6], // 4 / (1 - 5/6)
+      [2, 3, 4, 6], // 6 * 4 * (3 - 2)
+      [1, 3, 4, 6], // 6 / (1 - 3/4)
+      [2, 4, 10, 10], // (10 - 2) * 10 / 4 ? Wait: (10 + 2) * (10 / 4) = 12 * 2.5 = 30. (10 + 10) + 4 = 24
+      [3, 4, 6, 8]  // (8 - 6) * 3 * 4 = 24
+    ];
+
+    let currentPuzzle = [];
+    let usedIndices = new Set();
+    let tokens = [];
+    let solvedCount = 0;
+    let streak = 0;
+    let solveTimes = [];
+    let timerStart = Date.now();
+    let timerInterval = null;
+
+    function initPuzzle() {
+      // Pick random puzzle that is guaranteed solvable
+      currentPuzzle = PUZZLES[Math.floor(Math.random() * PUZZLES.length)];
+      usedIndices.clear();
+      tokens = [];
+      document.getElementById('solutionHint').classList.remove('active');
+      document.getElementById('feedbackMsg').textContent = '';
+      renderNumbers();
+      renderExpr();
+
+      timerStart = Date.now();
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 100);
+    }
+
+    function updateTimer() {
+      const elapsed = (Date.now() - timerStart) / 1000;
+      document.getElementById('dispTimer').textContent = elapsed.toFixed(1) + 's';
+    }
+
+    function renderNumbers() {
+      const c = document.getElementById('numbersContainer');
+      c.innerHTML = currentPuzzle.map((n, i) => `
+        <div class="num-tile ${usedIndices.has(i) ? 'used' : ''}" onclick="useNumber(${i})">${n}</div>
+      `).join('');
+    }
+
+    function renderExpr() {
+      const b = document.getElementById('exprBox');
+      if (tokens.length === 0) {
+        b.textContent = 'Click numbers and operators...';
+        b.style.opacity = '0.5';
+      } else {
+        b.textContent = tokens.map(t => {
+          if (t === '*') return '×';
+          if (t === '/') return '÷';
+          return t;
+        }).join(' ');
+        b.style.opacity = '1';
+      }
+    }
+
+    function useNumber(idx) {
+      if (usedIndices.has(idx)) return;
+      usedIndices.add(idx);
+      tokens.push(currentPuzzle[idx]);
+      renderNumbers();
+      renderExpr();
+    }
+
+    function addToken(tok) {
+      tokens.push(tok);
+      renderExpr();
+    }
+
+    function clearExpr() {
+      usedIndices.clear();
+      tokens = [];
+      document.getElementById('feedbackMsg').textContent = '';
+      renderNumbers();
+      renderExpr();
+    }
+
+    function submitExpr() {
+      const fb = document.getElementById('feedbackMsg');
+
+      if (usedIndices.size !== 4) {
+        fb.className = 'feedback-msg err';
+        fb.textContent = `You must use all 4 numbers! (Used ${usedIndices.size} of 4)`;
+        return;
+      }
+
+      const exprStr = tokens.join('');
+      // Securely evaluate standard arithmetic expression
+      try {
+        // Only allow digits and operators
+        if (!/^[0-9+\-*/().\s]+$/.test(exprStr)) throw new Error("Invalid characters");
+        const res = Function(`'use strict'; return (${exprStr})`)();
+
+        if (Math.abs(res - 24) < 1e-5) {
+          fb.className = 'feedback-msg ok';
+          fb.textContent = `✓ Correct! Result = 24.`;
+          solvedCount++;
+          streak++;
+          const duration = (Date.now() - timerStart) / 1000;
+          solveTimes.push(duration);
+
+          document.getElementById('dispSolved').textContent = solvedCount;
+          document.getElementById('dispStreak').textContent = streak;
+          const avg = (solveTimes.reduce((a, b) => a + b, 0) / solveTimes.length).toFixed(1);
+          document.getElementById('dispAvg').textContent = avg + 's';
+
+          setTimeout(initPuzzle, 1000);
+        } else {
+          fb.className = 'feedback-msg err';
+          fb.textContent = `✗ Result is ${Number(res.toFixed(2))}, not 24. Try adjusting brackets.`;
+        }
+      } catch (e) {
+        fb.className = 'feedback-msg err';
+        fb.textContent = `Invalid syntax: check mismatched parentheses or missing operators.`;
+      }
+    }
+
+    // Comprehensive 24 Solver
+    function solve24(nums) {
+      const ops = ['+', '-', '*', '/'];
+      function* permutations(arr) {
+        if (arr.length <= 1) yield arr;
+        else {
+          for (let i = 0; i < arr.length; i++) {
+            const rest = [...arr.slice(0, i), ...arr.slice(i + 1)];
+            for (const p of permutations(rest)) yield [arr[i], ...p];
+          }
+        }
+      }
+
+      for (const p of permutations(nums)) {
+        const [a, b, c, d] = p;
+        for (const op1 of ops) {
+          for (const op2 of ops) {
+            for (const op3 of ops) {
+              const forms = [
+                `(${a}${op1}${b})${op2}(${c}${op3}${d})`,
+                `((${a}${op1}${b})${op2}${c})${op3}${d}`,
+                `(${a}${op1}(${b}${op2}${c}))${op3}${d}`,
+                `${a}${op1}((${b}${op2}${c})${op3}${d})`,
+                `${a}${op1}(${b}${op2}(${c}${op3}${d}))`
+              ];
+              for (const f of forms) {
+                try {
+                  const val = Function(`'use strict'; return (${f})`)();
+                  if (Math.abs(val - 24) < 1e-5) {
+                    return f.replace(/\*/g, ' × ').replace(/\//g, ' ÷ ').replace(/\+/g, ' + ').replace(/-/g, ' − ');
+                  }
+                } catch(e) {}
+              }
+            }
+          }
+        }
+      }
+      return null;
+    }
+
+    function giveUpAndShow() {
+      streak = 0;
+      document.getElementById('dispStreak').textContent = 0;
+      const sol = solve24(currentPuzzle);
+      const hintEl = document.getElementById('solutionHint');
+      hintEl.classList.add('active');
+      hintEl.innerHTML = `<strong>A Valid Solution:</strong> <code>${sol || "No simple integer solution"} = 24</code>`;
+    }
+
+    function nextPuzzle() {
+      streak = 0;
+      document.getElementById('dispStreak').textContent = 0;
+      initPuzzle();
+    }
+
+    initPuzzle();
+  </script>
+</body>
+</html>

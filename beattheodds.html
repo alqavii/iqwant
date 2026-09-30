@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>IQwant — Beat the Odds & Kelly Betting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090a0d;
+      --surface: #101217;
+      --surface-card: #0d0f13;
+      --surface-hover: #15181f;
+      --border: #1b1f27;
+      --border-hover: #2d3340;
+      --text: #ededed;
+      --text-muted: #848b98;
+      --text-dim: #4f5664;
+      --green: #2fa872;
+      --red: #df4a56;
+      --amber: #d99036;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(9, 10, 13, 0.85);
+      backdrop-filter: blur(12px);
+    }
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--text); }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .info-strip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--text-dim);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .info-strip strong { color: var(--text); }
+
+    /* Dashboard Bar */
+    .dashboard-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 600px) {
+      .dashboard-bar { grid-template-columns: 1fr 1fr; }
+    }
+    .dash-box {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .dash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+    .dash-val {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* Game Stage */
+    .game-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .round-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .round-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .odds-display {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 500px) {
+      .odds-display { grid-template-columns: 1fr; }
+    }
+
+    .odds-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+    }
+    .odds-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .odds-val {
+      font-family: var(--font-mono);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .wager-controls {
+      margin-bottom: 24px;
+    }
+    .wager-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .wager-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .wager-amount {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #ededed;
+      cursor: pointer;
+    }
+
+    .quick-pcts {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .quick-btn {
+      flex: 1;
+      padding: 6px 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .quick-btn:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+      border-color: var(--border-hover);
+    }
+
+    .action-btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    button.btn-bet {
+      background: var(--text);
+      color: var(--bg);
+      border: 1px solid var(--text);
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    button.btn-bet:hover { background: #ffffff; }
+
+    button.btn-skip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    button.btn-skip:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+      border-color: var(--border-hover);
+    }
+
+    /* Outcome Animation Box */
+    .outcome-box {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      display: none;
+    }
+    .outcome-box.win {
+      display: block;
+      background: rgba(47, 168, 114, 0.12);
+      border: 1px solid var(--green);
+      color: var(--green);
+    }
+    .outcome-box.loss {
+      display: block;
+      background: rgba(223, 74, 86, 0.12);
+      border: 1px solid var(--red);
+      color: var(--red);
+    }
+    .outcome-box.skip {
+      display: block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    /* Report Card */
+    .report-card {
+      display: none;
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+    }
+    .report-card.active { display: block; }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+    @media (max-width: 600px) {
+      .report-grid { grid-template-columns: 1fr; }
+    }
+
+    .report-metric {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">IQwant</a>
+      <div class="nav-links">
+        <a href="index.html">← All Modules</a>
+        <a href="optiver80.html">80 in 8</a>
+        <a href="marketmaking.html">Market Making</a>
+        <a href="calibration.html">Calibration</a>
+        <a href="questions.html">Question Bank</a>
+        <a href="companies.html">Firms</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="eyebrow">Risk Allocation &bull; Optiver "Beat the Odds" Assessment</div>
+    <h1>Beat the Odds: Kelly Criterion Simulator</h1>
+    <p class="lead">Simulate sequential risk-taking across 20 stochastic bets. Quant interviewers test whether you maximize geometric bankroll growth while strictly avoiding ruin.</p>
+
+    <div class="info-strip">
+      <strong>The Mathematical Law:</strong> The optimal fraction $f^*$ to wager on a bet with win probability $p$ and payout odds $b$ (to 1) is given by the <strong>Kelly Criterion</strong>:
+      <code>f^* = \frac{b \cdot p - q}{b}</code> where $q = 1 - p$. Betting more than $f^*$ (over-betting) decreases your long-term growth and exponentially accelerates drawdown risk. Betting on negative EV ($b \cdot p < q$) is an immediate fail.
+    </div>
+
+    <!-- Live Metrics -->
+    <div class="dashboard-bar">
+      <div class="dash-box">
+        <div class="dash-label">Bankroll</div>
+        <div class="dash-val" id="dispBankroll">$1,000.00</div>
+      </div>
+      <div class="dash-box">
+        <div class="dash-label">Round</div>
+        <div class="dash-val" id="dispRound">1 / 20</div>
+      </div>
+      <div class="dash-box">
+        <div class="dash-label">Peak Capital</div>
+        <div class="dash-val" id="dispPeak">$1,000.00</div>
+      </div>
+      <div class="dash-box">
+        <div class="dash-label">Max Drawdown</div>
+        <div class="dash-val" id="dispDrawdown">0.0%</div>
+      </div>
+    </div>
+
+    <!-- Active Round Card -->
+    <div class="game-card" id="gameCard">
+      <div class="round-header">
+        <span class="round-tag" id="roundTag">Wager 1 of 20</span>
+        <span class="round-tag" id="evTag" style="font-weight:600;">Calculating EV...</span>
+      </div>
+
+      <div class="odds-display">
+        <div class="odds-item">
+          <div class="odds-label">Win Probability ($p$)</div>
+          <div class="odds-val" id="dispProb">60.0%</div>
+        </div>
+        <div class="odds-item">
+          <div class="odds-label">Payout Odds ($b : 1$)</div>
+          <div class="odds-val" id="dispOdds">1.20 : 1</div>
+        </div>
+      </div>
+
+      <div class="wager-controls">
+        <div class="wager-header">
+          <span class="wager-label">Wager Amount:</span>
+          <span class="wager-amount" id="dispWager">$0.00 (0.0%)</span>
+        </div>
+        <input type="range" id="wagerSlider" min="0" max="100" value="0" step="1" oninput="updateWager()" />
+        <div class="quick-pcts">
+          <button class="quick-btn" onclick="setPct(0)">0%</button>
+          <button class="quick-btn" onclick="setPct(10)">10%</button>
+          <button class="quick-btn" onclick="setPct(20)">20%</button>
+          <button class="quick-btn" onclick="setPct(25)">25%</button>
+          <button class="quick-btn" onclick="setPct(50)">50%</button>
+          <button class="quick-btn" onclick="setPct(100)">100% (All-In)</button>
+        </div>
+      </div>
+
+      <div class="action-btn-row">
+        <button class="btn-bet" onclick="placeBet()">Place Wager</button>
+        <button class="btn-skip" onclick="skipBet()">Skip Bet (Wager $0)</button>
+      </div>
+
+      <div class="outcome-box" id="outcomeBox"></div>
+    </div>
+
+    <!-- Final Evaluation Report -->
+    <div class="report-card" id="reportCard">
+      <div class="eyebrow">Assessment Performance Audit</div>
+      <h2 style="font-size:1.45rem; font-weight:700; margin-bottom:6px;">Trading Capital Report</h2>
+      <p style="color:var(--text-muted); font-size:0.9rem;">Diagnostic analysis of your sizing strategy against the theoretical Kelly curve.</p>
+
+      <div class="report-grid">
+        <div class="report-metric">
+          <div class="dash-label">Final Bankroll</div>
+          <div class="dash-val" id="repFinal" style="color:var(--text);">$0.00</div>
+        </div>
+        <div class="report-metric">
+          <div class="dash-label">Theoretical Kelly Peak</div>
+          <div class="dash-val" id="repKelly" style="color:var(--green);">$0.00</div>
+        </div>
+        <div class="report-metric">
+          <div class="dash-label">EV Extraction Efficiency</div>
+          <div class="dash-val" id="repEfficiency">--</div>
+        </div>
+      </div>
+
+      <div class="info-strip" id="repAnalysis"></div>
+
+      <div style="text-align:center; margin-top:24px;">
+        <button class="btn-bet" style="max-width:240px;" onclick="resetGame()">Play Again</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let bankroll = 1000.0;
+    let peakBankroll = 1000.0;
+    let maxDrawdown = 0.0;
+    let currentRound = 0;
+    const TOTAL_ROUNDS = 20;
+
+    let roundsData = [];
+    let historyLog = [];
+
+    function generateRounds() {
+      roundsData = [];
+      for (let i = 0; i < TOTAL_ROUNDS; i++) {
+        // Generate diverse probability and payout scenarios
+        const isTrap = (Math.random() < 0.25); // 25% negative EV trap bets
+        let p, b;
+        if (isTrap) {
+          // Negative EV: e.g. p = 40%, b = 1.0 (EV = -0.20)
+          p = 0.35 + Math.random() * 0.15;
+          b = 0.8 + Math.random() * 0.4;
+        } else {
+          // Positive EV
+          p = 0.52 + Math.random() * 0.25; // 52% to 77%
+          b = 0.9 + Math.random() * 0.8;  // 0.9 to 1.7
+        }
+        p = Math.round(p * 100) / 100;
+        b = Math.round(b * 100) / 100;
+        roundsData.push({ p, b });
+      }
+    }
+
+    function initGame() {
+      bankroll = 1000.0;
+      peakBankroll = 1000.0;
+      maxDrawdown = 0.0;
+      currentRound = 0;
+      historyLog = [];
+      generateRounds();
+
+      document.getElementById('gameCard').style.display = 'block';
+      document.getElementById('reportCard').classList.remove('active');
+      document.getElementById('outcomeBox').className = 'outcome-box';
+      document.getElementById('outcomeBox').style.display = 'none';
+
+      updateDashboard();
+      renderRound();
+    }
+
+    function updateDashboard() {
+      document.getElementById('dispBankroll').textContent = `$${bankroll.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('dispRound').textContent = `${currentRound + 1} / ${TOTAL_ROUNDS}`;
+      document.getElementById('dispPeak').textContent = `$${peakBankroll.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('dispDrawdown').textContent = `${(maxDrawdown * 100).toFixed(1)}%`;
+    }
+
+    function renderRound() {
+      if (currentRound >= TOTAL_ROUNDS || bankroll <= 0.5) {
+        endGame();
+        return;
+      }
+
+      const r = roundsData[currentRound];
+      const ev = (r.p * r.b) - (1 - r.p);
+      const kelly = Math.max(0, (r.b * r.p - (1 - r.p)) / r.b);
+
+      document.getElementById('roundTag').textContent = `Wager ${currentRound + 1} of ${TOTAL_ROUNDS}`;
+      document.getElementById('dispProb').textContent = `${(r.p * 100).toFixed(0)}%`;
+      document.getElementById('dispOdds').textContent = `${r.b.toFixed(2)} : 1`;
+
+      const evEl = document.getElementById('evTag');
+      if (ev > 0) {
+        evEl.textContent = `Expected Value: +${(ev * 100).toFixed(1)}% (Kelly: ${(kelly * 100).toFixed(1)}%)`;
+        evEl.style.color = 'var(--green)';
+      } else {
+        evEl.textContent = `Expected Value: ${(ev * 100).toFixed(1)}% (Negative EV)`;
+        evEl.style.color = 'var(--red)';
+      }
+
+      // Reset slider
+      document.getElementById('wagerSlider').value = 0;
+      updateWager();
+    }
+
+    function setPct(pct) {
+      document.getElementById('wagerSlider').value = pct;
+      updateWager();
+    }
+
+    function updateWager() {
+      const pct = parseFloat(document.getElementById('wagerSlider').value);
+      const amount = (bankroll * (pct / 100));
+      document.getElementById('dispWager').textContent = `$${amount.toFixed(2)} (${pct.toFixed(0)}%)`;
+    }
+
+    function placeBet() {
+      const pct = parseFloat(document.getElementById('wagerSlider').value);
+      executeWager(pct / 100);
+    }
+
+    function skipBet() {
+      executeWager(0.0);
+    }
+
+    function executeWager(fraction) {
+      const r = roundsData[currentRound];
+      const wagerAmt = bankroll * fraction;
+      const kellyFrac = Math.max(0, (r.b * r.p - (1 - r.p)) / r.b);
+      const ev = (r.p * r.b) - (1 - r.p);
+
+      let won = false;
+      let netChange = 0;
+
+      if (fraction > 0) {
+        won = (Math.random() < r.p);
+        if (won) {
+          netChange = wagerAmt * r.b;
+          bankroll += netChange;
+        } else {
+          netChange = -wagerAmt;
+          bankroll -= wagerAmt;
+        }
+      }
+
+      // Update peak and drawdown
+      if (bankroll > peakBankroll) peakBankroll = bankroll;
+      const dd = (peakBankroll - bankroll) / peakBankroll;
+      if (dd > maxDrawdown) maxDrawdown = dd;
+
+      historyLog.push({
+        round: currentRound + 1,
+        p: r.p,
+        b: r.b,
+        ev: ev,
+        fraction: fraction,
+        kelly: kellyFrac,
+        wagerAmt: wagerAmt,
+        won: won,
+        netChange: netChange,
+        endBankroll: bankroll
+      });
+
+      const outcomeBox = document.getElementById('outcomeBox');
+      if (fraction === 0) {
+        outcomeBox.className = 'outcome-box skip';
+        outcomeBox.textContent = `Skipped wager. Bankroll preserved at $${bankroll.toFixed(2)}.`;
+      } else if (won) {
+        outcomeBox.className = 'outcome-box win';
+        outcomeBox.textContent = `✓ WIN: Outcome hit! Won +$${netChange.toFixed(2)}. New Bankroll: $${bankroll.toFixed(2)}.`;
+      } else {
+        outcomeBox.className = 'outcome-box loss';
+        outcomeBox.textContent = `✗ LOSS: Outcome missed. Lost -$${wagerAmt.toFixed(2)}. New Bankroll: $${bankroll.toFixed(2)}.`;
+      }
+
+      updateDashboard();
+      currentRound++;
+
+      if (currentRound < TOTAL_ROUNDS && bankroll > 0.5) {
+        setTimeout(() => {
+          outcomeBox.style.display = 'none';
+          renderRound();
+        }, 1200);
+      } else {
+        setTimeout(endGame, 1200);
+      }
+    }
+
+    function endGame() {
+      document.getElementById('gameCard').style.display = 'none';
+      const rep = document.getElementById('reportCard');
+      rep.classList.add('active');
+
+      document.getElementById('repFinal').textContent = `$${bankroll.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+      // Calculate theoretical Kelly compound benchmark
+      let theoretical = 1000.0;
+      historyLog.forEach(h => {
+        if (h.kelly > 0) {
+          const w = h.kelly * theoretical;
+          if (h.won) theoretical += w * h.b;
+          else theoretical -= w;
+        }
+      });
+      document.getElementById('repKelly').textContent = `$${theoretical.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+      // EV extraction efficiency
+      let actualEVWagered = 0;
+      let optimalEVWagered = 0;
+      let overbetCount = 0;
+      let negEvBets = 0;
+
+      historyLog.forEach(h => {
+        if (h.ev > 0) {
+          actualEVWagered += h.fraction;
+          optimalEVWagered += h.kelly;
+          if (h.fraction > h.kelly * 1.5) overbetCount++;
+        } else {
+          if (h.fraction > 0) negEvBets++;
+        }
+      });
+
+      const efficiency = optimalEVWagered > 0 ? Math.min(100, Math.round((actualEVWagered / optimalEVWagered) * 100)) : 100;
+      document.getElementById('repEfficiency').textContent = `${efficiency}%`;
+
+      const analysisEl = document.getElementById('repAnalysis');
+      let notes = [];
+
+      if (bankroll <= 5) {
+        notes.push(`<strong>Ruin Event:</strong> You experienced complete capital liquidation. In market making, bankroll extinction terminates trading privileges permanently.`);
+      } else if (bankroll > 1000) {
+        notes.push(`<strong>Profitable Execution:</strong> You grew capital from $1,000 to $${bankroll.toFixed(2)} (+${(((bankroll-1000)/1000)*100).toFixed(1)}%).`);
+      } else {
+        notes.push(`<strong>Capital Preservation:</strong> Finished with $${bankroll.toFixed(2)}. Downside was limited, but positive expected value was left on the table.`);
+      }
+
+      if (negEvBets > 0) {
+        notes.push(`<strong>Negative EV Leak:</strong> You placed wagers on ${negEvBets} round(s) with negative expected value. Optiver screeners filter out candidates who trade negative expectation.`);
+      } else {
+        notes.push(`<strong>Disciplined Game Selection:</strong> You successfully avoided all negative EV trap wagers.`);
+      }
+
+      if (overbetCount > 2) {
+        notes.push(`<strong>Over-betting Tendency:</strong> On ${overbetCount} rounds, your bet size significantly exceeded the optimal Kelly fraction ($f^*$). Over-betting increases geometric decay and drastically inflates max drawdown.`);
+      }
+
+      analysisEl.innerHTML = notes.join('<br><br>');
+    }
+
+    function resetGame() {
+      initGame();
+    }
+
+    initGame();
+  </script>
+</body>
+</html>

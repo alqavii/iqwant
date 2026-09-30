@@ -776,6 +776,368 @@ $M_{\\text{Total}} = 40,000 + 270,000 = <strong>310,000 tonnes of VLSFO</strong>
 • <em>Notice:</em> $182.9M - $210.8M = <strong>-$27.9M Loss!</strong><br>
 <strong>Key Trading Takeaway:</strong> Diluting 3.2% HSFO all the way down to 0.5% with expensive 0.1% gasoil is uneconomic when the gasoil-fueloil crack is wide. Successful blending desks instead use sweet vacuum gas oil (VGO) or low-sulfur straight-run (LSSR) atmospheric residue with low viscosity to optimize margin.`
       }
+,
+      {
+      "id": "comm-12",
+      "category": "commodities",
+      "difficulty": "hard",
+      "firms": [
+            "Trafigura",
+            "Vitol",
+            "BP Trading"
+      ],
+      "title": "Permian Pipeline Bottlenecks, Prorationing & WTI Midland Basis Blowout",
+      "prompt": "In 2018, crude production in the Permian Basin surged past 3.2 million bbl/day, while total regional outbound pipeline takeaway capacity to the Gulf Coast was only 2.8 million bbl/day.<br>\nPipelines instituted <strong>prorationing</strong>, and rail takeaway was limited.<br>\n<strong>Question:</strong> Explain why the WTI Midland vs. WTI Cushing basis spread blew out to an unprecedented <strong>-$17.00/bbl discount</strong>. What is the economic price floor for stranded inland crude during a pipeline takeaway deficit?",
+      "solution": "<strong>1. The Physical Bottleneck Dynamics:</strong><br>\nWhen local production exceeds total takeaway capacity (pipelines + local refinery demand), the basin is physically constrained. Because crude oil is an incompressible liquid, producers cannot simply leave oil on the wellhead once drilled without risking reservoir damage or shut-in costs.<br><br>\n<strong>2. The Marginal Transport Cost Floor:</strong><br>\n• Pipeline tariff: ~$2.50 - $3.50/bbl.<br>\n• When pipelines are 100% full, the marginal barrel must move via the next most expensive transport: <strong>Trucking to rail terminals + Crude by Rail (CBR)</strong> to the Gulf Coast.<br>\n• Crude-by-rail cost from West Texas to Houston: <strong>$7.00 - $9.00/bbl</strong>.<br>\n• When rail capacity also exhausts, the marginal price is set by <strong>local storage tank-top economics</strong> or the cost of shutting in marginal stripper wells.<br><br>\n<strong>3. Trading Implication:</strong><br>\nPhysical traders with grandfathered pipeline space ('committed shippers') bought Midland crude at -$17.00 discount, paid their pipeline tariff of $3.00, and delivered to Cushing or the Gulf Coast at flat price, pocketing <strong>+$14.00/bbl pure structural logistics margin</strong>."
+},
+      {
+      "id": "comm-13",
+      "category": "commodities",
+      "difficulty": "medium",
+      "firms": [
+            "Statkraft",
+            "Shell Energy",
+            "Vitol"
+      ],
+      "title": "Clean Dark Spread & Thermal Efficiency in European Power Markets",
+      "prompt": "A German coal-fired power plant has a thermal heat efficiency of <strong>38%</strong>.<br>\n• Baseload German Power Price: <strong>€95.00 / MWh</strong>.<br>\n• API2 Rotterdam Coal Futures: <strong>$110.00 / tonne</strong> (Exchange rate: 1.08 USD/EUR; Energy content: 6.976 MWh/tonne).<br>\n• Carbon Intensity: Burning coal produces <strong>0.86 tonnes of CO2 per MWh of electricity generated</strong>.<br>\n• EU ETS Carbon Allowances (EUA): <strong>€65.00 / tonne CO2</strong>.<br>\n<strong>Question:</strong> Calculate the <strong>Dark Spread</strong> and the <strong>Clean Dark Spread (CDS)</strong>. Should this plant run baseload?",
+      "solution": "<strong>1. Coal Fuel Cost per MWh generated:</strong><br>\n• Coal price in EUR = $110.00 / 1.08 = <strong>€101.85 / tonne</strong>.<br>\n• Energy cost of coal = €101.85 / 6.976 MWh/tonne = <strong>€14.60 / MWh (thermal)</strong>.<br>\n• Taking plant efficiency into account (38%):<br>\n<code>Fuel Cost = \\frac{€14.60}{0.38} = \\mathbf{€38.42 / MWh_{\\text{electricity}}}</code><br><br>\n<strong>2. Dark Spread (Pre-Carbon):</strong><br>\n<code>Dark Spread = Power Price - Fuel Cost = €95.00 - €38.42 = \\mathbf{+€56.58 / MWh}</code><br><br>\n<strong>3. Clean Dark Spread (Factoring Carbon Cost):</strong><br>\n• Carbon Cost = 0.86 tonnes CO2/MWh × €65.00/tonne = <strong>€55.90 / MWh</strong>.<br>\n<code>Clean Dark Spread = Dark Spread - Carbon Cost = €56.58 - €55.90 = \\mathbf{+€0.68 / MWh}</code><br><br>\n<strong>4. Commercial Dispatch Decision:</strong><br>\nWhile the pre-carbon Dark Spread looks massive (+€56.58), the Clean Dark Spread is a razor-thin <strong>+€0.68/MWh</strong>. Factoring in plant operational and maintenance (O&M) costs (~€2.50/MWh), the net margin is <strong>negative (-€1.82/MWh)</strong>. The plant will shut down or only run during extreme peak demand hours."
+},
+      {
+      "id": "comm-14",
+      "category": "commodities",
+      "difficulty": "hard",
+      "firms": [
+            "Trafigura",
+            "Vitol",
+            "Glencore"
+      ],
+      "title": "Tanker Freight Economics: Worldscale System & Flat Rate Conversions",
+      "prompt": "A physical crude desk fixes a VLCC (Very Large Crude Carrier, 2,000,000 bbls capacity) from Ras Tanura (Saudi Arabia) to Ningbo (China) at <strong>WS 65</strong>.<br>\n• The annual Worldscale Flat Rate for this voyage is <strong>$18.50 per metric tonne</strong>.<br>\n• Conversion factor: 1 metric tonne of Arab Light = <strong>7.35 barrels</strong>.<br>\n• Bunker fuel price (VLSFO) is $600/tonne; sea transit time is 22 days each way; vessel fuel consumption is 50 tonnes/day laden, 40 tonnes/day ballast.<br>\n<strong>Question:</strong> What is the freight cost per barrel of crude delivered to Ningbo?",
+      "solution": "<strong>1. Understanding Worldscale (WS):</strong><br>\nWorldscale is a freight index where <strong>WS 100</strong> represents the nominal break-even flat rate established annually for a standard reference tanker on a specific route.<br>\nA fixture at <strong>WS 65</strong> means the agreed freight is 65% of the published flat rate.<br><br>\n<strong>2. Calculation of Freight per Metric Tonne:</strong><br>\n<code>Freight Rate = \\text{Flat Rate} \\times \\frac{\\text{WS}}{100} = $18.50 \\times 0.65 = \\mathbf{$12.025 / \\text{tonne}}</code><br><br>\n<strong>3. Conversion to Freight Cost per Barrel:</strong><br>\n<code>Freight per Barrel = \\frac{$12.025}{7.35} = \\mathbf{$1.636 / \\text{barrel}}</code><br><br>\n<strong>4. Total Charter Freight Liability:</strong><br>\nFor a 2,000,000-barrel cargo:<br>\nTotal Freight = 2,000,000 bbls × $1.636/bbl = <strong>$3,272,000</strong>.<br>\nTrading desks track daily WS rates against global crude spatial arbitrage spreads to ensure the geographic price differential exceeds total landed freight."
+},
+      {
+      "id": "comm-15",
+      "category": "commodities",
+      "difficulty": "hard",
+      "firms": [
+            "Glencore",
+            "Trafigura"
+      ],
+      "title": "Copper Smelter Treatment & Refining Charges (TC/RCs) Economics",
+      "prompt": "Explain how a global physical metal merchant trades <strong>Copper Concentrates</strong> (mined ore, ~30% Cu) vs. <strong>Refined Copper Cathodes</strong> (99.99% Cu).<br>\nWhat are <strong>TC/RCs (Treatment Charges / Refining Charges)</strong>, who pays them, and why did spot TC/RCs collapse from <strong>$85/tonne</strong> down to near <strong>$0 / negative</strong> in early 2024?",
+      "solution": "<strong>1. Commercial Structure of Concentrate Contracts:</strong><br>\nMiners sell raw concentrate (~30% copper grade) to smelters/traders. Instead of paying the full LME price, smelters deduct fees for processing the ore:<br>\n• <strong>Treatment Charge (TC):</strong> A flat dollar fee per dry metric tonne (DMT) of concentrate (e.g. $80/tonne).<br>\n• <strong>Refining Charge (RC):</strong> A fee per pound of payable refined copper produced (e.g. 8.0 cents/lb).<br>\n• <em>The Smelter/Trader receives TC/RCs from the miner as payment for smelting.</em><br><br>\n<strong>2. The 2024 Market Shock:</strong><br>\n• In 2023–2024, unexpected supply cuts (closure of Cobre Panama mine, -350kt; downgrades at Anglo American) collided with massive smelter capacity expansions in China and India.<br>\n• Smelters faced severe concentrate feedstock shortages and competed aggressively to avoid idling multi-billion dollar smelters.<br>\n• Competition drove spot TC/RCs from $85/tonne down to <strong>below $5/tonne and into negative territory</strong>.<br><br>\n<strong>3. Trading Advantage:</strong><br>\nPhysical merchants with long-term, fixed-benchmark supply contracts with miners at $80/tonne could sell their concentrate into the starved spot market at $5/tonne TC, capturing a <strong>+$75/tonne windfall profit</strong> without taking flat-price metal risk."
+},
+      {
+      "id": "comm-16",
+      "category": "commodities",
+      "difficulty": "medium",
+      "firms": [
+            "Cargill",
+            "Bunge",
+            "ADM"
+      ],
+      "title": "Agricultural Basis Trading & Local Elevator Carry Economics",
+      "prompt": "A grain elevator in Iowa purchases cash corn from a local farmer at <strong>$4.20 / bushel</strong> when the Chicago Board of Trade (CBOT) Dec Corn futures contract is trading at <strong>$4.55 / bushel</strong>.<br>\n<strong>Question:</strong> What is the farmer's <strong>Basis</strong>? How does the elevator merchant hedge flat-price risk, and under what conditions does the elevator make money?",
+      "solution": "<strong>1. Definition of Basis:</strong><br>\n<code>\\text{Basis} = \\text{Local Cash Price} - \\text{Futures Price}</code><br>\n• Basis = $4.20 - $4.55 = <strong>-35 cents (35 under Dec)</strong>.<br><br>\n<strong>2. The Commercial Hedge:</strong><br>\nThe elevator buys physical cash corn at $4.20. To remove flat-price market risk, the elevator immediately <strong>sells Dec CBOT Corn futures at $4.55</strong>.<br>\nThe elevator is now <strong>Long Basis</strong> at -35 cents. They do not care if corn goes to $2.00 or $8.00; they only care about basis changes.<br><br>\n<strong>3. Earning Profit via Basis Strengthening:</strong><br>\nOver the winter, river logistics open up, or export demand surges at the US Gulf, causing local processors to bid more aggressively.<br>\nTwo months later, local cash corn is bidding at <strong>-10 cents under Dec</strong>.<br>\nThe elevator sells the physical corn to a processor and simultaneously buys back the Dec futures hedge.<br>\n<code>Profit = \\text{Selling Basis} - \\text{Buying Basis} = (-0.10) - (-0.35) = \\mathbf{+25 \\text{ cents/bushel}}</code><br>\nFor a 500,000-bushel commercial silo, this generates <strong>$125,000 pure basis trading profit</strong>."
+},
+      {
+      "id": "comm-17",
+      "category": "commodities",
+      "difficulty": "hard",
+      "firms": [
+            "TotalEnergies",
+            "Vitol",
+            "Trafigura"
+      ],
+      "title": "Natural Gas Storage Valuation: Fast-Churn Salt Caverns vs. Seasonal Depleted Fields",
+      "prompt": "Compare the trading valuation of a <strong>Salt Cavern gas storage facility</strong> (capable of 6 full injection/withdrawal cycles per year) versus a <strong>Depleted Gas Field</strong> (1 single seasonal injection/withdrawal cycle per year).<br>\nWhy is a salt cavern valued primarily as a <strong>strip of daily spark/volatility options (Extrinsic Value)</strong>, while a depleted reservoir is valued as an <strong>Intrinsic Forward Summer-Winter spread</strong>?",
+      "solution": "<strong>1. Geological & Operational Differences:</strong><br>\n• <strong>Depleted Reservoirs:</strong> Massive working gas volume, but low deliverability. Gas takes 180 days to inject (summer) and 120 days to withdraw (winter). Maximum 1 cycle per year.<br>\n• <strong>Salt Caverns:</strong> High pressure, structural integrity, extreme deliverability. Can inject and withdraw at maximum rate within days. Allows 5 to 10 full turns per year.<br><br>\n<strong>2. Intrinsic vs. Extrinsic Valuation:</strong><br>\n• <strong>Intrinsic Value:</strong> The value locked in via the forward curve today. For depleted fields: Buy Summer gas futures (e.g. July at $2.20), Sell Winter gas futures (e.g. January at $3.50). Gross intrinsic spread = $1.30/MMBtu.<br>\n• <strong>Extrinsic (Option) Value:</strong> The capacity to react to daily weather shocks, pipeline freeze-offs, and price spikes. Because salt caverns can cycle rapidly, a trader owns a daily exchange option: if tomorrow's cash price spikes to $15 due to a freeze, empty the cavern; when prices collapse to $2 next week, refill it immediately.<br><br>\n<strong>3. Quant Pricing Method:</strong><br>\nSalt caverns are modeled using Least-Squares Monte Carlo (LSMC) or spot-volatility PDE options engines. When spot gas volatility is 80% (as in European TTF post-2022), extrinsic option value exceeds intrinsic spread value by over <strong>300%</strong>."
+},
+      {
+      "id": "prob-05",
+      "category": "probability",
+      "difficulty": "hard",
+      "firms": [
+            "Jane Street",
+            "Citadel",
+            "Optiver"
+      ],
+      "title": "The Coupon Collector Problem & Expected Purchases",
+      "prompt": "Each box of cereal contains 1 of $n$ distinct trading cards, distributed uniformly and independently at random.<br>\n<strong>Question:</strong> What is the expected number of boxes of cereal you must buy to collect all $n$ unique cards? What is the asymptotic behavior as $n \\to \\infty$?",
+      "solution": "<strong>1. Geometric Random Variables Decomposition:</strong><br>\nLet $X$ be the total boxes purchased. Let $X_i$ be the additional boxes needed to collect the $i$-th new card after having collected $i-1$ cards.<br>\n<code>X = X_1 + X_2 + \\dots + X_n</code><br><br>\n<strong>2. Expected Value of Each Stage:</strong><br>\nWhen you already have $i-1$ cards, there are $n - (i-1)$ uncollected cards left.<br>\nProbability of finding a new card in the next box: $p_i = \\frac{n - (i-1)}{n}$.<br>\nSince $X_i$ is a geometric random variable with success probability $p_i$:<br>\n<code>E[X_i] = \\frac{1}{p_i} = \\frac{n}{n - i + 1}</code><br><br>\n<strong>3. Summation (Harmonic Series):</strong><br>\n<code>E[X] = \\sum_{i=1}^n \\frac{n}{n - i + 1} = n \\left( \\frac{1}{n} + \\frac{1}{n-1} + \\dots + \\frac{1}{1} \\right) = n H_n</code><br><br>\n<strong>4. Asymptotic Formula:</strong><br>\nSince the $n$-th harmonic number $H_n \\approx \\ln n + \\gamma$ (where Euler-Mascheroni constant $\\gamma \\approx 0.5772$):<br>\n<code>E[X] \\approx n \\ln n + \\gamma n</code><br>\nFor $n = 50$ cards, you need $50 \\times (\\ln 50 + 0.577) \\approx 50 \\times (3.912 + 0.577) \\approx \\mathbf{225 \\text{ boxes}}$."
+},
+      {
+      "id": "prob-06",
+      "category": "probability",
+      "difficulty": "hard",
+      "firms": [
+            "Jane Street",
+            "Optiver",
+            "Citadel"
+      ],
+      "title": "Optimal Stopping on a 6-Sided Die with Up to 3 Rolls",
+      "prompt": "You roll a fair 6-sided die. You can accept the number showing as your payout in dollars, or reject it and roll again.<br>\nYou have at most <strong>3 rolls</strong> total. Once you reroll, you cannot go back to previous rolls.<br>\n<strong>Question:</strong> What is your optimal stopping strategy, and what is the expected payout of the game?",
+      "solution": "<strong>1. Backward Induction (Dynamic Programming):</strong><br>\nWork backwards from the final roll.<br><br>\n<strong>Round 3 (Last Roll):</strong><br>\nYou must accept whatever lands. Expected value:<br>\n<code>E_3 = \\frac{1+2+3+4+5+6}{6} = 3.5</code><br><br>\n<strong>Round 2:</strong><br>\nYou should accept a roll $X_2$ if and only if $X_2 > E_3 = 3.5$.<br>\n• Accept on: 4, 5, 6 (Average value = 5.0).<br>\n• Reroll on: 1, 2, 3 (Expected value = $E_3 = 3.5$).<br>\n<code>E_2 = \\frac{1}{2}(5.0) + \\frac{1}{2}(3.5) = 2.5 + 1.75 = \\mathbf{4.25}</code><br><br>\n<strong>Round 1 (Initial Roll):</strong><br>\nYou should accept a roll $X_1$ if and only if $X_1 > E_2 = 4.25$.<br>\n• Accept on: 5, 6 (Average value = 5.5, probability = 2/6 = 1/3).<br>\n• Reroll on: 1, 2, 3, 4 (Expected value = $E_2 = 4.25$, probability = 4/6 = 2/3).<br>\n<code>E_1 = \\frac{1}{3}(5.5) + \\frac{2}{3}(4.25) = \\frac{5.5 + 8.5}{3} = \\frac{14}{3} \\approx \\mathbf{\\$4.67}</code><br><br>\n<strong>Summary Strategy:</strong> Stop on 5 or 6 on roll 1; stop on 4, 5, or 6 on roll 2; take whatever lands on roll 3. Fair value is <strong>$4.67</strong>."
+},
+      {
+      "id": "prob-07",
+      "category": "probability",
+      "difficulty": "medium",
+      "firms": [
+            "Optiver",
+            "Akuna Capital"
+      ],
+      "title": "Russian Roulette with Adjacent Bullets in a 6-Chamber Revolver",
+      "prompt": "A 6-chamber revolver is loaded with exactly <strong>two bullets placed in adjacent chambers</strong>.<br>\nThe cylinder is spun. Player 1 points the gun at his head and pulls the trigger: <em>Click</em> (empty chamber, survived).<br>\nNow it is Player 2's turn. Player 2 can choose between two actions:<br>\n1. Spin the cylinder again before pulling the trigger.<br>\n2. Pull the trigger immediately without spinning.<br>\n<strong>Question:</strong> Which option gives Player 2 the highest probability of survival?",
+      "solution": "<strong>1. Option A: Spin the Cylinder:</strong><br>\nIf you spin, the chamber position is completely randomized.<br>\nThere are 2 bullets in 6 chambers.<br>\n<code>P(\\text{Bullet}) = \\frac{2}{6} = \\frac{1}{3} \\approx 33.3\\%</code><br>\n<code>P(\\text{Survive | Spin}) = \\frac{4}{6} = \\frac{2}{3} \\approx \\mathbf{66.7\\%}</code><br><br>\n<strong>2. Option B: Pull Trigger Without Spinning:</strong><br>\nPlayer 1 landed on an empty chamber. There are 4 empty chambers in total.<br>\nLet the chambers be 1, 2, 3, 4, 5, 6 with bullets in chambers (1, 2).<br>\nThe 4 empty chambers are 3, 4, 5, 6.<br>\n• If Player 1 hit chamber 3, next chamber is 4 (Empty).<br>\n• If Player 1 hit chamber 4, next chamber is 5 (Empty).<br>\n• If Player 1 hit chamber 5, next chamber is 6 (Empty).<br>\n• If Player 1 hit chamber 6, next chamber is 1 (<strong>BULLET!</strong>).<br><br>\nThus, given Player 1 survived, out of the 4 possible empty chambers he hit, only <strong>1 leads to a bullet</strong>, and <strong>3 lead to empty chambers</strong>!<br>\n<code>P(\\text{Survive | No Spin}) = \\frac{3}{4} = \\mathbf{75.0\\%}</code><br><br>\n<strong>Conclusion:</strong> <strong>Do not spin!</strong> Your survival probability jumps from 66.7% to <strong>75.0%</strong> because the bullets are adjacent."
+},
+      {
+      "id": "prob-08",
+      "category": "probability",
+      "difficulty": "hard",
+      "firms": [
+            "Jane Street",
+            "Five Rings"
+      ],
+      "title": "Card Color Prediction Game with Red/Black Balance",
+      "prompt": "A standard deck of 52 cards (26 Red, 26 Black) is shuffled and dealt face up one by one.<br>\nAt any point before the deck runs out, you can call out: <strong>\"The NEXT card will be RED!\"</strong><br>\nYou can only make this bet <strong>once per deck</strong>. If you reach the very last card without calling, you are forced to bet on the last card.<br>\n<strong>Question:</strong> What is your optimal stopping strategy, and what is your maximum achievable probability of winning?",
+      "solution": "<strong>1. Surprising Result:</strong><br>\nNo matter what strategy you use, your probability of winning is <strong>identically 50% (1/2)</strong>!<br><br>\n<strong>2. Martingale Proof:</strong><br>\nLet $R_t$ be the number of red cards remaining after $t$ cards have been revealed, and $N_t = 52 - t$ be the total cards remaining.<br>\nIf you guess Red at step $t$, your probability of winning is $\\frac{R_t}{N_t}$.<br>\nLet $P_t = \\frac{R_t}{N_t}$. Notice that $P_t$ is a <strong>Martingale</strong> with respect to the revealed cards!<br>\nWhy? Given $R_t$ and $N_t$:<br>\n• With probability $\\frac{R_t}{N_t}$, the next card is Red, leaving $R_{t+1} = R_t - 1$ and $N_{t+1} = N_t - 1$.<br>\n• With probability $\\frac{N_t - R_t}{N_t}$, the next card is Black, leaving $R_{t+1} = R_t$ and $N_{t+1} = N_t - 1$.<br>\nCalculating conditional expectation: $E[P_{t+1} \\mid \\mathcal{F}_t] = P_t$.<br><br>\n<strong>3. Optional Stopping Theorem:</strong><br>\nBy Doob's Optional Stopping Theorem, for any stopping time $\\tau$ bounded by 52:<br>\n<code>E[P_\\tau] = E[P_0] = \\frac{26}{52} = \\frac{1}{2} = \\mathbf{50\\%}</code><br>\nEven if 25 black cards come out first and only 1 black remains with 26 reds, your conditional probability on that specific turn is $26/27$, but the probability of ever reaching that state is precisely balanced by the downside of losing earlier."
+},
+      {
+      "id": "fin-04",
+      "category": "finance",
+      "difficulty": "hard",
+      "firms": [
+            "Optiver",
+            "Akuna Capital",
+            "Jane Street"
+      ],
+      "title": "ATM Option Delta vs. 50% Probability of Expiring In-The-Money",
+      "prompt": "In the Black-Scholes model, for an At-the-Money (ATM) call option ($S_0 = K$), why is the option's <strong>Delta ($N(d_1)$) greater than 0.50</strong>, while the risk-neutral probability of expiring in-the-money (<strong>$N(d_2)$</strong>) is <strong>less than 0.50</strong> (assuming positive interest rate $r > \\frac{1}{2}\\sigma^2$)?",
+      "solution": "<strong>1. Black-Scholes Formulas for $d_1$ and $d_2$:</strong><br>\n<code>d_1 = \\frac{\\ln(S_0/K) + (r + \\frac{1}{2}\\sigma^2)T}{\\sigma \\sqrt{T}}</code><br>\n<code>d_2 = d_1 - \\sigma \\sqrt{T} = \\frac{\\ln(S_0/K) + (r - \\frac{1}{2}\\sigma^2)T}{\\sigma \\sqrt{T}}</code><br><br>\n<strong>2. ATM Condition ($S_0 = K \\implies \\ln(S_0/K) = 0$):</strong><br>\n• $d_1 = \\frac{(r + \\frac{1}{2}\\sigma^2)T}{\\sigma \\sqrt{T}} > 0 \\implies \\mathbf{\\Delta = N(d_1) > 0.50}$.<br>\n• If $r = 0$, $d_2 = -\\frac{1}{2}\\sigma \\sqrt{T} < 0 \\implies \\mathbf{P(\\text{ITM}) = N(d_2) < 0.50}$.<br><br>\n<strong>3. Economic Intuition & Lognormal Skewness:</strong><br>\nStock prices are modeled as a Geometric Brownian Motion ($S_T$ is lognormally distributed, not normally distributed).<br>\n• <strong>Median vs Mean:</strong> A lognormal distribution has a fat right tail (stock can rise infinitely, but can only fall to zero). The median of $S_T$ is $S_0 e^{(r - \\frac{1}{2}\\sigma^2)T}$, which is strictly below the mean $S_0 e^{rT}$ due to Jensen's inequality!<br>\n• Since median $< S_0$, more than 50% of the distribution lies below the strike, so $P(S_T > K) < 50\\%$.<br>\n• However, when the stock does expire in-the-money, its conditional payoff $(S_T - K)$ is heavily weighted towards large positive gains, pulling Delta above 50%."
+},
+      {
+      "id": "fin-05",
+      "category": "finance",
+      "difficulty": "hard",
+      "firms": [
+            "Optiver",
+            "Flow Traders",
+            "Citadel"
+      ],
+      "title": "Sticky Strike vs. Sticky Delta Volatility Regimes",
+      "prompt": "When the underlying asset price moves, how does an equity index option implied volatility surface behave under:<br>\n1. <strong>Sticky Strike (Sticky by Absolute Strike $K$):</strong> $\\sigma(S, K) = f(K)$<br>\n2. <strong>Sticky Delta (Sticky by Moneyness $K/S$):</strong> $\\sigma(S, K) = g(K/S)$<br>\n<strong>Question:</strong> What are the crucial risk and Delta-hedging implications for an option market maker?",
+      "solution": "<strong>1. Definitions:</strong><br>\n• <strong>Sticky Strike:</strong> Implied volatility at a specific strike price $K$ remains constant regardless of spot movement. (Common in individual single stocks with idiosyncratic event risk).<br>\n• <strong>Sticky Delta:</strong> Implied volatility is fixed by moneyness $\\frac{K}{S}$. As spot rises, the entire skew curve shifts right along with spot. (Standard in equity index options like S&P 500).<br><br>\n<strong>2. Delta-Hedging Implication:</strong><br>\nBy chain rule, total delta $\\Delta_{\\text{Total}} = \\frac{\\partial C}{\\partial S} + \\frac{\\partial C}{\\partial \\sigma} \\cdot \\frac{\\partial \\sigma}{\\partial S}$:<br>\n<code>\\Delta_{\\text{Total}} = \\Delta_{\\text{BS}} + \\text{Vega} \\times \\frac{\\partial \\sigma}{\\partial S}</code><br><br>\n<strong>3. Impact of Skew:</strong><br>\nSince equity index markets have a downward-sloping skew ($\\frac{\\partial \\sigma}{\\partial K} < 0$), under a Sticky Delta regime, when spot rises, the moneyness $\\frac{K}{S}$ drops, meaning implied volatility at strike $K$ falls ($\\frac{\\partial \\sigma}{\\partial S} < 0$).<br>\n• Because Vega is positive, $\\text{Vega} \\times \\frac{\\partial \\sigma}{\\partial S} < 0$.<br>\n• <strong>Result:</strong> Under Sticky Delta, a Call's effective Delta is <em>lower</em> than its Black-Scholes Delta, and a Put's effective Delta is <em>more negative</em>. Hedging with naive Black-Scholes Delta leaves traders consistently under-hedged on short gamma."
+},
+      {
+      "id": "fin-06",
+      "category": "finance",
+      "difficulty": "medium",
+      "firms": [
+            "DRW",
+            "SIG",
+            "Jump Trading"
+      ],
+      "title": "Modified Duration, Convexity & Bond Portfolio Immunization",
+      "prompt": "A 10-year coupon bond has a Modified Duration of <strong>8.0 years</strong> and Convexity of <strong>75.0</strong>.<br>\nIf market yields spike upwards by <strong>+150 basis points (+1.5%)</strong>, what is the estimated percentage change in the bond's price using the Taylor series expansion? Why is positive convexity universally valued by bond traders?",
+      "solution": "<strong>1. Taylor Series Expansion for Bond Price:</strong><br>\n<code>\\frac{\\Delta P}{P} \\approx -D_{\\text{mod}} \\Delta y + \\frac{1}{2} C (\\Delta y)^2</code><br><br>\n<strong>2. Calculation:</strong><br>\n• $\\Delta y = +0.015$ (+150 bps).<br>\n• Duration term: $-8.0 \\times 0.015 = -0.1200$ (<strong>-12.00%</strong>).<br>\n• Convexity correction: $\\frac{1}{2} \\times 75.0 \\times (0.015)^2 = 0.5 \\times 75.0 \\times 0.000225 = +0.0084375$ (<strong>+0.84%</strong>).<br>\n<code>\\frac{\\Delta P}{P} \\approx -12.00\\% + 0.84\\% = \\mathbf{-11.16\\%}</code><br><br>\n<strong>3. Value of Convexity to Traders:</strong><br>\nConvexity is always positive for non-callable bonds because price-yield curvature bends upwards.<br>\n• When yields rise, convexity <em>dampens price declines</em>.<br>\n• When yields fall, convexity <em>accelerates price increases</em>.<br>\nA portfolio long convexity will outperform a duration-matched portfolio in volatile interest rate regimes."
+},
+      {
+      "id": "brain-03",
+      "category": "brainteasers",
+      "difficulty": "easy",
+      "firms": [
+            "Jane Street",
+            "Citadel",
+            "Akuna Capital"
+      ],
+      "title": "Burning Ropes to Measure Exactly 45 Minutes",
+      "prompt": "You have two identical-looking ropes. Each rope takes <strong>exactly 60 minutes</strong> to burn completely from one end to the other.<br>\nHowever, the ropes burn <strong>non-uniformly</strong> (e.g. 90% of a rope might burn in the first 10 minutes, and the remaining 10% in the last 50 minutes).<br>\nYou have a box of matches and no clock or timer.<br>\n<strong>Question:</strong> How can you measure an exact duration of <strong>45 minutes</strong>?",
+      "solution": "<strong>1. Key Insight:</strong><br>\nEven if a rope burns non-uniformly, if you light a rope from <strong>both ends simultaneously</strong>, the two burning flame fronts will meet when the total burn time reaches exactly <strong>30 minutes</strong> ($60 / 2 = 30$).<br><br>\n<strong>2. Step-by-Step Procedure:</strong><br>\n1. At $t = 0$: Light <strong>both ends</strong> of Rope A, and <strong>one end</strong> of Rope B simultaneously.<br>\n2. When Rope A burns out completely, exactly <strong>30 minutes</strong> have elapsed.<br>\n3. At that exact moment ($t = 30$ min), Rope B has exactly 30 minutes of burn time remaining.<br>\n4. Immediately light the <strong>other end</strong> of Rope B.<br>\n5. The remaining 30 minutes of Rope B will now burn twice as fast from both ends and extinguish in exactly <strong>15 minutes</strong>.<br>\n6. When Rope B extinguishes, total elapsed time = $30 + 15 = \\mathbf{45 \\text{ minutes}}$."
+},
+      {
+      "id": "brain-04",
+      "category": "brainteasers",
+      "difficulty": "hard",
+      "firms": [
+            "Citadel",
+            "Optiver",
+            "Jane Street"
+      ],
+      "title": "12 Coins with 1 Counterfeit: 3 Weighings on a Balance Scale",
+      "prompt": "You have 12 coins that look identical. Exactly <strong>one coin is counterfeit</strong>, with a weight different from the 11 genuine coins (you do not know whether it is heavier or lighter).<br>\nYou have a traditional two-pan balance scale.<br>\n<strong>Question:</strong> How can you identify the counterfeit coin AND determine whether it is heavier or lighter in only <strong>3 weighings</strong>?",
+      "solution": "<strong>1. Information Theory Upper Bound:</strong><br>\nThere are 12 candidate coins, and each could be heavier or lighter: $12 \\times 2 = 24$ possible outcomes.<br>\nEach weighing has 3 outcomes: Left Pan Down, Right Pan Down, or Balanced ($3^3 = 27$ total states). Since $27 > 24$, 3 weighings are theoretically sufficient.<br><br>\n<strong>2. Weighing 1:</strong><br>\nWeigh <strong>[1, 2, 3, 4] vs [5, 6, 7, 8]</strong>. (Leave [9, 10, 11, 12] off).<br><br>\n<strong>Case A (Scale Balances):</strong><br>\nThe counterfeit is among {9, 10, 11, 12}, and coins {1..8} are confirmed genuine.<br>\n• <strong>Weighing 2:</strong> Weigh [9, 10, 11] vs [1, 2, 3] (known genuine).<br>\n  - If balances: 12 is fake. Weighing 3: Weigh 12 vs 1 (genuine) to find if heavy/light.<br>\n  - If tilts (e.g. 9,10,11 heavy): fake is among {9,10,11} and is heavy. Weighing 3: Weigh 9 vs 10.<br><br>\n<strong>Case B (Scale Tilts - e.g. [1, 2, 3, 4] Heavy vs [5, 6, 7, 8] Light):</strong><br>\nCoins {9, 10, 11, 12} are known genuine.<br>\n• <strong>Weighing 2:</strong> Swap and substitute! Weigh <strong>[1, 2, 5] vs [3, 4, 6]</strong> (replaced with genuine 9, 10).<br>\n  - By tracking whether the tilt stays, reverses, or balances, you narrow down the single suspect coin and resolve whether it is heavy or light on Weighing 3."
+},
+      {
+      "id": "brain-05",
+      "category": "brainteasers",
+      "difficulty": "medium",
+      "firms": [
+            "Optiver",
+            "Citadel",
+            "Jane Street"
+      ],
+      "title": "Pirate Gold Division: Subgame Perfect Backward Induction",
+      "prompt": "5 rational, greedy pirates (A, B, C, D, E in order of seniority: A is senior) must divide <strong>100 gold coins</strong>.<br>\nRules:<br>\n1. The most senior pirate proposes a division.<br>\n2. All pirates vote. If <strong>50% or more</strong> vote in favor, the proposal passes.<br>\n3. If less than 50% vote yes, the proposer is thrown overboard to the sharks, and the next senior pirate proposes.<br>\n4. Every pirate wants to maximize their coins, prefers to survive, and if indifferent, prefers to see others thrown overboard.<br>\n<strong>Question:</strong> What distribution should Pirate A propose to maximize his gold while surviving?",
+      "solution": "<strong>1. Backward Induction (Start with 2 Pirates left):</strong><br>\n• <strong>2 Pirates (D, E):</strong> D proposes (100, 0). D votes yes. Since 1 vote out of 2 is 50%, proposal passes. E gets <strong>0</strong>.<br><br>\n• <strong>3 Pirates (C, D, E):</strong> C knows that if he dies, D gets 100 and E gets 0. Therefore, C only needs to offer E <strong>1 coin</strong> to secure E's vote ($1 > 0$).<br>\nProposal: <strong>C gets 99, D gets 0, E gets 1</strong>. C and E vote yes (2/3 = 66%).<br><br>\n• <strong>4 Pirates (B, C, D, E):</strong> B knows that if he dies, C gets 99, D gets 0, E gets 1. B needs 1 other vote (2 out of 4 is 50%). D gets 0 under C's regime, so B offers D <strong>1 coin</strong>.<br>\nProposal: <strong>B gets 99, C gets 0, D gets 1, E gets 0</strong>. B and D vote yes (2/4 = 50%).<br><br>\n• <strong>5 Pirates (A, B, C, D, E):</strong> A needs 2 other votes (3 out of 5 is 60%).<br>\nUnder B's regime, C gets 0 and E gets 0.<br>\nA bribes C with 1 coin ($1 > 0$) and E with 1 coin ($1 > 0$).<br>\n<code>Final Allocation: \\mathbf{A = 98, B = 0, C = 1, D = 0, E = 1}</code><br>\nA, C, and E vote yes (3/5 = 60%). Pirate A walks away with <strong>98 gold coins</strong>."
+},
+      {
+      "id": "behav-03",
+      "category": "behavioral",
+      "difficulty": "hard",
+      "firms": [
+            "Citadel",
+            "Optiver",
+            "SIG"
+      ],
+      "title": "Handling Rogue Risk Limits & Flash Crash Protocol",
+      "prompt": "You are trading an automated volatility dispersion book. A macro geopolitical event hits, liquidity vanishes, and your portfolio loses <strong>18% in 3 minutes</strong>, piercing your hard intraday stop-loss limit.<br>\nYour risk manager calls you demanding immediate action.<br>\n<strong>Question:</strong> What is the professional trader's protocol? Do you hit market bids to liquidate immediately, hedge with index futures, or adjust pricing?",
+      "solution": "<strong>Winning Response Framework:</strong><br>\n1. <strong>Strict Adherence to Risk Limits:</strong> Immediately acknowledge that the risk limit is an inviolable contract with the firm. Never argue with the risk manager or plead for 'just 10 more minutes'.<br>\n2. <strong>Avoid Panic Market Dumping:</strong> Explain the danger of crossing wide, illiquid spreads on illiquid single stocks during a crash, which guarantees maximal slippage.<br>\n3. <strong>Immediate Macro De-risking:</strong> Freeze algorithmic quotation to prevent picking off. Immediately hedge portfolio Delta to <strong>zero</strong> using high-liquidity index futures (e.g. S&P E-mini or EuroStoxx) where spreads remain tight.<br>\n4. <strong>Controlled Wind-down:</strong> Work out of the basis and skew positions orderly via crossing networks and block liquidity over the next 30 minutes, minimizing market impact.<br>\n5. <strong>Post-Mortem:</strong> Review whether the risk model failed to anticipate correlation breakdown during tail events."
+},
+      {
+      "id": "behav-04",
+      "category": "behavioral",
+      "difficulty": "medium",
+      "firms": [
+            "Optiver",
+            "SIG",
+            "Jane Street"
+      ],
+      "title": "Why Elite Quant Desks Trade Fractional Kelly (Half-Kelly)",
+      "prompt": "The Kelly Criterion ($f^* = \\frac{bp - q}{b}$) mathematically proves the optimal bet size to maximize long-term compound capital growth.<br>\nYet almost every proprietary trading desk mandates <strong>Half-Kelly ($0.5 f^*$)</strong> or <strong>Quarter-Kelly ($0.25 f^*$)</strong>.<br>\n<strong>Question:</strong> Mathematically and practically, why do traders never trade full Kelly?",
+      "solution": "<strong>1. Parameter Estimation Uncertainty:</strong><br>\nFull Kelly assumes you know the <em>exact true probability</em> $p$. In financial markets, $p$ is estimated from noisy empirical data. If you overestimate your edge by just 20%, Full Kelly turns into dangerous over-betting, which guarantees geometric decline and exponential risk of ruin.<br><br>\n<strong>2. Return vs. Volatility Tradeoff (The 75% Rule):</strong><br>\n• Betting <strong>Half-Kelly ($0.5 f^*$)</strong> achieves <strong>75% of the maximum theoretical growth rate</strong> of Full Kelly.<br>\n• However, it cuts portfolio variance and volatility by <strong>50%</strong>, and reduces maximum drawdown by over <strong>60%</strong>!<br><br>\n<strong>3. Emotional Utility & Avoiding Tilt:</strong><br>\nUnder Full Kelly, a trader faces a <strong>33% probability of suffering a 50% bankroll drawdown</strong> at some point in their career. In a prop trading firm, a 50% drawdown gets your desk liquidated and risk allocation pulled."
+}
+,
+      {
+      "id": "comm-18",
+      "category": "commodities",
+      "difficulty": "hard",
+      "firms": [
+            "Glencore",
+            "Rio Tinto",
+            "South32"
+      ],
+      "title": "Primary Aluminium Smelting: Power Intensity & Smelting Margins",
+      "prompt": "An aluminium smelter in Iceland consumes <strong>14.2 MWh of electricity</strong> per metric tonne of liquid primary aluminium produced.<br>\n• Power contract tariff: <strong>$38.00 / MWh</strong>.<br>\n• Alumina feedstock cost: <strong>$390 / tonne</strong> (Conversion: it takes exactly <strong>1.92 tonnes of alumina</strong> to produce 1 tonne of aluminium).<br>\n• Carbon anode consumption: <strong>0.45 tonnes of carbon anode per tonne of aluminium</strong> at <strong>$600 / tonne</strong>.<br>\n• Other operational & maintenance costs (Opex): <strong>$220 / tonne</strong>.<br>\n• Current LME Aluminium Cash price: <strong>$2,450 / tonne</strong>.<br>\n<strong>Question:</strong> What is the cash cost per tonne of aluminium, and what is the smelter's net operating margin per tonne?",
+      "solution": "<strong>1. Cost Breakdown per Metric Tonne of Aluminium:</strong><br>\n• <strong>Electricity Cost:</strong> 14.2 MWh × $38.00/MWh = <strong>$539.60</strong>.<br>\n• <strong>Alumina Feedstock:</strong> 1.92 tonnes × $390.00/tonne = <strong>$748.80</strong>.<br>\n• <strong>Carbon Anodes:</strong> 0.45 tonnes × $600.00/tonne = <strong>$270.00</strong>.<br>\n• <strong>Other O&M Opex:</strong> <strong>$220.00</strong>.<br><br>\n<strong>2. Total Cash Cost of Production (C1 Cost):</strong><br>\n<code>C1 Cost = $539.60 + $748.80 + $270.00 + $220.00 = \\mathbf{$1,778.40 / \\text{tonne}}</code><br><br>\n<strong>3. Net Operating Margin:</strong><br>\n<code>Net Margin = LME Cash Price - C1 Cost = $2,450.00 - $1,778.40 = \\mathbf{+$671.60 / \\text{tonne}}</code><br>\nFor a standard 300,000-tonne annual capacity smelter, this produces <strong>+$201.5 million</strong> in annual operating cash flow. In trading, metals desks track power tariffs closely because power represents ~30% of global aluminium cash costs."
+},
+      {
+      "id": "comm-19",
+      "category": "commodities",
+      "difficulty": "medium",
+      "firms": [
+            "Cargill",
+            "Bunge",
+            "Oldendorff Carriers"
+      ],
+      "title": "Dry Bulk Freight: Panamax vs. Capesize Vessel Routing & Deadweight",
+      "prompt": "Explain the fundamental operational and trade flow distinctions between a <strong>Capesize vessel (~180,000 DWT)</strong> and a <strong>Panamax vessel (~75,000 DWT)</strong>.<br>\nWhy can Capesize freight rates swing wildly from $5,000/day to $80,000/day, while Panamax rates remain much more stable?",
+      "solution": "<strong>1. Vessel Dimensions & Commodity Profiles:</strong><br>\n• <strong>Capesize (~180,000 DWT):</strong> Too massive to transit the Panama Canal (must round Cape Horn or Cape of Good Hope). Exclusively dedicated to two massive industrial raw materials: <strong>Iron Ore</strong> (Brazil & Australia to China) and <strong>Coking Coal</strong>.<br>\n• <strong>Panamax (~75,000 DWT):</strong> Engineered to fit the Panama Canal lock chambers. High flexibility: carries agricultural grains (soybeans, corn, wheat), thermal coal, fertilizer, and minor bulk ores.<br><br>\n<strong>2. Volatility Asymmetry Drivers:</strong><br>\n• <strong>Demand Concentration:</strong> Capesize demand is almost 100% tied to Chinese steel mill production cycles. When China stimulus surges, iron ore chartering panics and Capesize rates skyrocket. When Chinese mills shut down, Capesize demand collapses to near zero with no substitute cargo.<br>\n• <strong>Agricultural Buffer:</strong> Panamax vessels can seamlessly switch between Black Sea wheat, US Gulf soybeans, and South American corn harvests as seasons rotate, providing a structural floor to freight volatility."
+},
+      {
+      "id": "comm-20",
+      "category": "commodities",
+      "difficulty": "hard",
+      "firms": [
+            "Trafigura",
+            "Vitol",
+            "Mercuria"
+      ],
+      "title": "Gasoil Hydrotreating, Hydrogen Economics & Sulfur Penalties",
+      "prompt": "A coastal European refinery processes 100,000 bbl/day of High-Sulfur Middle Distillates (1,500 ppm sulfur).<br>\nTo sell into the European automotive diesel market, sulfur must be reduced to <strong>under 10 ppm (Ultra-Low Sulfur Diesel, ULSD)</strong> via catalytic hydrodesulfurization (HDS).<br>\n• Hydrogen consumption: <strong>80 standard cubic feet (scf) of H2 per barrel per 1,000 ppm sulfur removed</strong>.<br>\n• Hydrogen is produced via Steam Methane Reforming (SMR) from natural gas: producing 1,000 scf of H2 consumes <strong>0.38 MMBtu of natural gas</strong>.<br>\n• TTF Natural Gas price spikes to <strong>$35.00 / MMBtu</strong>.<br>\n<strong>Question:</strong> How much does the natural gas spike add to the operating cost of refining a barrel of diesel?",
+      "solution": "<strong>1. Sulfur Removal Requirement:</strong><br>\nSulfur to remove = $1,500 - 10 = <strong>1,490 ppm</strong>.<br><br>\n<strong>2. Hydrogen Consumption per Barrel:</strong><br>\n<code>H_2 = 80 \\text{ scf} \\times \\frac{1,490}{1,000} = \\mathbf{119.2 \\text{ scf of } H_2 / \\text{barrel}}</code><br><br>\n<strong>3. Natural Gas Required per Barrel:</strong><br>\n<code>Gas = \\frac{119.2}{1,000} \\times 0.38 \\text{ MMBtu} = \\mathbf{0.0453 \\text{ MMBtu / barrel}}</code><br><br>\n<strong>4. Cost Impact:</strong><br>\n• At baseline gas price ($5.00/MMBtu): Cost = 0.0453 × $5.00 = <strong>$0.23 / bbl</strong>.<br>\n• At spiked gas price ($35.00/MMBtu): Cost = 0.0453 × $35.00 = <strong>$1.59 / bbl</strong>.<br>\n<code>Cost Increase = $1.59 - $0.23 = \\mathbf{+\\$1.36 / \\text{bbl}}</code><br>\nThis directly inflates the European Diesel-Crude crack spread, as refiners must pass the hydrogen utility cost onto downstream buyers."
+},
+      {
+      "id": "prob-09",
+      "category": "probability",
+      "difficulty": "hard",
+      "firms": [
+            "Jane Street",
+            "Citadel",
+            "Five Rings"
+      ],
+      "title": "Expected Distance Between Two Random Points in a Unit Square",
+      "prompt": "Two points $(X_1, Y_1)$ and $(X_2, Y_2)$ are chosen independently and uniformly at random within the unit square $[0, 1] \\times [0, 1]$.<br>\n<strong>Question:</strong> What is the expected value of the <em>squared</em> Euclidean distance $E[D^2]$? What is the intuition for why $E[D^2]$ is so simple to compute?",
+      "solution": "<strong>1. Mathematical Formulation:</strong><br>\nSquared Euclidean distance:<br>\n<code>D^2 = (X_1 - X_2)^2 + (Y_1 - Y_2)^2</code><br>\nBy linearity of expectation:<br>\n<code>E[D^2] = E[(X_1 - X_2)^2] + E[(Y_1 - Y_2)^2]</code><br><br>\n<strong>2. Symmetry and 1D Evaluation:</strong><br>\nSince $X_1$ and $X_2$ are i.i.d. $U(0, 1)$:<br>\n<code>E[(X_1 - X_2)^2] = E[X_1^2] - 2E[X_1 X_2] + E[X_2^2] = 2E[X^2] - 2(E[X])^2 = 2 \\text{Var}(X)</code><br>\nFor a uniform distribution $U(0, 1)$, $\\text{Var}(X) = \\frac{1}{12}$.<br>\n<code>E[(X_1 - X_2)^2] = 2 \\times \\frac{1}{12} = \\frac{1}{6}</code><br><br>\n<strong>3. Total Expected Squared Distance:</strong><br>\n<code>E[D^2] = \\frac{1}{6} + \\frac{1}{6} = \\frac{2}{6} = \\mathbf{\\frac{1}{3} \\approx 0.333}</code><br>\n(Note: The actual distance $E[D] \\approx 0.5214$, which requires integrating $\\sqrt{\\dots}$, but $E[D^2]$ is an instant interview mental math shortcut)."
+},
+      {
+      "id": "prob-10",
+      "category": "probability",
+      "difficulty": "medium",
+      "firms": [
+            "Optiver",
+            "SIG",
+            "Akuna Capital"
+      ],
+      "title": "Biased Coin Flips & Probability of Consecutive Heads",
+      "prompt": "You flip a biased coin with probability of heads $p = 0.6$ repeatedly until you observe <strong>two heads in a row (HH)</strong>.<br>\n<strong>Question:</strong> What is the expected total number of coin flips needed?",
+      "solution": "<strong>1. First-Step Analysis (Conditioning on the First Flips):</strong><br>\nLet $E$ be the expected number of flips to get HH.<br>\n• Flip 1: Lands Tails (probability $1 - p = 0.4$). The game completely resets. You have wasted 1 flip. Expected flips remaining = $E$.<br>\n• Flip 1: Lands Heads (probability $p = 0.6$).<br>\n  - Flip 2: Lands Heads (probability $p = 0.6$). You are done! Total flips = 2.<br>\n  - Flip 2: Lands Tails (probability $1 - p = 0.4$). You have wasted 2 flips, and the game resets to the beginning. Expected flips remaining = $E$.<br><br>\n<strong>2. Setting up the Renewal Equation:</strong><br>\n<code>E = (1 - p)(1 + E) + p [ p \\times 2 + (1 - p)(2 + E) ]</code><br>\n$E = 1 - p + (1 - p)E + 2p^2 + 2p(1 - p) + p(1 - p)E$<br>\n$E = 1 + (1 - p^2)E + p$<br>\n$E [1 - (1 - p) - p(1 - p)] = 1 + p$<br>\n$E [p - p + p^2] = 1 + p \\implies E \\cdot p^2 = 1 + p$<br>\n<code>E = \\frac{1 + p}{p^2}</code><br><br>\n<strong>3. Numerical Solution for $p = 0.6$:</strong><br>\n<code>E = \\frac{1 + 0.6}{(0.6)^2} = \\frac{1.6}{0.36} = \\frac{160}{36} = \\mathbf{\\frac{40}{9} \\approx 4.44 \\text{ flips}}</code><br>\n(For a fair coin $p = 0.5$, $E = \\frac{1.5}{0.25} = 6$ flips)."
+},
+      {
+      "id": "fin-07",
+      "category": "finance",
+      "difficulty": "hard",
+      "firms": [
+            "Optiver",
+            "IMC",
+            "Citadel"
+      ],
+      "title": "Avellaneda-Stoikov Market Making: Inventory Penalty Parameter",
+      "prompt": "In the classic <strong>Avellaneda-Stoikov high-frequency market making model</strong>, how does a trader determine their optimal reservation price $r(s, q, t)$ relative to mid-price $s$ when holding inventory $q$?<br>\n<code>r(s, q, t) = s - q \\gamma \\sigma^2 (T - t)</code><br>\n<strong>Question:</strong> What are the trading intuitions behind each parameter, and how does the market maker adjust their bid-ask spread to mean-revert inventory?",
+      "solution": "<strong>1. Reservation Price Mechanics:</strong><br>\nThe reservation price $r$ is the price at which the market maker is indifferent between keeping their current position and executing a trade.<br>\n• If $q > 0$ (<strong>Long Inventory</strong>): $r < s$. The market maker lowers their quotes below mid-price. This makes their <strong>Ask more aggressive (tighter)</strong> to attract buyers, and their <strong>Bid wider (less attractive)</strong> to deter sellers, naturally shedding long inventory.<br>\n• If $q < 0$ (<strong>Short Inventory</strong>): $r > s$. The market maker bids higher to cover shorts and raises their ask.<br><br>\n<strong>2. Parameter Sensitivities:</strong><br>\n• $\\gamma$ (<strong>Risk Aversion</strong>): Higher risk aversion widens the penalty, forcing faster inventory offloading.<br>\n• $\\sigma^2$ (<strong>Asset Variance</strong>): In high-volatility regimes, holding inventory is toxic; quotes skew aggressively against inventory.<br>\n• $(T - t)$ (<strong>Time Horizon Remaining</strong>): Near the end of the trading session ($T - t \\to 0$), the inventory penalty diminishes because the holding period is short."
+},
+      {
+      "id": "fin-08",
+      "category": "finance",
+      "difficulty": "hard",
+      "firms": [
+            "Jane Street",
+            "Citadel",
+            "Flow Traders"
+      ],
+      "title": "VIX Futures Term Structure, Contango & Negative Roll Yield",
+      "prompt": "Why is the VIX futures term structure in <strong>Contango (front-month < back-month) roughly 85% of the time</strong> in normal markets?<br>\nWhat is the structural cause of the severe <strong>negative roll yield</strong> suffered by long volatility exchange-traded products like VXX?",
+      "solution": "<strong>1. The Volatility Mean-Reversion Dynamic:</strong><br>\nSpot VIX is calculated from 30-day S&P 500 option implied volatilities. Long-term historical mean VIX is approximately <strong>19–20 points</strong>.<br>\nIn calm bull markets, spot VIX typically trades between <strong>12 and 15</strong>.<br>\nBecause markets anticipate that volatility will eventually spike back toward its long-term average, distant futures price in an upward premium: <code>\\text{Spot (13)} < F_1 (14.5) < F_2 (16.0) < F_3 (17.5)</code>.<br><br>\n<strong>2. Structural Roll Decay:</strong><br>\nA long volatility ETF (e.g. VXX) must maintain a constant 30-day maturity profile. To do so, every day it must:<br>\n• <strong>Sell cheaper front-month futures</strong> ($F_1$).<br>\n• <strong>Buy more expensive second-month futures</strong> ($F_2$).<br>\nIn contango, the fund is perpetually <em>selling low and buying high</em>.<br>\nAs futures contracts approach expiration, they must converge downwards to the lower spot VIX.<br>\nThis creates an ongoing <strong>3% to 8% monthly decay</strong>, destroying up to 99% of long buy-and-hold capital over multi-year horizons."
+},
+      {
+      "id": "brain-06",
+      "category": "brainteasers",
+      "difficulty": "hard",
+      "firms": [
+            "Jane Street",
+            "Optiver"
+      ],
+      "title": "The Blue Eyes Island Paradox & Common Knowledge Induction",
+      "prompt": "On an island, there are 100 people with blue eyes and 100 people with brown eyes. Everyone can see everyone else's eye color, but no one knows their own eye color. There are no mirrors, and communication about eye color is strictly forbidden.<br>\nA strict religious law states: if anyone discovers their own eye color, they must publicly leave the island at midnight.<br>\nA visitor arrives, gathers all 200 islanders, and makes one public announcement: <strong>\"At least one of you has blue eyes.\"</strong><br>\n<strong>Question:</strong> Assuming everyone is perfectly rational and follows the law, what happens, and on which night?",
+      "solution": "<strong>1. The Base Case (n = 1):</strong><br>\nSuppose there were only 1 person with blue eyes ($n = 1$). He looks around, sees 0 other blue-eyed people. Knowing the visitor announced at least one person has blue eyes, he deduces it must be himself. He leaves on <strong>Night 1</strong>.<br><br>\n<strong>2. Induction Step (n = 2):</strong><br>\nSuppose there are 2 blue-eyed people (A and B). A looks at B and thinks: \"If I don't have blue eyes, B will see 0 blue eyes and leave on Night 1.\"<br>\nNight 1 passes, and B does not leave. A immediately realizes: \"B didn't leave because B saw someone else with blue eyes—me!\" B reaches the exact same conclusion. Both A and B leave on <strong>Night 2</strong>.<br><br>\n<strong>3. Conclusion for n = 100:</strong><br>\nBy mathematical induction, for any $n$ blue-eyed people:<br>\nNothing happens on nights 1 through 99. Each blue-eyed person waits to see if the other 99 leave.<br>\nWhen no one leaves on Night 99, all 100 blue-eyed people realize they must have blue eyes, and <strong>all 100 leave together on Night 100</strong>.<br><br>\n<strong>4. What the Visitor Changed (Common Knowledge):</strong><br>\nEveryone already knew someone had blue eyes (they each saw 99 or 100 blue-eyed people). But the visitor created <strong>Common Knowledge</strong>: everyone now knows that everyone knows that everyone knows..."
+},
+      {
+      "id": "brain-07",
+      "category": "brainteasers",
+      "difficulty": "easy",
+      "firms": [
+            "Akuna Capital",
+            "IMC",
+            "Flow Traders"
+      ],
+      "title": "Find the Heavy Marble Among 8 Marbles in 2 Weighings",
+      "prompt": "You have <strong>8 marbles</strong> that look completely identical. 7 marbles have identical weight, and <strong>1 marble is slightly heavier</strong>.<br>\nYou have a balance scale.<br>\n<strong>Question:</strong> How do you identify the heavy marble in <strong>at most 2 weighings</strong>?",
+      "solution": "<strong>1. Information Theory Divide-and-Conquer:</strong><br>\nWith a balance scale, each weighing has 3 possible outcomes (Left heavy, Right heavy, Balanced). In 2 weighings, you can distinguish $3^2 = 9$ states ($9 \\ge 8$).<br>\nDivide the 8 marbles into three groups: <strong>3, 3, and 2</strong>.<br><br>\n<strong>2. Weighing 1:</strong><br>\nWeigh <strong>Group A (3 marbles) vs. Group B (3 marbles)</strong>. (Leave Group C of 2 marbles on the table).<br><br>\n• <strong>Outcome 1: Scale Balances:</strong><br>\nThe heavy marble is in Group C (the 2 unweighed marbles).<br>\n<strong>Weighing 2:</strong> Weigh marble 7 vs marble 8. Whichever pan drops is the heavy marble.<br><br>\n• <strong>Outcome 2: Scale Tilts (e.g. Group A is heavier):</strong><br>\nThe heavy marble is one of the 3 marbles in Group A.<br>\n<strong>Weighing 2:</strong> Take 2 marbles from Group A and weigh them 1 vs 1. If one drops, that is the heavy marble; if they balance, the third unweighed marble in Group A is the heavy one.<br><br>\nGuaranteed resolution in exactly <strong>2 weighings</strong>."
+},
+      {
+      "id": "behav-05",
+      "category": "behavioral",
+      "difficulty": "medium",
+      "firms": [
+            "Jane Street",
+            "Optiver",
+            "Citadel"
+      ],
+      "title": "Process vs. Outcome: Assessing an Unlucky Trading Decision",
+      "prompt": "In an interview, you are asked: <em>\"Tell me about a trade where you did everything right, but still lost money. How did you know your process was right?\"</em><br>\nWhat is the interviewer testing, and what trap must you avoid?",
+      "solution": "<strong>What the Interviewer is Testing:</strong><br>\n1. <strong>Outcome Bias Immunity:</strong> In probabilistic trading, positive EV bets ($EV > 0$) frequently result in negative single-event outcomes due to variance. A good trader does not abandon a winning strategy due to short-term bad luck, nor do they celebrate a stupid bet that happened to win.<br>\n2. <strong>Falsifiability of Edge:</strong> You must demonstrate how you quantitatively evaluated that you had an edge *before* the trade (e.g. order book queue position, structural statistical arbitrage mispricing, or fundamental supply bottleneck).<br>\n3. <strong>Bankroll Management:</strong> Even with positive EV, did you size the bet so that losing didn't threaten your desk's survival?<br><br>\n<strong>The Deadly Trap:</strong><br>\nClaiming you 'did everything right' when in fact you ignored an obvious macro headline or failed to hedge tail risk. Admit the loss cleanly, explain the distribution, and show that you reviewed the post-trade data without emotional tilt."
+}
     ];
 
     let currentCategory = 'all';

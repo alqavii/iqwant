@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>IQwant — Flanker Inhibition Task</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090a0d;
+      --surface: #101217;
+      --surface-card: #0d0f13;
+      --surface-hover: #15181f;
+      --border: #1b1f27;
+      --border-hover: #2d3340;
+      --text: #ededed;
+      --text-muted: #848b98;
+      --text-dim: #4f5664;
+      --green: #2fa872;
+      --red: #df4a56;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(9, 10, 13, 0.85);
+      backdrop-filter: blur(12px);
+    }
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--text); }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .info-strip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--text-dim);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .info-strip strong { color: var(--text); }
+
+    .dash-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .dash-box {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+    .dash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .dash-val {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .game-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 40px 24px;
+      text-align: center;
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .flanker-box {
+      font-family: var(--font-mono);
+      font-size: 3.8rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      color: var(--text);
+      user-select: none;
+      margin: 32px 0;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .flanker-box .target-arrow {
+      color: #ffffff;
+      text-decoration: underline;
+      text-underline-offset: 8px;
+    }
+
+    .controls-row {
+      display: flex;
+      gap: 16px;
+      width: 100%;
+      max-width: 380px;
+      margin-top: 16px;
+    }
+    .btn-arrow {
+      flex: 1;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 1.6rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .btn-arrow:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-hover);
+    }
+
+    .btn-main {
+      background: var(--text);
+      color: var(--bg);
+      border: 1px solid var(--text);
+      padding: 12px 28px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-main:hover { background: #ffffff; }
+
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+    .report-table th, .report-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .report-table th {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">IQwant</a>
+      <div class="nav-links">
+        <a href="index.html">← All Modules</a>
+        <a href="optiver80.html">80 in 8</a>
+        <a href="balloon.html">Balloon BART</a>
+        <a href="switchgame.html">Switch Challenge</a>
+        <a href="questions.html">Question Bank</a>
+        <a href="companies.html">Firms</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="eyebrow">Cognitive Inhibition &bull; Citadel Pymetrics / Optiver Shapeshift</div>
+    <h1>Arrow Flanker &amp; Interference Task</h1>
+    <p class="lead">Focus exclusively on the <u>CENTER ARROW</u>. Press Left or Right corresponding only to the direction of the center target arrow, ignoring conflicting flanking distractors.</p>
+
+    <div class="info-strip">
+      <strong>Psychometric Science:</strong> Evaluates the <em>Eriksen Flanker Effect</em> and executive inhibitory control. Flanker interference cost = $(RT_{\text{Incongruent}} - RT_{\text{Congruent}})$. Quant trading candidates with lower interference cost possess superior capacity to filter out market noise and false breakouts under high sensory load. Use Keyboard arrow keys <code>←</code> and <code>→</code>.
+    </div>
+
+    <div class="dash-bar">
+      <div class="dash-item">
+        <span class="dash-label">Trials</span>
+        <span class="dash-val" id="dispTrials">0 / 30</span>
+      </div>
+      <div class="dash-item">
+        <span class="dash-label">Accuracy</span>
+        <span class="dash-val" id="dispAcc">100%</span>
+      </div>
+      <div class="dash-item">
+        <span class="dash-label">Avg Congruent RT</span>
+        <span class="dash-val" id="dispCong">--</span>
+      </div>
+      <div class="dash-item">
+        <span class="dash-label">Flanker Interference Cost</span>
+        <span class="dash-val" id="dispCost">--</span>
+      </div>
+    </div>
+
+    <div class="game-card">
+      <div id="startScreen">
+        <h3 style="font-size:1.35rem; font-weight:700; margin-bottom:8px;">30-Trial Assessment</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:24px; max-width:440px;">Respond as fast as possible to the central underlined arrow using your keyboard <code>←</code> / <code>→</code> or the buttons below.</p>
+        <button class="btn-main" onclick="startTest()">Start Test</button>
+      </div>
+
+      <div id="playStage" style="display:none; width:100%; flex-direction:column; align-items:center;">
+        <div class="flanker-box" id="flankerDisplay">+</div>
+        <div class="controls-row">
+          <button class="btn-arrow" onclick="respond('left')">← Left</button>
+          <button class="btn-arrow" onclick="respond('right')">Right →</button>
+        </div>
+      </div>
+
+      <div id="reportScreen" style="display:none; width:100%;">
+        <div class="eyebrow">Cognitive Diagnostic</div>
+        <h3 style="font-size:1.45rem; font-weight:700; margin-bottom:6px;">Inhibitory Control Results</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">Latency differential between congruent and conflict-laden incongruent stimuli.</p>
+
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>Condition</th>
+              <th>Trials</th>
+              <th>Accuracy</th>
+              <th>Mean Latency</th>
+            </tr>
+          </thead>
+          <tbody id="reportTableBody"></tbody>
+        </table>
+
+        <div style="margin-top:28px;">
+          <button class="btn-main" onclick="startTest()">Test Again</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const TOTAL_TRIALS = 30;
+    let trialIndex = 0;
+    let currentTarget = null;
+    let currentCondition = null; // 'congruent' | 'incongruent' | 'neutral'
+    let trialStartTime = 0;
+    let trialActive = false;
+    let trialData = [];
+
+    function startTest() {
+      trialIndex = 0;
+      trialData = [];
+      document.getElementById('startScreen').style.display = 'none';
+      document.getElementById('reportScreen').style.display = 'none';
+      const ps = document.getElementById('playStage');
+      ps.style.display = 'flex';
+
+      document.getElementById('dispTrials').textContent = `0 / ${TOTAL_TRIALS}`;
+      document.getElementById('dispAcc').textContent = `100%`;
+      document.getElementById('dispCong').textContent = `--`;
+      document.getElementById('dispCost').textContent = `--`;
+
+      nextTrial();
+    }
+
+    function nextTrial() {
+      if (trialIndex >= TOTAL_TRIALS) {
+        finishTest();
+        return;
+      }
+
+      trialActive = false;
+      const box = document.getElementById('flankerDisplay');
+      box.textContent = "+"; // Fixation cross
+
+      // Random delay 400-800ms
+      const delay = 400 + Math.random() * 400;
+      setTimeout(() => {
+        // Generate trial
+        const dir = (Math.random() < 0.5) ? 'left' : 'right';
+        const typeRoll = Math.random();
+        let cond, flankerDir;
+
+        if (typeRoll < 0.45) {
+          cond = 'congruent';
+          flankerDir = dir;
+        } else if (typeRoll < 0.90) {
+          cond = 'incongruent';
+          flankerDir = (dir === 'left') ? 'right' : 'left';
+        } else {
+          cond = 'neutral';
+          flankerDir = 'neutral';
+        }
+
+        currentTarget = dir;
+        currentCondition = cond;
+
+        const arrowChar = (dir === 'left') ? '←' : '→';
+        let flankChar;
+        if (flankerDir === 'left') flankChar = '←';
+        else if (flankerDir === 'right') flankChar = '→';
+        else flankChar = '—';
+
+        box.innerHTML = `${flankChar}&nbsp;${flankChar}&nbsp;<span class="target-arrow">${arrowChar}</span>&nbsp;${flankChar}&nbsp;${flankChar}`;
+
+        trialStartTime = performance.now();
+        trialActive = true;
+      }, delay);
+    }
+
+    function respond(choice) {
+      if (!trialActive) return;
+      trialActive = false;
+
+      const latency = Math.round(performance.now() - trialStartTime);
+      const isCorrect = (choice === currentTarget);
+
+      trialData.push({
+        condition: currentCondition,
+        target: currentTarget,
+        choice: choice,
+        correct: isCorrect,
+        rt: latency
+      });
+
+      trialIndex++;
+      document.getElementById('dispTrials').textContent = `${trialIndex} / ${TOTAL_TRIALS}`;
+
+      // Update running stats
+      const correctCount = trialData.filter(d => d.correct).length;
+      document.getElementById('dispAcc').textContent = `${Math.round((correctCount / trialData.length) * 100)}%`;
+
+      nextTrial();
+    }
+
+    function finishTest() {
+      document.getElementById('playStage').style.display = 'none';
+      const rep = document.getElementById('reportScreen');
+      rep.style.display = 'block';
+
+      // Group by condition
+      const cong = trialData.filter(d => d.condition === 'congruent' && d.correct);
+      const incong = trialData.filter(d => d.condition === 'incongruent' && d.correct);
+      const neut = trialData.filter(d => d.condition === 'neutral' && d.correct);
+
+      const meanRT = (arr) => arr.length ? Math.round(arr.reduce((a, b) => a + b.rt, 0) / arr.length) : 0;
+      const congRT = meanRT(cong);
+      const incongRT = meanRT(incong);
+      const neutRT = meanRT(neut);
+      const cost = Math.max(0, incongRT - congRT);
+
+      document.getElementById('dispCong').textContent = `${congRT}ms`;
+      document.getElementById('dispCost').textContent = `+${cost}ms`;
+
+      const tbody = document.getElementById('reportTableBody');
+      tbody.innerHTML = `
+        <tr>
+          <td><strong>Congruent (Same Direction)</strong></td>
+          <td>${cong.length}</td>
+          <td>${Math.round((cong.length / trialData.filter(d => d.condition === 'congruent').length) * 100)}%</td>
+          <td style="font-family:var(--font-mono);">${congRT} ms</td>
+        </tr>
+        <tr>
+          <td><strong>Incongruent (Conflicting Flankers)</strong></td>
+          <td>${incong.length}</td>
+          <td>${Math.round((incong.length / trialData.filter(d => d.condition === 'incongruent').length) * 100)}%</td>
+          <td style="font-family:var(--font-mono);">${incongRT} ms</td>
+        </tr>
+        <tr>
+          <td><strong>Neutral (Dash Flankers)</strong></td>
+          <td>${neut.length}</td>
+          <td>${Math.round((neut.length / trialData.filter(d => d.condition === 'neutral').length) * 100)}%</td>
+          <td style="font-family:var(--font-mono);">${neutRT} ms</td>
+        </tr>
+        <tr style="background:var(--surface);">
+          <td colspan="3"><strong>Executive Interference Deficit (Incongruent − Congruent)</strong></td>
+          <td style="font-family:var(--font-mono); font-weight:700; color:${cost < 50 ? 'var(--green)' : 'var(--red)'};">+${cost} ms</td>
+        </tr>
+      `;
+    }
+
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') respond('left');
+      else if (e.key === 'ArrowRight') respond('right');
+    });
+  </script>
+</body>
+</html>

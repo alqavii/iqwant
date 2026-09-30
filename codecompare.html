@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>IQwant — Code Compare (Perceptual Match)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090a0d;
+      --surface: #101217;
+      --surface-card: #0d0f13;
+      --surface-hover: #15181f;
+      --border: #1b1f27;
+      --border-hover: #2d3340;
+      --text: #ededed;
+      --text-muted: #848b98;
+      --text-dim: #4f5664;
+      --green: #2fa872;
+      --red: #df4a56;
+      --amber: #d99036;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(9, 10, 13, 0.85);
+      backdrop-filter: blur(12px);
+    }
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--text); }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .info-strip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--text-dim);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .info-strip strong { color: var(--text); }
+
+    .dash-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .dash-box {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+    .dash-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .dash-val {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .game-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .ref-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .ref-code-box {
+      background: var(--surface);
+      border: 1px solid var(--border-hover);
+      border-radius: 8px;
+      padding: 18px 24px;
+      font-family: var(--font-mono);
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--text);
+      display: inline-block;
+      margin-bottom: 32px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 600px) {
+      .options-grid { grid-template-columns: 1fr; }
+    }
+
+    .option-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 16px;
+      font-family: var(--font-mono);
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.12s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .option-btn:hover:not(:disabled) {
+      background: var(--surface-hover);
+      border-color: var(--border-hover);
+      color: var(--text);
+    }
+    .option-btn.correct {
+      background: rgba(47, 168, 114, 0.14) !important;
+      border-color: var(--green) !important;
+      color: var(--green) !important;
+    }
+    .option-btn.wrong {
+      background: rgba(223, 74, 86, 0.14) !important;
+      border-color: var(--red) !important;
+      color: var(--red) !important;
+    }
+
+    .btn-main {
+      background: var(--text);
+      color: var(--bg);
+      border: 1px solid var(--text);
+      padding: 12px 28px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .btn-main:hover { background: #ffffff; }
+
+    .start-screen {
+      padding: 40px 0;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">IQwant</a>
+      <div class="nav-links">
+        <a href="index.html">← All Modules</a>
+        <a href="optiver80.html">80 in 8</a>
+        <a href="math24.html">Number Box</a>
+        <a href="chimp.html">Chimp Memory</a>
+        <a href="questions.html">Question Bank</a>
+        <a href="companies.html">Firms</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="eyebrow">Perceptual Proofreading &bull; Optiver Zap-N Assessment</div>
+    <h1>Code Compare: Rapid Visual Match</h1>
+    <p class="lead">Match the exact target code among subtly distorted permutations. Tests proofreading accuracy under high-pressure time limits with negative marking.</p>
+
+    <div class="info-strip">
+      <strong>Scoring Protocol:</strong> <strong>+1 point</strong> for correct identification, <strong>−2 points</strong> for incorrect guess. Wild guessing will rapidly destroy your score. Optiver uses this to evaluate symbol discrimination and visual scanning speed without fatigue.
+    </div>
+
+    <div class="dash-bar">
+      <div class="dash-box">
+        <div class="dash-label">Time Remaining</div>
+        <div class="dash-val" id="dispTime">60s</div>
+      </div>
+      <div class="dash-box">
+        <div class="dash-label">Net Score</div>
+        <div class="dash-val" id="dispScore">0</div>
+      </div>
+      <div class="dash-box">
+        <div class="dash-label">Accuracy</div>
+        <div class="dash-val" id="dispAcc">100%</div>
+      </div>
+      <div class="dash-box">
+        <div class="dash-label">Best Score</div>
+        <div class="dash-val" id="dispBest">0</div>
+      </div>
+    </div>
+
+    <div class="game-card">
+      <div class="start-screen" id="startScreen">
+        <h3 style="font-size:1.35rem; font-weight:700; margin-bottom:8px;">60-Second Challenge</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:24px; max-width:440px; margin-left:auto; margin-right:auto;">Spot the single identical code among 4 candidate strings with transposed digits and look-alike characters.</p>
+        <button class="btn-main" onclick="startGame()">Start Test</button>
+      </div>
+
+      <div id="playStage" style="display:none;">
+        <div class="ref-label">Target Reference Code</div>
+        <div class="ref-code-box" id="refCode">KX98-BL37-QM41</div>
+
+        <div class="options-grid" id="optionsGrid"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    const CONFUSIONS = {
+      '0': ['O', 'D', 'Q'],
+      'O': ['0', 'Q', 'D'],
+      '1': ['I', 'L', '7'],
+      'I': ['1', 'L', 'T'],
+      '8': ['B', '3', '0'],
+      'B': ['8', 'R', 'P'],
+      '5': ['S', '6'],
+      'S': ['5', '8'],
+      '2': ['Z', '7'],
+      'Z': ['2', '7'],
+      'U': ['V', 'W'],
+      'V': ['U', 'Y'],
+      'M': ['N', 'W'],
+      'N': ['M', 'H']
+    };
+
+    let timeLeft = 60;
+    let timerId = null;
+    let score = 0;
+    let correctAttempts = 0;
+    let totalAttempts = 0;
+    let bestScore = parseInt(localStorage.getItem('iqwant_codecompare_best') || '0', 10);
+    let currentRef = "";
+    let correctIdx = 0;
+    let canClick = true;
+
+    document.getElementById('dispBest').textContent = bestScore;
+
+    function randomString(len) {
+      let res = "";
+      for (let i = 0; i < len; i++) {
+        res += CHARS[Math.floor(Math.random() * CHARS.length)];
+      }
+      return res;
+    }
+
+    function generateCode() {
+      // Structure: XXXX-YYYY-ZZZZ
+      return `${randomString(4)}-${randomString(4)}-${randomString(4)}`;
+    }
+
+    function mutateCode(code) {
+      const arr = code.split('');
+      // Find eligible indices (avoid dashes)
+      const validIndices = [];
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] !== '-') validIndices.push(i);
+      }
+
+      const mutType = Math.random();
+      if (mutType < 0.45 && validIndices.length >= 2) {
+        // Transpose adjacent
+        const pickIdx = validIndices[Math.floor(Math.random() * (validIndices.length - 1))];
+        const nextIdx = pickIdx + 1;
+        if (arr[nextIdx] !== '-' && arr[pickIdx] !== arr[nextIdx]) {
+          const tmp = arr[pickIdx];
+          arr[pickIdx] = arr[nextIdx];
+          arr[nextIdx] = tmp;
+          return arr.join('');
+        }
+      }
+
+      // Substitute lookalike or random char
+      const idx = validIndices[Math.floor(Math.random() * validIndices.length)];
+      const orig = arr[idx];
+      if (CONFUSIONS[orig]) {
+        const pool = CONFUSIONS[orig];
+        arr[idx] = pool[Math.floor(Math.random() * pool.length)];
+      } else {
+        let replacement = CHARS[Math.floor(Math.random() * CHARS.length)];
+        while (replacement === orig) replacement = CHARS[Math.floor(Math.random() * CHARS.length)];
+        arr[idx] = replacement;
+      }
+
+      return arr.join('');
+    }
+
+    function startGame() {
+      timeLeft = 60;
+      score = 0;
+      correctAttempts = 0;
+      totalAttempts = 0;
+      canClick = true;
+
+      document.getElementById('startScreen').style.display = 'none';
+      document.getElementById('playStage').style.display = 'block';
+
+      updateStats();
+
+      if (timerId) clearInterval(timerId);
+      timerId = setInterval(() => {
+        timeLeft--;
+        document.getElementById('dispTime').textContent = `${timeLeft}s`;
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+
+      newRound();
+    }
+
+    function updateStats() {
+      document.getElementById('dispScore').textContent = score;
+      const acc = totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 100;
+      document.getElementById('dispAcc').textContent = `${acc}%`;
+      document.getElementById('dispBest').textContent = bestScore;
+    }
+
+    function newRound() {
+      canClick = true;
+      currentRef = generateCode();
+      document.getElementById('refCode').textContent = currentRef;
+
+      // Generate 4 options: 1 exact match, 3 unique mutations
+      const options = [currentRef];
+      while (options.length < 4) {
+        const mut = mutateCode(currentRef);
+        if (!options.includes(mut)) options.push(mut);
+      }
+
+      // Shuffle options
+      options.sort(() => Math.random() - 0.5);
+      correctIdx = options.indexOf(currentRef);
+
+      const grid = document.getElementById('optionsGrid');
+      grid.innerHTML = options.map((opt, i) => `
+        <button class="option-btn" id="opt-${i}" onclick="chooseOption(${i})">${opt}</button>
+      `).join('');
+    }
+
+    function chooseOption(idx) {
+      if (!canClick || timeLeft <= 0) return;
+      canClick = false;
+      totalAttempts++;
+
+      const btn = document.getElementById(`opt-${idx}`);
+      if (idx === correctIdx) {
+        score += 1;
+        correctAttempts++;
+        btn.classList.add('correct');
+      } else {
+        score -= 2;
+        btn.classList.add('wrong');
+        document.getElementById(`opt-${correctIdx}`).classList.add('correct');
+      }
+
+      if (score > bestScore) {
+        bestScore = score;
+        localStorage.setItem('iqwant_codecompare_best', bestScore);
+      }
+
+      updateStats();
+
+      setTimeout(() => {
+        newRound();
+      }, 250);
+    }
+
+    function endGame() {
+      clearInterval(timerId);
+      document.getElementById('playStage').style.display = 'none';
+      const sc = document.getElementById('startScreen');
+      sc.style.display = 'block';
+
+      sc.innerHTML = `
+        <div style="font-family:var(--font-mono); font-size:0.75rem; text-transform:uppercase; color:var(--text-dim); margin-bottom:8px;">Test Concluded</div>
+        <h3 style="font-size:1.6rem; font-weight:700; margin-bottom:8px;">Final Net Score: ${score}</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:24px;">Total attempts: ${totalAttempts} &bull; Accuracy: ${totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 0}% &bull; Speed: ${(totalAttempts / 60).toFixed(2)} ops/sec.</p>
+        <button class="btn-main" onclick="startGame()">Play Again</button>
+      `;
+    }
+  </script>
+</body>
+</html>

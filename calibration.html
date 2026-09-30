@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>IQwant — Calibration & Confidence Intervals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090a0d;
+      --surface: #101217;
+      --surface-card: #0d0f13;
+      --surface-hover: #15181f;
+      --border: #1b1f27;
+      --border-hover: #2d3340;
+      --text: #ededed;
+      --text-muted: #848b98;
+      --text-dim: #4f5664;
+      --green: #2fa872;
+      --red: #df4a56;
+      --amber: #d99036;
+      --accent: #ededed;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(9, 10, 13, 0.85);
+      backdrop-filter: blur(12px);
+    }
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--text); }
+
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .info-strip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--text-dim);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .info-strip strong { color: var(--text); }
+
+    .card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .round-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .round-num {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .tag-category {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .question-prompt {
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+    .question-unit {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 500px) {
+      .input-grid { grid-template-columns: 1fr; }
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field-group label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .field-group input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      padding: 12px 14px;
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .field-group input:focus {
+      border-color: var(--border-hover);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--text);
+      color: var(--bg);
+      border: 1px solid var(--text);
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .btn-submit:hover:not(:disabled) {
+      background: #ffffff;
+    }
+    .btn-submit:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Summary & Analysis Panel */
+    .summary-card {
+      display: none;
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px;
+    }
+    .summary-card.active { display: block; }
+
+    .score-banner {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+      margin: 20px 0 28px;
+    }
+    .metric-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
+      text-align: center;
+    }
+    .metric-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .metric-val {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .calibration-eval {
+      padding: 16px 20px;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .breakdown-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 0.82rem;
+    }
+    .breakdown-table th {
+      text-align: left;
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+    }
+    .breakdown-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .breakdown-table tr:hover td {
+      background: var(--surface);
+    }
+    .badge-hit { color: var(--green); font-weight: 600; font-family: var(--font-mono); }
+    .badge-miss { color: var(--red); font-weight: 600; font-family: var(--font-mono); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">IQwant</a>
+      <div class="nav-links">
+        <a href="index.html">← All Modules</a>
+        <a href="optiver80.html">80 in 8</a>
+        <a href="marketmaking.html">Market Making</a>
+        <a href="balloon.html">Balloon BART</a>
+        <a href="questions.html">Question Bank</a>
+        <a href="companies.html">Firms</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="eyebrow">Bayesian Estimation &bull; Jane Street / SIG / Bridgewater</div>
+    <h1>90% Confidence Interval Calibration</h1>
+    <p class="lead">Elite quant interviewers evaluate whether your stated confidence matches reality. Overconfidence is a fatal flaw in market makers.</p>
+
+    <div class="info-strip">
+      <strong>The Calibration Principle:</strong> For each question, provide a range <code>[Lower Bound, Upper Bound]</code> such that you are <strong>90% confident</strong> the true value falls inside. In a test of 10 questions, exactly <strong>9 of the 10</strong> true values should fall within your intervals. If fewer than 9 fall inside, you are <em>overconfident</em> (your bands are too narrow for your uncertainty). If all 10 are inside with absurdly wide bands, you are <em>underconfident</em>.
+    </div>
+
+    <!-- Active Question Card -->
+    <div class="card" id="questionCard">
+      <div class="round-meta">
+        <span class="round-num" id="roundIndicator">Question 1 of 10</span>
+        <span class="tag-category" id="catIndicator">Commodities</span>
+      </div>
+
+      <div class="question-prompt" id="promptText">Loading question...</div>
+      <div class="question-unit" id="unitText">Unit: Barrels / Day</div>
+
+      <div class="input-grid">
+        <div class="field-group">
+          <label for="lowInput">90% Lower Bound</label>
+          <input type="number" id="lowInput" placeholder="Min estimate" step="any" autofocus />
+        </div>
+        <div class="field-group">
+          <label for="highInput">90% Upper Bound</label>
+          <input type="number" id="highInput" placeholder="Max estimate" step="any" />
+        </div>
+      </div>
+
+      <button id="submitBtn" class="btn-submit" onclick="submitAnswer()">Confirm Range &amp; Next →</button>
+    </div>
+
+    <!-- Results Card -->
+    <div class="summary-card" id="summaryCard">
+      <div class="eyebrow">Assessment Results</div>
+      <h2 style="font-size:1.4rem; font-weight:700; margin-bottom:4px;">Calibration Diagnostic</h2>
+      <p style="color:var(--text-muted); font-size:0.9rem;">Evaluation of your subjective confidence intervals against objective ground truth.</p>
+
+      <div class="score-banner">
+        <div class="metric-box">
+          <div class="metric-label">Target Hit Rate</div>
+          <div class="metric-val" style="color:var(--text);">90.0%</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Your Hit Rate</div>
+          <div class="metric-val" id="resHitRate">--</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Brier Error</div>
+          <div class="metric-val" id="resBrier">--</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Verdict</div>
+          <div class="metric-val" id="resVerdict" style="font-size:1.05rem;">--</div>
+        </div>
+      </div>
+
+      <div class="calibration-eval" id="evalText"></div>
+
+      <div style="font-family:var(--font-mono); font-size:0.75rem; text-transform:uppercase; color:var(--text-dim); margin-top:28px;">Individual Question Breakdown</div>
+      <table class="breakdown-table">
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Your 90% Range</th>
+            <th>True Value</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody id="breakdownBody"></tbody>
+      </table>
+
+      <div style="margin-top:24px; text-align:center;">
+        <button class="btn-submit" style="max-width:240px;" onclick="resetTest()">Test Another Set</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const POOL = [
+      { q: "Global crude oil consumption in barrels per day (2024 average)", val: 102500000, unit: "Barrels / Day", cat: "Commodities" },
+      { q: "Average deadweight tonnage (DWT) capacity of a Very Large Crude Carrier (VLCC)", val: 300000, unit: "Metric Tons", cat: "Commodities" },
+      { q: "Average distance from the Earth to the Moon", val: 384400, unit: "Kilometers (km)", cat: "Science" },
+      { q: "Total number of commercial passenger airplanes in service globally", val: 26000, unit: "Aircraft", cat: "Logistics" },
+      { q: "Daily trading volume of the global foreign exchange (FX) market in trillion USD", val: 7.5, unit: "Trillion USD", cat: "Finance" },
+      { q: "Annual global production of refined copper in metric tons", val: 26500000, unit: "Metric Tons", cat: "Commodities" },
+      { q: "Maximum depth of the Mariana Trench in meters", val: 10994, unit: "Meters", cat: "Geography" },
+      { q: "Total weight of the Eiffel Tower in Paris", val: 10100, unit: "Metric Tons", cat: "Engineering" },
+      { q: "Annual global liquefied natural gas (LNG) export volume in million tons", val: 404, unit: "Million Metric Tons", cat: "Commodities" },
+      { q: "Number of seconds in one standard calendar year (365 days)", val: 31536000, unit: "Seconds", cat: "Mental Math" },
+      { q: "Speed of sound in dry air at 20°C (68°F) in meters per second", val: 343, unit: "Meters / Second", cat: "Physics" },
+      { q: "Average daily transit count of container & cargo ships through the Suez Canal (pre-crisis)", val: 56, unit: "Vessels / Day", cat: "Logistics" },
+      { q: "Length of the Panama Canal from Atlantic to Pacific entrance in kilometers", val: 82, unit: "Kilometers (km)", cat: "Logistics" },
+      { q: "Total gold ever mined in human history in metric tons", val: 212500, unit: "Metric Tons", cat: "Commodities" },
+      { q: "Population of Tokyo metropolitan area in millions", val: 37.4, unit: "Million People", cat: "Demographics" }
+    ];
+
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let userAnswers = [];
+
+    function shuffle(arr) {
+      return [...arr].sort(() => Math.random() - 0.5);
+    }
+
+    function initTest() {
+      currentQuestions = shuffle(POOL).slice(0, 10);
+      currentIndex = 0;
+      userAnswers = [];
+      document.getElementById('questionCard').style.display = 'block';
+      document.getElementById('summaryCard').classList.remove('active');
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const item = currentQuestions[currentIndex];
+      document.getElementById('roundIndicator').textContent = `Question ${currentIndex + 1} of 10`;
+      document.getElementById('catIndicator').textContent = item.cat;
+      document.getElementById('promptText').textContent = item.q;
+      document.getElementById('unitText').textContent = `Required Unit: ${item.unit}`;
+      document.getElementById('lowInput').value = '';
+      document.getElementById('highInput').value = '';
+      document.getElementById('lowInput').focus();
+    }
+
+    function submitAnswer() {
+      const lowVal = parseFloat(document.getElementById('lowInput').value);
+      const highVal = parseFloat(document.getElementById('highInput').value);
+
+      if (isNaN(lowVal) || isNaN(highVal)) {
+        alert("Please enter numeric values for both lower and upper bounds.");
+        return;
+      }
+      if (lowVal >= highVal) {
+        alert("Upper bound must be strictly greater than lower bound.");
+        return;
+      }
+
+      const q = currentQuestions[currentIndex];
+      const isInside = (q.val >= lowVal && q.val <= highVal);
+
+      userAnswers.push({
+        q: q.q,
+        unit: q.unit,
+        trueVal: q.val,
+        low: lowVal,
+        high: highVal,
+        hit: isInside
+      });
+
+      currentIndex++;
+      if (currentIndex < currentQuestions.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function formatNum(n) {
+      if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(2) + 'M';
+      if (Math.abs(n) >= 1e3) return n.toLocaleString();
+      return n.toString();
+    }
+
+    function showResults() {
+      document.getElementById('questionCard').style.display = 'none';
+      const sumCard = document.getElementById('summaryCard');
+      sumCard.classList.add('active');
+
+      const total = userAnswers.length;
+      const hits = userAnswers.filter(a => a.hit).length;
+      const hitRate = (hits / total) * 100;
+
+      // Brier score for 90% confidence target
+      // Target probability p = 0.90. Brier = mean((hit ? 1 : 0 - 0.90)^2)
+      let brierSum = 0;
+      userAnswers.forEach(a => {
+        const outcome = a.hit ? 1.0 : 0.0;
+        brierSum += Math.pow(outcome - 0.90, 2);
+      });
+      const brierScore = (brierSum / total).toFixed(3);
+
+      const hitRateEl = document.getElementById('resHitRate');
+      const brierEl = document.getElementById('resBrier');
+      const verdictEl = document.getElementById('resVerdict');
+      const evalText = document.getElementById('evalText');
+
+      hitRateEl.textContent = hitRate.toFixed(1) + '%';
+      brierEl.textContent = brierScore;
+
+      if (hits === 9) {
+        hitRateEl.style.color = 'var(--green)';
+        verdictEl.textContent = 'Perfect Calibration';
+        verdictEl.style.color = 'var(--green)';
+        evalText.innerHTML = `<strong>Exceptional:</strong> Exactly 9 out of 10 true values fell inside your 90% confidence intervals. You exhibit rare self-awareness of uncertainty, avoiding the trap of false precision that leads to catastrophic trading drawdowns.`;
+      } else if (hits === 8 || hits === 10) {
+        hitRateEl.style.color = 'var(--amber)';
+        verdictEl.textContent = 'Well Calibrated';
+        verdictEl.style.color = 'var(--amber)';
+        evalText.innerHTML = `<strong>Strong:</strong> ${hits} of 10 intervals captured the true value. While slight ${hits < 9 ? 'overconfidence' : 'conservatism'} is present, your bands are generally consistent with your internal uncertainty.`;
+      } else if (hits < 8) {
+        hitRateEl.style.color = 'var(--red)';
+        verdictEl.textContent = 'Severe Overconfidence';
+        verdictEl.style.color = 'var(--red)';
+        evalText.innerHTML = `<strong>Critical Bias Detected:</strong> Only ${hits} of 10 true values were captured. Your subjective intervals were far too tight for your genuine state of knowledge. In quant trading, overconfidence leads to underestimating tail risk and market maker ruin under adverse selection. Widen your bands when uncertainty is high.`;
+      }
+
+      // Populate table
+      const tbody = document.getElementById('breakdownBody');
+      tbody.innerHTML = userAnswers.map(a => `
+        <tr>
+          <td><strong>${a.q}</strong></td>
+          <td style="font-family:var(--font-mono);">[${formatNum(a.low)}, ${formatNum(a.high)}]</td>
+          <td style="font-family:var(--font-mono); color:var(--text);">${formatNum(a.trueVal)} ${a.unit}</td>
+          <td><span class="${a.hit ? 'badge-hit' : 'badge-miss'}">${a.hit ? '✓ INSIDE' : '✗ OUTSIDE'}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    function resetTest() {
+      initTest();
+    }
+
+    // Keyboard support: Enter to submit
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && document.getElementById('questionCard').style.display !== 'none') {
+        submitAnswer();
+      }
+    });
+
+    initTest();
+  </script>
+</body>
+</html>

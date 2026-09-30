@@ -21,8 +21,7 @@
       --text: #ededed;
       --text-muted: #848b98;
       --text-dim: #4f5664;
-      --accent: #5e6ad2;
-      --accent-soft: rgba(94, 106, 210, 0.12);
+      --accent: #ededed;
       --font-mono: 'JetBrains Mono', monospace;
     }
 
@@ -80,7 +79,7 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 22px;
     }
     .nav-links a {
       color: var(--text-muted);
@@ -93,11 +92,12 @@
       color: var(--text);
     }
     .nav-cta {
-      padding: 6px 14px;
       background: var(--text);
       color: var(--bg) !important;
+      padding: 6px 14px;
       border-radius: 6px;
-      font-weight: 600;
+      font-weight: 600 !important;
+      font-size: 0.82rem !important;
       transition: opacity 0.15s ease;
     }
     .nav-cta:hover { opacity: 0.9; }
@@ -110,7 +110,7 @@
 
     .hero {
       margin-bottom: 56px;
-      max-width: 680px;
+      max-width: 720px;
     }
     .hero-eyebrow {
       font-family: var(--font-mono);
@@ -142,7 +142,7 @@
       color: var(--text-dim);
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      margin-bottom: 16px;
+      margin: 44px 0 16px;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -158,7 +158,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
       gap: 16px;
-      margin-bottom: 48px;
+      margin-bottom: 16px;
     }
 
     .card {
@@ -171,7 +171,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 160px;
+      min-height: 165px;
       transition: background 0.15s ease, border-color 0.15s ease;
     }
     .card:hover {
@@ -243,7 +243,7 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 20px;
-      margin-bottom: 48px;
+      margin: 48px 0;
     }
     .feature-content h3 {
       font-size: 1.1rem;
@@ -275,7 +275,7 @@
 
     footer {
       border-top: 1px solid var(--border);
-      padding: 32px 24px;
+      padding: 36px 24px;
       text-align: center;
       font-size: 0.8rem;
       color: var(--text-dim);
@@ -295,12 +295,13 @@
     <div class="nav-container">
       <a href="index.html" class="brand">
         IQwant
-        <span class="brand-tag">v2.1</span>
+        <span class="brand-tag">v2.5</span>
       </a>
       <nav class="nav-links">
-        <a href="#assessments">Assessments</a>
-        <a href="questions.html">Question Bank</a>
-        <a href="questions.html?category=commodities">Commodities</a>
+        <a href="#numerical">Arithmetic</a>
+        <a href="#marketmaking">Game Theory</a>
+        <a href="#memory">Memory</a>
+        <a href="#questions">50 Questions</a>
         <a href="companies.html">Firms</a>
         <a href="optiver80.html" class="nav-cta">Practice 80 in 8</a>
       </nav>
@@ -309,28 +310,143 @@
 
   <main>
     <div class="hero">
-      <div class="hero-eyebrow">Quantitative Assessment Suite</div>
-      <h1>Assessments, simulators, and technical intelligence for trading roles.</h1>
-      <p>A focused platform for quantitative market making, algorithmic prop desks, and physical commodities merchants.</p>
+      <div class="hero-eyebrow">Quantitative &amp; Commodities Assessment Suite</div>
+      <h1>Assessments, cognitive simulators, and technical intelligence for trading.</h1>
+      <p>A comprehensive platform replicating the recruitment batteries of quantitative market makers (Optiver, Jane Street, Citadel, SIG, Flow Traders) and global commodity merchants (Trafigura, Glencore, Vitol).</p>
     </div>
 
-    <!-- SIMULATORS SECTION -->
-    <div class="section-label" id="assessments">Standard Assessment Simulators</div>
+    <!-- 1. NUMERICAL & CALCULATION SPEED -->
+    <div class="section-label" id="numerical">Mental Math &amp; Numerical Agility</div>
     <div class="grid">
-
       <!-- Optiver 80 in 8 -->
       <a href="optiver80.html" class="card">
         <div>
           <div class="card-meta">
-            <span class="card-firm">Optiver · Flow Traders</span>
+            <span class="card-firm">Optiver · Flow · Akuna</span>
             <span class="card-badge">80 Qs / 8 min</span>
           </div>
           <div class="card-title">80 in 8 Mental Arithmetic</div>
-          <div class="card-desc">Speed arithmetic with strict negative marking (+1 / −1 / 0). Evaluates speed, accuracy, and skipping discipline.</div>
+          <div class="card-desc">Speed arithmetic with strict negative marking (+1 / −1 / 0). Evaluates speed, accuracy, and skipping discipline with Zetamac &amp; Flow 30 presets.</div>
         </div>
-        <div class="card-action">Launch simulator →</div>
+        <div class="card-action">Launch arithmetic simulator →</div>
       </a>
 
+      <!-- Number Box (24 Game) -->
+      <a href="math24.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Optiver Zap-N · Akuna</span>
+            <span class="card-badge">Arithmetic Puzzle</span>
+          </div>
+          <div class="card-title">Number Box (Make 24)</div>
+          <div class="card-desc">Combine 4 numbers with arithmetic operations (+, −, ×, ÷) and parentheses to hit 24. Standard Optiver Zap-N mental flexibility test.</div>
+        </div>
+        <div class="card-action">Solve 24 puzzles →</div>
+      </a>
+
+      <!-- Code Compare -->
+      <a href="codecompare.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Optiver Zap-N</span>
+            <span class="card-badge">60s Speed Match</span>
+          </div>
+          <div class="card-title">Code Compare (Perceptual Match)</div>
+          <div class="card-desc">Identify the exact matching code among 4 candidate strings with transposed digits. High-speed proofreading with +1/−2 scoring penalty.</div>
+        </div>
+        <div class="card-action">Test proofreading accuracy →</div>
+      </a>
+    </div>
+
+    <!-- 2. MARKET MAKING & GAME THEORY -->
+    <div class="section-label" id="marketmaking">Market Making, Probability &amp; Sizing</div>
+    <div class="grid">
+      <!-- Market Making Game -->
+      <a href="marketmaking.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Jane Street · SIG · Citadel</span>
+            <span class="card-badge">Order Book</span>
+          </div>
+          <div class="card-title">Market Making Pit</div>
+          <div class="card-desc">Make two-way markets ([Bid] @ [Ask]) with adverse selection, sequential Bayesian clues, and positional inventory penalties.</div>
+        </div>
+        <div class="card-action">Enter the pit →</div>
+      </a>
+
+      <!-- Beat the Odds -->
+      <a href="beattheodds.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Optiver Assessment</span>
+            <span class="card-badge">20 Wagers</span>
+          </div>
+          <div class="card-title">Beat the Odds (Kelly Criterion)</div>
+          <div class="card-desc">Allocate bankroll across 20 stochastic bets. Tests expected value calculation ($EV > 0$), geometric compound growth, and drawdown control.</div>
+        </div>
+        <div class="card-action">Simulate bankroll growth →</div>
+      </a>
+
+      <!-- Calibration & Confidence Intervals -->
+      <a href="calibration.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Jane Street · Bridgewater</span>
+            <span class="card-badge">Brier Score</span>
+          </div>
+          <div class="card-title">90% Confidence Interval Calibration</div>
+          <div class="card-desc">Provide 90% confidence bands [Low, High] for numerical estimation problems. Quantifies subjective overconfidence against empirical truth.</div>
+        </div>
+        <div class="card-action">Test calibration accuracy →</div>
+      </a>
+    </div>
+
+    <!-- 3. COGNITIVE & WORKING MEMORY -->
+    <div class="section-label" id="memory">Working Memory &amp; Spatial Span</div>
+    <div class="grid">
+      <!-- Chimp Spatial Memory -->
+      <a href="chimp.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Spatial Memory</span>
+            <span class="card-badge">Sequential Recall</span>
+          </div>
+          <div class="card-title">Spatial Sequential Memory (Chimp Test)</div>
+          <div class="card-desc">Numbers flash on a grid and mask upon first click. Click tiles in ascending order from visual memory. Measures iconic decay under pressure.</div>
+        </div>
+        <div class="card-action">Test sequential memory →</div>
+      </a>
+
+      <!-- Memory Grid -->
+      <a href="memorygrid.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Optiver · SHL · Pymetrics</span>
+            <span class="card-badge">Pattern &amp; Shift</span>
+          </div>
+          <div class="card-title">Memory Grid &amp; Orientation</div>
+          <div class="card-desc">Spatial tile matrix recall and rapid directional orientation changes. Isolates mental rotation and visual retention limits.</div>
+        </div>
+        <div class="card-action">Launch grid test →</div>
+      </a>
+
+      <!-- Digits Span (Pincode) -->
+      <a href="pincode.html" class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-firm">Optiver Pincode · Pymetrics</span>
+            <span class="card-badge">Digit Span</span>
+          </div>
+          <div class="card-title">Working Memory Digits (Pincode)</div>
+          <div class="card-desc">Forward, reverse, and ascending numerical span test. Benchmarks working memory buffer capacity (Miller's 7±2 bound).</div>
+        </div>
+        <div class="card-action">Start digits span →</div>
+      </a>
+    </div>
+
+    <!-- 4. PSYCHOMETRICS & COGNITIVE CONTROL -->
+    <div class="section-label" id="psychometrics">Psychometrics &amp; Inhibitory Control</div>
+    <div class="grid">
       <!-- BART Balloon Risk -->
       <a href="balloon.html" class="card">
         <div>
@@ -341,142 +457,121 @@
           <div class="card-title">BART Balloon Risk Task</div>
           <div class="card-desc">Measures risk-taking propensity, loss aversion, and post-burst consistency under stochastic payoff curves.</div>
         </div>
-        <div class="card-action">Start assessment →</div>
+        <div class="card-action">Start risk assessment →</div>
       </a>
 
-      <!-- Market Making Game -->
-      <a href="marketmaking.html" class="card">
+      <!-- Flanker Task -->
+      <a href="flanker.html" class="card">
         <div>
           <div class="card-meta">
-            <span class="card-firm">Jane Street · SIG</span>
-            <span class="card-badge">Order Book</span>
+            <span class="card-firm">Citadel · Optiver</span>
+            <span class="card-badge">30 Trials</span>
           </div>
-          <div class="card-title">Market Making Pit</div>
-          <div class="card-desc">Quote two-way markets [Bid] @ [Ask] on uncertain distributions while managing adverse selection and inventory skew.</div>
+          <div class="card-title">Arrow Flanker &amp; Interference Task</div>
+          <div class="card-desc">Respond only to the center arrow while filtering conflicting distractors. Quantifies executive inhibitory control and noise filtering.</div>
         </div>
-        <div class="card-action">Enter trading pit →</div>
+        <div class="card-action">Measure interference cost →</div>
       </a>
 
-      <!-- Switch Challenge -->
+      <!-- SHL Switch Challenge -->
       <a href="switchgame.html" class="card">
         <div>
           <div class="card-meta">
-            <span class="card-firm">Optiver · SHL Interactive</span>
-            <span class="card-badge">Executive Function</span>
+            <span class="card-firm">SHL · IMC · Macquarie</span>
+            <span class="card-badge">Cognitive Shift</span>
           </div>
-          <div class="card-title">Switch Challenge</div>
-          <div class="card-desc">Evaluates task-switching latency by alternating rule evaluations between arithmetic parity and arrow symmetry.</div>
+          <div class="card-title">SHL Switch Challenge</div>
+          <div class="card-desc">Dynamic task-switching under alternating color and parity rules. Measures cognitive flexibility and switch-cost latency deficits.</div>
         </div>
-        <div class="card-action">Run test →</div>
+        <div class="card-action">Take switch test →</div>
       </a>
 
-      <!-- Memory Grid -->
-      <a href="memorygrid.html" class="card">
-        <div>
-          <div class="card-meta">
-            <span class="card-firm">Optiver · SHL</span>
-            <span class="card-badge">Spatial Memory</span>
-          </div>
-          <div class="card-title">Memory Grid</div>
-          <div class="card-desc">Flash spatial recall on dynamic matrix grids. Tracks pattern retention and rotation change recognition.</div>
-        </div>
-        <div class="card-action">Start grid →</div>
-      </a>
-
-      <!-- Digits Span -->
-      <a href="pincode.html" class="card">
-        <div>
-          <div class="card-meta">
-            <span class="card-firm">Citadel · Pymetrics</span>
-            <span class="card-badge">Working Memory</span>
-          </div>
-          <div class="card-title">Digits Memory Span</div>
-          <div class="card-desc">Forward, reverse, and sorted sequence retention measuring short-term phonological loop and working memory capacity.</div>
-        </div>
-        <div class="card-action">Open trainer →</div>
-      </a>
-
-      <!-- Shape Reaction Zap -->
+      <!-- Reaction Speed (Zap) -->
       <a href="simongame.html" class="card">
         <div>
           <div class="card-meta">
-            <span class="card-firm">Optiver Zap</span>
-            <span class="card-badge">Latency Test</span>
+            <span class="card-firm">Optiver Zap · Akuna</span>
+            <span class="card-badge">Sub-ms Latency</span>
           </div>
           <div class="card-title">Reaction Speed (Zap)</div>
           <div class="card-desc">Sub-millisecond visual reaction testing across peripheral vision coordinates with false alarm penalties.</div>
         </div>
-        <div class="card-action">Test latency →</div>
+        <div class="card-action">Test reaction latency →</div>
       </a>
-
-      <!-- Companies Directory -->
-      <a href="companies.html" class="card">
-        <div>
-          <div class="card-meta">
-            <span class="card-firm">Hiring Intelligence</span>
-            <span class="card-badge">12 Firms</span>
-          </div>
-          <div class="card-title">Company Assessment Profiles</div>
-          <div class="card-desc">Stage-by-stage pipelines, cutoffs, culture profiles, and test formats for Optiver, Jane Street, Citadel, Trafigura, and Vitol.</div>
-        </div>
-        <div class="card-action">View profiles →</div>
-      </a>
-
     </div>
 
     <!-- COMMODITIES SPOTLIGHT STRIP -->
     <div class="section-label">Commodities Trading Hub</div>
     <div class="feature-strip">
       <div class="feature-content">
-        <h3>Physical & Financial Commodities</h3>
-        <p>In-depth case studies on contango/backwardation storage arbitrage, 3:2:1 crack spreads, clean spark spreads, tanker chartering logistics, and LNG boil-off routing.</p>
+        <h3>Physical &amp; Financial Commodities Hub</h3>
+        <p>Comprehensive technical and case study prep for commodity trading giants (Trafigura, Glencore, Vitol, Gunvor, BP/Shell, Cargill). 20+ dedicated cases covering contango storage cash-and-carry, 3:2:1 crack spreads, clean spark/dark spreads, tanker demurrage, LNG boil-off, and LME metal warrant queues.</p>
       </div>
-      <a href="questions.html?category=commodities" class="feature-btn">Open Commodities Cases →</a>
+      <a href="questions.html?category=commodities" class="feature-btn">Explore 20 Commodities Cases →</a>
     </div>
 
-    <!-- QUESTION BANKS -->
-    <div class="section-label">Technical Question Banks</div>
+    <!-- 5. QUESTION BANKS & INTELLIGENCE -->
+    <div class="section-label" id="questions">Technical Question Banks (50 Problems with Worked Proofs)</div>
     <div class="grid">
       <a href="questions.html?category=commodities" class="card">
         <div>
-          <div class="card-meta"><span class="card-firm">Energy · Metals · Ags</span></div>
-          <div class="card-title">Commodities Economics</div>
-          <div class="card-desc">Cash-and-carry, refinery yields, laytime/demurrage, pipeline differentials, and basis risk.</div>
+          <div class="card-meta"><span class="card-firm">Energy · Metals · Ags</span><span class="card-badge">20 Cases</span></div>
+          <div class="card-title">Commodities Economics &amp; Logistics</div>
+          <div class="card-desc">Storage arbitrage, refinery margins, laytime/demurrage, pipeline bottlenecks, and dry bulk freight.</div>
         </div>
-        <div class="card-action">Browse 11 cases →</div>
+        <div class="card-action">Browse 20 cases →</div>
       </a>
 
       <a href="questions.html?category=probability" class="card">
         <div>
-          <div class="card-meta"><span class="card-firm">Probability · Stochastics</span></div>
-          <div class="card-title">Probability & Mathematics</div>
-          <div class="card-desc">Bayes' rule, conditional expectation, stopping times, Markov chains, and random walks.</div>
+          <div class="card-meta"><span class="card-firm">Probability · Stochastics</span><span class="card-badge">10 Problems</span></div>
+          <div class="card-title">Probability &amp; Mathematics</div>
+          <div class="card-desc">Coupon collector, Markov chains, optimal stopping on dice, and random walk absorption.</div>
         </div>
-        <div class="card-action">Browse questions →</div>
+        <div class="card-action">Browse 10 problems →</div>
       </a>
 
       <a href="questions.html?category=finance" class="card">
         <div>
-          <div class="card-meta"><span class="card-firm">Derivatives · Volatility</span></div>
-          <div class="card-title">Quant Finance & Greeks</div>
-          <div class="card-desc">Black-Scholes mechanics, Delta-neutral Gamma scalping, put-call parity, and volatility skew.</div>
+          <div class="card-meta"><span class="card-firm">Derivatives · Microstructure</span><span class="card-badge">8 Problems</span></div>
+          <div class="card-title">Quant Finance &amp; Greeks</div>
+          <div class="card-desc">Avellaneda-Stoikov market making, Gamma scalping, ATM Delta convexity, and VIX roll yield.</div>
         </div>
-        <div class="card-action">Browse questions →</div>
+        <div class="card-action">Browse 8 problems →</div>
       </a>
 
       <a href="questions.html?category=brainteasers" class="card">
         <div>
-          <div class="card-meta"><span class="card-firm">Logic · Problem Solving</span></div>
-          <div class="card-title">Logic & Brainteasers</div>
-          <div class="card-desc">100 prisoners hat parity, ants on an N-gon, and balance scale optimization.</div>
+          <div class="card-meta"><span class="card-firm">Logic · Problem Solving</span><span class="card-badge">7 Problems</span></div>
+          <div class="card-title">Logic &amp; Brainteasers</div>
+          <div class="card-desc">Burning ropes, 12 counterfeit coins, Blue Eyes Island induction, and Pirate Game Theory.</div>
         </div>
-        <div class="card-action">Browse questions →</div>
+        <div class="card-action">Browse 7 puzzles →</div>
+      </a>
+
+      <a href="questions.html?category=behavioral" class="card">
+        <div>
+          <div class="card-meta"><span class="card-firm">Trading Fit · Risk</span><span class="card-badge">5 Frameworks</span></div>
+          <div class="card-title">Behavioral &amp; Risk Mindset</div>
+          <div class="card-desc">Why trading, flash crash risk limit breaches, Half-Kelly sizing, and outcome bias immunity.</div>
+        </div>
+        <div class="card-action">Browse 5 frameworks →</div>
+      </a>
+
+      <!-- Companies Directory -->
+      <a href="companies.html" class="card">
+        <div>
+          <div class="card-meta"><span class="card-firm">Hiring Intelligence</span><span class="card-badge">12 Firms</span></div>
+          <div class="card-title">Company Assessment Profiles</div>
+          <div class="card-desc">Stage-by-stage pipelines, cutoffs, culture profiles, and test formats for Optiver, Jane Street, Citadel, Trafigura, and Vitol.</div>
+        </div>
+        <div class="card-action">View firm profiles →</div>
       </a>
     </div>
   </main>
 
   <footer>
-    IQwant — Minimalist quantitative assessment simulator. Built for market making and commodity trading preparation.
+    IQwant — Quantitative &amp; Commodities Trading Assessment Platform. Zero-bloat static architecture.
   </footer>
 
 </body>
