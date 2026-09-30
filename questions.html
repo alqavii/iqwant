@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IQwant - Quant & Commodities Question Bank</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05060a;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --glass: rgba(255, 255, 255, 0.07);
+      --border: rgba(255, 255, 255, 0.1);
+      --primary: #8b5cf6;
+      --primary-light: #c084fc;
+      --accent: #38bdf8;
+      --gold: #f59e0b;
+      --green: #22c55e;
+      --red: #ef4444;
+      --text: #ffffff;
+      --subtext: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 20% 15%, rgba(139, 92, 246, 0.15), transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.12), transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    nav {
+      width: 100%;
+      max-width: 1240px;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+    .brand .iq {
+      background: linear-gradient(90deg, #a78bfa, #8b5cf6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand .want { color: #fff; }
+    .nav-links { display: flex; gap: 16px; align-items: center; }
+    .nav-links a { color: var(--subtext); text-decoration: none; font-size: 0.95rem; font-weight: 600; }
+    .nav-links a:hover, .nav-links a.active { color: #fff; }
+
+    .container {
+      width: min(1200px, 94vw);
+      position: relative;
+      z-index: 1;
+      padding: 30px 0 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hero-banner {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .hero-banner h1 { font-size: 2.6rem; font-weight: 800; margin-bottom: 8px; }
+    .hero-banner p { color: var(--subtext); font-size: 1.1rem; max-width: 780px; margin: 0 auto; line-height: 1.5; }
+
+    /* Category Nav Pills */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 16px 0;
+    }
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--subtext);
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(139, 92, 246, 0.25);
+      border-color: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    }
+    .filter-btn.active.commodities {
+      background: rgba(245, 158, 11, 0.25);
+      border-color: var(--gold);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+    }
+
+    /* Search & Stats Bar */
+    .search-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 20px;
+      backdrop-filter: blur(15px);
+    }
+    .search-input {
+      flex: 1;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: white;
+      font-size: 0.95rem;
+      padding: 10px 16px;
+      outline: none;
+    }
+    .search-input:focus { border-color: var(--primary); }
+    .stats-counter { font-size: 0.9rem; color: var(--subtext); white-space: nowrap; }
+
+    /* Question Cards List */
+    .questions-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .q-card {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      backdrop-filter: blur(20px);
+      padding: 24px;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .q-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .q-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .q-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .tag {
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .tag-category { background: rgba(139, 92, 246, 0.2); border: 1px solid var(--primary); color: #c084fc; }
+    .tag-comm { background: rgba(245, 158, 11, 0.2); border: 1px solid var(--gold); color: #fbbf24; }
+    .tag-math { background: rgba(56, 189, 248, 0.2); border: 1px solid var(--accent); color: #7dd3fc; }
+    .tag-diff-easy { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+    .tag-diff-med { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .tag-diff-hard { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .tag-firm { background: rgba(255, 255, 255, 0.08); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15); }
+
+    .q-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.4;
+    }
+    .q-prompt {
+      font-size: 0.98rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    .q-prompt strong { color: #f8fafc; }
+    .code-block {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #38bdf8;
+      margin: 8px 0;
+      overflow-x: auto;
+    }
+
+    /* Collapsible Solution */
+    .solution-panel {
+      display: none;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-top: 10px;
+      color: #e2e8f0;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+    .solution-panel.open { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+    .solution-title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .q-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .btn-toggle-sol {
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid var(--primary);
+      color: #c4b5fd;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-toggle-sol:hover {
+      background: rgba(139, 92, 246, 0.3);
+      color: #ffffff;
+    }
+    .mastered-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--subtext);
+      cursor: pointer;
+      user-select: none;
+    }
+    .mastered-label input { accent-color: var(--green); width: 16px; height: 16px; }
+
+    /* Special Spotlight Box for Commodities */
+    .spotlight-box {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(180, 83, 9, 0.05));
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 8px;
+    }
+    .spotlight-box h3 { color: #f59e0b; font-size: 1.3rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .spotlight-box p { color: #e2e8f0; font-size: 0.95rem; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="brand">
+      <span class="iq">IQ</span><span class="want">want</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">← All Games</a>
+      <a href="optiver80.html">80 in 8</a>
+      <a href="balloon.html">Balloon BART</a>
+      <a href="marketmaking.html">Market Making</a>
+      <a href="companies.html">Company Guides</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="hero-banner">
+      <h1>Quant & Commodities Question Bank</h1>
+      <p>Curated bank of actual interview questions asked across top proprietary trading shops, quantitative hedge funds, and global commodity trading houses.</p>
+    </div>
+
+    <div class="spotlight-box">
+      <h3>🌾 🛢️ Commodities Desk Focus Area</h3>
+      <p>Physical and financial commodity trading interviews (Trafigura, Glencore, Vitol, Gunvor, BP/Shell, Cargill) demand sharp mastery over <strong>forward curve dynamics (contango vs backwardation), cost-of-carry storage arbitrage, crack & spark spreads, physical logistics (Incoterms, demurrage), and seasonal weather demand</strong>. Filter by "Commodities" below to drill these dedicated cases.</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="setCategory('all')">All Questions (<span id="countAll">0</span>)</button>
+      <button class="filter-btn commodities" onclick="setCategory('commodities')">🛢️ Commodities (<span id="countComm">0</span>)</button>
+      <button class="filter-btn" onclick="setCategory('probability')">🎲 Probability & Maths (<span id="countProb">0</span>)</button>
+      <button class="filter-btn" onclick="setCategory('finance')">📈 Quant Finance & Greeks (<span id="countFin">0</span>)</button>
+      <button class="filter-btn" onclick="setCategory('brainteasers')">🧩 Logic & Brainteasers (<span id="countBrain">0</span>)</button>
+      <button class="filter-btn" onclick="setCategory('behavioral')">💼 Trading Fit & Behavioral (<span id="countBehav">0</span>)</button>
+    </div>
+
+    <!-- Search & Stats -->
+    <div class="search-row">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search by topic, formula, or firm (e.g. 'Trafigura', 'Crack Spread', 'Bayes', 'Contango')..." oninput="filterQuestions()">
+      <span class="stats-counter" id="visibleCounter">Showing 0 questions</span>
+    </div>
+
+    <!-- Questions Container -->
+    <div class="questions-grid" id="questionsContainer">
+      <!-- Populated via JS -->
+    </div>
+  </div>
+
+  <script>
+    const QUESTIONS_DATA = [
+      // ==================== COMMODITIES SECTION ====================
+      {
+        id: "comm-01",
+        category: "commodities",
+        difficulty: "hard",
+        firms: ["Trafigura", "Glencore", "Vitol"],
+        title: "Cash-and-Carry Storage Arbitrage & Full Carry Contango",
+        prompt: `Spot crude oil is trading at <strong>$72.00 / bbl</strong>. The 6-month forward contract is trading at <strong>$77.50 / bbl</strong>.<br>
+Storage tank rent is <strong>$0.55 / bbl / month</strong> payable monthly in advance. The risk-free interest rate is <strong>5.0% annualized</strong> (simple interest). Physical insurance and inspection costs are <strong>$0.05 / bbl / month</strong>.<br>
+<strong>Question:</strong> Is there an arbitrage opportunity? What exact trade would you execute, what is your net profit per 500,000-barrel cargo, and what is the "Full Carry" forward price?`,
+        solution: `<strong>1. Concept:</strong> Storage Arbitrage (Cash-and-Carry) exploits an over-priced forward curve in contango where the forward price exceeds spot plus all carrying costs (Full Carry).<br><br>
+<strong>2. Calculate Total Carrying Costs for 6 Months:</strong><br>
+• Financing cost (Interest): $72.00 × 5% × (6/12) = <strong>$1.80 / bbl</strong>.<br>
+• Tank storage fees: 6 months × $0.55 = <strong>$3.30 / bbl</strong>.<br>
+• Insurance & inspection: 6 months × $0.05 = <strong>$0.30 / bbl</strong>.<br>
+• <strong>Total Cost of Carry:</strong> $1.80 + $3.30 + $0.30 = <strong>$5.40 / bbl</strong>.<br><br>
+<strong>3. Full Carry Price:</strong><br>
+Full Carry Forward = Spot + Carry = $72.00 + $5.40 = <strong>$77.40 / bbl</strong>.<br><br>
+<strong>4. Arbitrage Evaluation:</strong><br>
+Actual Forward Price = $77.50 > Full Carry ($77.40).<br>
+Yes, an arbitrage exists! Net profit = $77.50 - $77.40 = <strong>+$0.10 / bbl</strong> (risk-free).<br><br>
+<strong>5. Execution Steps:</strong><br>
+• Buy 500,000 bbl spot oil at $72.00 (borrow $36M at 5%).<br>
+• Simultaneously sell 500 futures/forward contracts for delivery in 6 months at $77.50.<br>
+• Inject oil into leased storage tanks.<br>
+• Deliver into the forward contract in Month 6.<br>
+• <strong>Net P&L on Cargo:</strong> 500,000 bbl × $0.10 = <strong>+$50,000 locked in risk-free</strong>.`
+      },
+      {
+        id: "comm-02",
+        category: "commodities",
+        difficulty: "hard",
+        firms: ["Vitol", "BP Trading", "Shell Trading"],
+        title: "The 3:2:1 Refinery Crack Spread Calculation & Hedging",
+        prompt: `A complex refinery on the US Gulf Coast processes WTI crude into RBOB gasoline and Ultra-Low Sulfur Diesel (ULSD / Heating Oil).<br>
+Current prices:<br>
+• WTI Crude Oil: <strong>$80.00 / bbl</strong><br>
+• RBOB Gasoline: <strong>$2.50 / gallon</strong><br>
+• ULSD Diesel: <strong>$2.80 / gallon</strong><br>
+<strong>Questions:</strong><br>
+1. Calculate the 3:2:1 crack spread margin per barrel of crude.<br>
+2. If refinery operational refining cost (opex) is $5.50/bbl, what is the net refining margin?<br>
+3. How would you hedge 30,000 barrels of crude processing exposure on NYMEX?`,
+        solution: `<strong>1. Understanding 3:2:1 Crack Spread:</strong><br>
+Refineries crack 3 barrels of crude into 2 barrels of gasoline and 1 barrel of distillate.<br>
+Remember: 1 barrel = <strong>42 US gallons</strong>.<br><br>
+<strong>Convert Product Prices from $/gal to $/bbl:</strong><br>
+• Gasoline: $2.50 × 42 = <strong>$105.00 / bbl</strong>.<br>
+• Diesel: $2.80 × 42 = <strong>$117.60 / bbl</strong>.<br><br>
+<strong>Total Revenue from 3 barrels of products:</strong><br>
+Revenue = (2 × $105.00) + (1 × $117.60) = $210.00 + $117.60 = <strong>$327.60</strong>.<br>
+<strong>Total Cost of 3 barrels of crude:</strong><br>
+Cost = 3 × $80.00 = <strong>$240.00</strong>.<br><br>
+<strong>Gross Crack Spread:</strong><br>
+Total Margin for 3 barrels = $327.60 - $240.00 = $87.60.<br>
+Per barrel of crude cracked = $87.60 / 3 = <strong>$29.20 / bbl</strong>.<br><br>
+<strong>2. Net Refining Margin:</strong><br>
+Net Margin = Gross Margin - Opex = $29.20 - $5.50 = <strong>$23.70 / bbl</strong>.<br><br>
+<strong>3. Hedging Position for 30,000 bbls:</strong><br>
+To lock in the crack spread margin for 30,000 barrels of crude (30 contracts on NYMEX):<br>
+• <strong>Buy 30 NYMEX WTI Crude futures</strong> (hedges input cost).<br>
+• <strong>Sell 20 NYMEX RBOB Gasoline futures</strong> (hedges output revenue).<br>
+• <strong>Sell 10 NYMEX Heating Oil (ULSD) futures</strong> (hedges output revenue).`
+      },
+      {
+        id: "comm-03",
+        category: "commodities",
+        difficulty: "medium",
+        firms: ["Trafigura", "Gunvor", "Mercuria"],
+        title: "Contango vs. Backwardation & Convenience Yield",
+        prompt: `Explain the fundamental concept of <strong>Convenience Yield</strong>. Why is a deep backwardation market impossible to arbitrage on the short side (cash-and-carry vs reverse cash-and-carry asymmetry)?`,
+        solution: `<strong>1. Definition of Convenience Yield ($y$):</strong><br>
+Convenience yield is the implied benefit or premium associated with holding physical inventory of a commodity rather than holding a derivative contract. It reflects the operational advantage of having immediate supply to prevent factory shutdowns, meet unexpected delivery spikes, or capture immediate physical price premiums.<br><br>
+<strong>2. Fundamental Pricing Equation:</strong><br>
+<code>F_0 = S_0 × e^{(r + u - y)T}</code><br>
+Where $r$ = interest rate, $u$ = storage & insurance cost, and $y$ = convenience yield.<br>
+• When $y < r + u$, the market is in <strong>Contango</strong> (forward > spot).<br>
+• When $y > r + u$, the market is in <strong>Backwardation</strong> (spot > forward). Deep backwardation indicates extreme physical scarcity today.<br><br>
+<strong>3. The Arbitrage Asymmetry:</strong><br>
+• <strong>Contango Arbitrage (Cash-and-Carry) has no physical ceiling:</strong> If forward is too high, anyone with capital can buy spot, lease tanks, sell futures, and lock in profit. Storage capacity is the only constraint.<br>
+• <strong>Backwardation Arbitrage (Reverse Cash-and-Carry) has a hard physical floor:</strong> To exploit forward < spot, you must short spot oil and buy futures. But you cannot short physical oil unless you already own oil that you can draw down or can borrow it! Once global working inventories hit 'tank bottoms' (minimum operational levels), no more oil can be sold. Therefore, backwardation can widen indefinitely during supply shocks (e.g. wartime or pipeline outages).`
+      },
+      {
+        id: "comm-04",
+        category: "commodities",
+        difficulty: "hard",
+        firms: ["Trafigura", "Glencore"],
+        title: "Physical Trading Logistics: Laytime, Demurrage & Cargo P&L",
+        prompt: `You buy a 1,000,000-barrel cargo of Bonny Light crude FOB Nigeria at Dated Brent + $1.50/bbl. You charter a Suezmax tanker at <strong>$35,000/day</strong> with <strong>72 hours allowed laytime</strong>.<br>
+Loading is delayed by terminal congestion and takes <strong>120 hours</strong>.<br>
+Demurrage rate is agreed at <strong>$45,000/day</strong> pro-rata.<br>
+<strong>Question:</strong> What is your demurrage liability, and who ultimately bears this cost under standard FOB contracts?`,
+        solution: `<strong>1. Laytime & Demurrage Concepts:</strong><br>
+• <strong>Laytime:</strong> The agreed time allowed to the charterer for loading/discharging cargo without paying extra fees.<br>
+• <strong>Demurrage:</strong> Liquidated damages paid by the charterer to the shipowner for exceeding allowed laytime.<br><br>
+<strong>2. Calculation:</strong><br>
+• Total loading time = 120 hours.<br>
+• Allowed laytime = 72 hours.<br>
+• Excess time = 120 - 72 = <strong>48 hours (exactly 2.0 days)</strong>.<br>
+• Demurrage due to shipowner = 2 days × $45,000/day = <strong>$90,000</strong>.<br><br>
+<strong>3. Contractual Recovery:</strong><br>
+Under standard FOB sales terms, if terminal delays are the fault of the FOB Seller (terminal failure to supply cargo as nominated), the Buyer pays the shipowner under the Charter Party, and immediately re-bills/claims the $90,000 demurrage back from the FOB supplier under the commercial sales contract.`
+      },
+      {
+        id: "comm-05",
+        category: "commodities",
+        difficulty: "hard",
+        firms: ["Vitol", "Trafigura", "TotalEnergies"],
+        title: "LNG Boil-Off & Geographical Arbitrage: US Gulf to Europe vs Asia",
+        prompt: `An LNG carrier loaded with 3.5 million MMBtu of LNG departs Sabine Pass, Louisiana.<br>
+• Henry Hub FOB purchase price: <strong>$2.50 / MMBtu</strong> + 15% liquefaction fee.<br>
+• European TTF price: <strong>$11.00 / MMBtu</strong> (Voyage: 12 days).<br>
+• Asian JKM price: <strong>$13.20 / MMBtu</strong> (Voyage: 26 days via Cape of Good Hope).<br>
+• Carrier charter rate: <strong>$90,000 / day</strong>.<br>
+• Boil-off gas rate: <strong>0.12% of cargo per day</strong>.<br>
+• Canal & port fees: Europe = $150k; Asia = $450k.<br>
+<strong>Question:</strong> Calculate the net landed margin for both destinations. Where should the cargo be discharged?`,
+        solution: `<strong>1. FOB Cost of LNG:</strong><br>
+FOB Price = $2.50 + (15% × $2.50) = <strong>$2.875 / MMBtu</strong>.<br>
+Initial cargo volume = 3,500,000 MMBtu.<br>
+Total FOB cargo cost = 3,500,000 × $2.875 = <strong>$10,062,500</strong>.<br><br>
+<strong>2. Route A: Europe (TTF):</strong><br>
+• Days = 12 days.<br>
+• Boil-off lost = 12 × 0.12% = 1.44%. Remaining cargo = 3,500,000 × (1 - 0.0144) = <strong>3,449,600 MMBtu</strong>.<br>
+• Gross Revenue = 3,449,600 MMBtu × $11.00 = <strong>$37,945,600</strong>.<br>
+• Shipping Freight = 12 days × $90,000 = $1,080,000 + $150,000 port fees = <strong>$1,230,000</strong>.<br>
+• Net Profit (Europe) = $37,945,600 - $10,062,500 - $1,230,000 = <strong>+$26,653,100</strong>.<br><br>
+<strong>3. Route B: Asia (JKM):</strong><br>
+• Days = 26 days.<br>
+• Boil-off lost = 26 × 0.12% = 3.12%. Remaining cargo = 3,500,000 × (1 - 0.0312) = <strong>3,390,800 MMBtu</strong>.<br>
+• Gross Revenue = 3,390,800 MMBtu × $13.20 = <strong>$44,758,560</strong>.<br>
+• Shipping Freight = 26 days × $90,000 = $2,340,000 + $450,000 port fees = <strong>$2,790,000</strong>.<br>
+• Net Profit (Asia) = $44,758,560 - $10,062,500 - $2,790,000 = <strong>+$31,906,060</strong>.<br><br>
+<strong>Conclusion:</strong> Discharge in <strong>Asia (JKM)</strong>! The net advantage is <strong>+$5,252,960</strong> over Europe, more than compensating for the longer voyage, extra boil-off loss, and higher charter costs.`
+      },
+      {
+        id: "comm-06",
+        category: "commodities",
+        difficulty: "medium",
+        firms: ["Cargill", "Bunge", "ADM", "Louis Dreyfus"],
+        title: "Agricultural Soybean Crush Spread Dynamics",
+        prompt: `Explain the economics of the <strong>Soybean Crush Spread</strong>. What are the standard yield ratios (bushel to meal and oil)? If the USDA WASDE report reports a severe drought in Argentina, what happens to the crush margin in the US?`,
+        solution: `<strong>1. Standard Crush Ratio:</strong><br>
+One 60-pound bushel of soybeans yields approximately:<br>
+• <strong>44 lbs of Soybean Meal</strong> (used for animal feed protein).<br>
+• <strong>11 lbs of Soybean Oil</strong> (used for cooking and renewable diesel/biofuel).<br>
+• 5 lbs of waste/moisture loss.<br><br>
+<strong>2. Spread Formula:</strong><br>
+Crush Margin ($/bushel) = [Soybean Meal Price ($/short ton) × 0.022] + [Soybean Oil Price (cents/lb) × 0.11] - Soybean Price ($/bushel).<br><br>
+<strong>3. Argentina Drought Impact:</strong><br>
+Argentina is the world's #1 exporter of soybean meal. A drought drastically cuts Argentine meal export availability.<br>
+Global buyers shift demand to US crushers. Meal prices surge relative to raw beans, driving US crush margins to historical highs as processors run plants at maximum capacity to capture the widening spread.`
+      },
+      {
+        id: "comm-07",
+        category: "commodities",
+        difficulty: "hard",
+        firms: ["BP Trading", "Shell Trading", "Statkraft"],
+        title: "Clean Spark Spread & Power Plant Dispatch Economics",
+        prompt: `A combined-cycle gas turbine (CCGT) power plant has a heat rate of <strong>7.0 MMBtu / MWh</strong> and emits <strong>0.37 metric tonnes of CO2 / MWh</strong>.<br>
+Market prices:<br>
+• Wholesale Power: <strong>€95.00 / MWh</strong><br>
+• Natural Gas: <strong>€25.00 / MWh (thermal)</strong> (Note: 1 MWh = 3.412 MMBtu)<br>
+• EU ETS Carbon Allowances: <strong>€65.00 / tonne</strong><br>
+<strong>Questions:</strong><br>
+1. Calculate the Clean Spark Spread (CSS) per MWh of electricity.<br>
+2. Will the power plant dispatch into the grid?`,
+        solution: `<strong>1. Heat Rate Conversion & Gas Fuel Cost:</strong><br>
+Heat rate = 7.0 MMBtu / MWh.<br>
+Since 1 MWh thermal = 3.412 MMBtu, the plant's thermal efficiency is 3.412 / 7.0 = 48.74%.<br>
+Gas cost per MWh power = Gas Price / Thermal Efficiency = €25.00 / 0.4874 = <strong>€51.29 / MWh</strong>.<br><br>
+<strong>2. Carbon Emissions Cost:</strong><br>
+Carbon cost = 0.37 tonnes CO2/MWh × €65.00/tonne = <strong>€24.05 / MWh</strong>.<br><br>
+<strong>3. Clean Spark Spread (CSS):</strong><br>
+<code>CSS = Power Price - Fuel Cost - Carbon Cost</code><br>
+CSS = €95.00 - €51.29 - €24.05 = <strong>+€19.66 / MWh</strong>.<br><br>
+<strong>4. Dispatch Decision:</strong><br>
+Yes! Because CSS is strongly positive (+€19.66/MWh > 0), the plant's marginal revenue exceeds its short-run marginal generation costs. The plant is in-the-money and will bid to generate and sell electricity onto the grid.`
+      },
+
+      // ==================== PROBABILITY & MATHS SECTION ====================
+      {
+        id: "prob-01",
+        category: "probability",
+        difficulty: "medium",
+        firms: ["Jane Street", "Optiver", "Citadel"],
+        title: "Conditional Expectation on Maximum of Two Dice",
+        prompt: `You roll two fair 6-sided dice. Let $X$ be the number on Die 1, and $Y$ be the number on Die 2. Let $M = \\max(X, Y)$.<br>
+<strong>Question:</strong> What is the expected value $\\mathbb{E}[M]$?`,
+        solution: `<strong>Method 1: Distribution of the Maximum:</strong><br>
+The event $\\max(X, Y) \\le k$ occurs if and only if both $X \\le k$ and $Y \\le k$.<br>
+Since $X$ and $Y$ are independent:<br>
+<code>P(M \\le k) = P(X \\le k) \\cdot P(Y \\le k) = (k/6)^2 = k^2 / 36</code><br><br>
+Now find the probability mass function $P(M = k)$ for $k = 1, 2, \\dots, 6$:<br>
+<code>P(M = k) = P(M \\le k) - P(M \\le k-1) = \\frac{k^2 - (k-1)^2}{36} = \\frac{2k - 1}{36}</code><br><br>
+<strong>Calculate Expected Value:</strong><br>
+$\\mathbb{E}[M] = \\sum_{k=1}^6 k \\cdot \\frac{2k - 1}{36}$<br>
+• $k=1: 1 \\times 1/36 = 1/36$<br>
+• $k=2: 2 \\times 3/36 = 6/36$<br>
+• $k=3: 3 \\times 5/36 = 15/36$<br>
+• $k=4: 4 \\times 7/36 = 28/36$<br>
+• $k=5: 5 \\times 9/36 = 45/36$<br>
+• $k=6: 6 \\times 11/36 = 66/36$<br><br>
+Sum = $(1 + 6 + 15 + 28 + 45 + 66) / 36 = 161 / 36 \\approx \\mathbf{4.472}$.`
+      },
+      {
+        id: "prob-02",
+        category: "probability",
+        difficulty: "hard",
+        firms: ["Jane Street", "SIG"],
+        title: "Sequential Coin Toss Stopping Game (HH vs HT)",
+        prompt: `You and your friend flip a fair coin repeatedly.<br>
+You win if the sequence <strong>H-H</strong> appears first.<br>
+Your friend wins if the sequence <strong>T-H</strong> appears first.<br>
+<strong>Question:</strong> What is the probability that you win?`,
+        solution: `<strong>Surprising Result:</strong> Although both HH and TH have probability $1/4$ on any two flips, the game is <strong>heavily biased towards your friend (TH)</strong>!<br><br>
+<strong>Analysis by States:</strong><br>
+Consider the first two flips:<br>
+1. <strong>Flip 1 = T:</strong> As soon as a Tail appears, whenever the next Head appears, the sequence TH is formed! The ONLY way HH can appear before TH is if the game starts with HH on the very first two flips (flips 1 and 2).<br>
+2. Why? If a Tail ever occurs, you can never get HH before TH, because to get HH you would have to flip a Head first—which immediately completes T followed by H (TH wins for your friend)!<br><br>
+<strong>Conclusion:</strong><br>
+You can only win if the first two flips are <strong>H-H</strong> directly.<br>
+$P(\\text{You win}) = P(\\text{Flip 1 = H and Flip 2 = H}) = 1/2 \\times 1/2 = \\mathbf{1/4}$ (25%).<br>
+Your friend has a <strong>75% probability of winning</strong>!`
+      },
+      {
+        id: "prob-03",
+        category: "probability",
+        difficulty: "medium",
+        firms: ["Optiver", "Akuna", "Flow Traders"],
+        title: "Bayesian Medical Test with Rare Prevalence",
+        prompt: `A disease affects <strong>0.1%</strong> of the population (1 in 1,000). A diagnostic test is <strong>99% sensitive</strong> (true positive rate) and has a <strong>2% false positive rate</strong>.<br>
+A randomly selected person tests positive.<br>
+<strong>Question:</strong> What is the exact probability they actually have the disease? Perform the mental calculation within 30 seconds.`,
+        solution: `<strong>Bayes' Rule:</strong><br>
+<code>P(Disease | Positive) = \\frac{P(Pos | Disease) \\cdot P(Disease)}{P(Pos)}</code><br><br>
+<strong>Mental Shortcut: Sample 100,000 People:</strong><br>
+• True Sick: 100,000 × 0.1% = <strong>100 people</strong>.<br>
+  - True Positives = 100 × 99% = <strong>99 people</strong>.<br>
+• Healthy: 100,000 - 100 = <strong>99,900 people</strong>.<br>
+  - False Positives = 99,900 × 2% = <strong>1,998 people</strong>.<br><br>
+<strong>Calculate Ratio:</strong><br>
+Total positive tests = 99 + 1,998 = 2,097.<br>
+<code>P(Disease | Pos) = \\frac{99}{2,097} \\approx \\frac{100}{2,100} \\approx \\mathbf{4.76\\%}</code><br><br>
+<strong>Trading Takeaway:</strong> Even with a 99% accurate test, because the base rate is so low, a positive signal is wrong ~95% of the time! (Base Rate Fallacy).`
+      },
+      {
+        id: "prob-04",
+        category: "probability",
+        difficulty: "hard",
+        firms: ["Citadel", "Five Rings"],
+        title: "Gambler's Ruin with Asymmetric Probabilities",
+        prompt: `A gambler starts with <strong>$k = 40</strong> and plays a game where they win $1 with probability $p = 0.48$ and lose $1 with probability $q = 0.52$. The game ends when they either reach <strong>$N = 100</strong> (goal) or go bankrupt (<strong>$0</strong>).<br>
+<strong>Question:</strong> What is the exact formula and probability of reaching $100?`,
+        solution: `<strong>Classical Gambler's Ruin Formula:</strong><br>
+When $p \\ne q$, let $r = q/p = 0.52 / 0.48 = 13/12 \\approx 1.0833$.<br>
+The probability of reaching $N$ starting from $k$ is:<br>
+<code>P(\\text{reach } N) = \\frac{1 - r^k}{1 - r^N}</code><br><br>
+<strong>Intuition & Magnitude:</strong><br>
+Notice that $r = 1.0833 > 1$.<br>
+$r^{40} \\approx 1.0833^{40} \\approx 24.3$.<br>
+$r^{100} \\approx 1.0833^{100} \\approx 3,025$.<br>
+<code>P = \\frac{1 - 24.3}{1 - 3,025} = \\frac{-23.3}{-3,024} \\approx \\mathbf{0.0077} \\text{ (approx } 0.77\\%)</code><br>
+Even a small 2% house edge ($p=0.48$) completely obliterates the chance of doubling up over a long random walk.`
+      },
+
+      // ==================== QUANT FINANCE & GREEKS ====================
+      {
+        id: "fin-01",
+        category: "finance",
+        difficulty: "hard",
+        firms: ["Optiver", "IMC", "Akuna"],
+        title: "Gamma Scalping & Delta-Neutral Market Making",
+        prompt: `You are a market maker who is <strong>Long Gamma</strong> (long ATM Straddle). As the underlying stock moves up and down, describe your dynamic delta-hedging rebalancing rules.<br>
+Do you buy high and sell low, or buy low and sell high? How does Gamma relate to Theta?`,
+        solution: `<strong>1. Dynamic Rebalancing with Long Gamma:</strong><br>
+• Because you are Long Gamma ($\\\\Gamma > 0$), when the underlying stock price increases, your Delta becomes more positive (long). To return to Delta-neutral ($\\\\Delta = 0$), you must <strong>SELL the underlying stock at the high price</strong>.<br>
+• When the underlying stock price falls, your Delta becomes negative (short). To return to Delta-neutral, you must <strong>BUY the underlying stock at the lower price</strong>.<br>
+• Therefore, a Long Gamma trader systematically <strong>Buys Low and Sells High</strong> across market fluctuations ("Gamma Scalping").<br><br>
+<strong>2. The Cost of Long Gamma (Theta):</strong><br>
+• There is no free lunch: Options decay over time ($\\\\Theta < 0$). Under the Black-Scholes PDE:<br>
+<code>\\\\Theta + \\\\frac{1}{2} \\\\sigma^2 S^2 \\\\Gamma = r(V - S\\\\Delta)</code><br>
+• If realized volatility exceeds implied volatility, your profits from buying low and selling high will exceed the daily Theta decay. If the market stays flat, you bleed Theta.`
+      },
+      {
+        id: "fin-02",
+        category: "finance",
+        difficulty: "medium",
+        firms: ["Jane Street", "Flow Traders", "DRW"],
+        title: "Put-Call Parity Synthetic Arbitrage",
+        prompt: `A non-dividend-paying stock trades at <strong>$100</strong>. A 1-year European Call with strike $K = 100$ trades at <strong>$12.00</strong>. A 1-year European Put with strike $K = 100$ trades at <strong>$8.00</strong>. The risk-free rate is <strong>5.0% continuous</strong> ($e^{-0.05 \\times 1} \\approx 0.9512$).<br>
+<strong>Question:</strong> Is Put-Call Parity violated? Detail the exact synthetic arbitrage portfolio and guaranteed profit.`,
+        solution: `<strong>1. Put-Call Parity Equation:</strong><br>
+<code>C - P = S - K \\cdot e^{-rT}</code><br><br>
+<strong>2. Check Values:</strong><br>
+• Left-Hand Side: $C - P = 12.00 - 8.00 = <strong>$4.00</strong>.<br>
+• Right-Hand Side: $S - K e^{-rT} = 100 - (100 \\times 0.9512) = 100 - 95.12 = <strong>$4.88</strong>.<br>
+Since $C - P < S - K e^{-rT}$ ($4.00 < 4.88$), the Call is underpriced relative to the Put/Stock synthetic.<br><br>
+<strong>3. Arbitrage Trade (Buy Low, Sell High):</strong><br>
+• <strong>Buy Call</strong> (spend $12.00).<br>
+• <strong>Sell Put</strong> (receive $8.00) -> Synthetic Long Stock for net cost of $4.00.<br>
+• <strong>Short Stock</strong> (receive $100.00).<br>
+• <strong>Lend / Deposit at risk-free rate:</strong> $100 - $4 = $96.00 at 5%.<br><br>
+<strong>4. Payoff at Expiry $T$:</strong><br>
+At maturity, Call and Put combine to deliver 1 share at strike $100, closing out the short stock perfectly.<br>
+Deposit grows to $96.00 \\times e^{0.05} = <strong>$100.92</strong>.<br>
+Net risk-free profit = $100.92 - $100.00 = <strong>+$0.92 per share</strong>.`
+      },
+      {
+        id: "fin-03",
+        category: "finance",
+        difficulty: "hard",
+        firms: ["Optiver", "Citadel", "SIG"],
+        title: "Volatility Skew & Smile Mechanics",
+        prompt: `Why do equity index options (e.g. S&P 500) exhibit a persistent <strong>downward-sloping Volatility Skew</strong> (higher IV for OTM Puts than OTM Calls), whereas agricultural and energy commodities often exhibit a <strong>Vol Smile or inverted skew</strong> (higher IV for OTM Calls)?`,
+        solution: `<strong>1. Equity Index Downward Skew:</strong><br>
+• <strong>Crash-o-phobia & Leverage Effect:</strong> Post-1987 crash, institutional investors buy OTM puts for portfolio disaster insurance, creating massive inelastic structural demand.<br>
+• <strong>Negative Correlation (Vol-Price):</strong> When equity markets drop, corporate leverage increases, panic rises, and volatility spikes. Conversely, bull markets are accompanied by declining volatility.<br><br>
+<strong>2. Commodities Vol Smile / Inverted Skew (Right-skew):</strong><br>
+• <strong>Inelastic Demand & Physical Storage Constraints:</strong> Unlike equities (which drop when companies fail), commodities suffer catastrophic supply shocks (war, refinery explosion, OPEC cut, freeze-offs). When supply disappears, prices don't drop—they explode upwards (spike risk)!<br>
+• Commercial end-users (airlines, refiners, utilities) scramble to buy OTM Calls to hedge upside price spikes, driving implied volatility for high-strike calls far above ATM options.`
+      },
+
+      // ==================== LOGIC & BRAINTEASERS ====================
+      {
+        id: "brain-01",
+        category: "brainteasers",
+        difficulty: "medium",
+        firms: ["Citadel", "Jane Street"],
+        title: "Ants on an Equilateral Triangle",
+        prompt: `Three ants sit at the three vertices of an equilateral triangle. Each ant randomly and independently chooses a direction (clockwise or counter-clockwise) with probability 0.5 and walks along the edge.<br>
+<strong>Question:</strong> What is the probability that none of the ants collide? What if there are $N$ ants on an $N$-sided regular polygon?`,
+        solution: `<strong>1. Three Ants Case:</strong><br>
+• Total possible directional choices = $2^3 = 8$.<br>
+• Ants will not collide if and only if ALL ants walk in the same direction: either all 3 walk <strong>Clockwise</strong> (CW) or all 3 walk <strong>Counter-Clockwise</strong> (CCW).<br>
+• Number of non-colliding configurations = 2 (CW-CW-CW or CCW-CCW-CCW).<br>
+<code>P(\\text{no collision}) = \\frac{2}{2^3} = \\frac{2}{8} = \\frac{1}{4} = \\mathbf{0.25}</code><br><br>
+<strong>2. General Case for $N$ Ants on an $N$-gon:</strong><br>
+Total outcomes = $2^N$. Favorable outcomes = 2.<br>
+<code>P(\\text{no collision}) = \\frac{2}{2^N} = \\mathbf{\\frac{1}{2^{N-1}}}</code>.`
+      },
+      {
+        id: "brain-02",
+        category: "brainteasers",
+        difficulty: "hard",
+        firms: ["Jane Street", "Optiver"],
+        title: "100 Prisoners and the Red/Black Hats",
+        prompt: `100 prisoners are lined up in a row facing forward, so each prisoner can see all prisoners in front of them, but cannot see anyone behind them or their own hat. A hat (either Red or Black) is placed on each prisoner's head.<br>
+Starting from the back (prisoner 100, who sees prisoners 1 through 99), each prisoner must shout either "Red" or "Black". If they guess correctly, they live; otherwise, they are executed.<br>
+They can agree on a strategy beforehand. What is the optimal strategy, and how many prisoners can be guaranteed to survive?`,
+        solution: `<strong>Optimal Parity Strategy (Guarantees 99 to 100 Survivors):</strong><br><br>
+<strong>1. The Strategy:</strong><br>
+• Prisoner 100 (at the very back) counts the total number of <strong>Black hats</strong> among the 99 prisoners ahead of him.<br>
+• If the count of Black hats is <strong>Even</strong>, prisoner 100 says <strong>"Black"</strong>.<br>
+• If the count of Black hats is <strong>Odd</strong>, prisoner 100 says <strong>"Red"</strong>.<br><br>
+<strong>2. Outcome for Prisoner 100:</strong><br>
+Prisoner 100 has a 50% chance of survival (since their answer transmits parity information for the group, not their own hat).<br><br>
+<strong>3. Outcome for Prisoners 99 down to 1:</strong><br>
+• Prisoner 99 knows the parity of all 99 hats in front of prisoner 100. He counts the black hats among the 98 prisoners in front of him.<br>
+• If the parity matches, his own hat must be Red. If the parity flipped, his own hat must be Black!<br>
+• Every subsequent prisoner keeps track of all revealed hats and determines their own hat with <strong>100% certainty</strong>.<br>
+<strong>Result:</strong> Exactly <strong>99 prisoners guaranteed to survive</strong>, with expected survivors = 99.5.`
+      },
+
+      // ==================== BEHAVIORAL & FIT ====================
+      {
+        id: "behav-01",
+        category: "behavioral",
+        difficulty: "medium",
+        firms: ["All Firms", "Optiver", "Trafigura"],
+        title: "Why Trading? Prop Market Making vs Physical Commodities",
+        prompt: `How should you answer the universal interview question: <em>"Why do you want to be a trader rather than a software engineer or quantitative researcher, and why our specific asset class / firm?"</em>`,
+        solution: `<strong>Framework for a Winning Answer:</strong><br><br>
+<strong>1. The Core Appeal of Trading:</strong><br>
+• <strong>Instant Feedback Loop & Measurable Impact:</strong> Unlike tech or IB where projects take months and individual attribution is murky, trading provides immediate, objective feedback via daily P&L. Every decision has quantifiable edge.<br>
+• <strong>Decision-Making Under Incomplete Information:</strong> Highlight that you thrive when calculating probabilistic EV in real-time under pressure rather than searching for academic perfection.<br><br>
+<strong>2. Firm Differentiation:</strong><br>
+• <strong>For Market Makers (Optiver, Jane Street, Flow Traders):</strong> Emphasize fascination with market microstructure, liquidity provision, bid-ask spread capture, and competitive game theory.<br>
+• <strong>For Commodity Traders (Trafigura, Glencore, Vitol):</strong> Emphasize that physical commodities trade reality, not just screens. You care about geopolitical supply disruptions, shipping logistics, infrastructure bottlenecks, and physical arbitrage across time and geography.`
+      },
+      {
+        id: "behav-02",
+        category: "behavioral",
+        difficulty: "hard",
+        firms: ["Jane Street", "Citadel", "Optiver"],
+        title: "Describe a Time You Took a Calculated Risk and Lost",
+        prompt: `Interviewers ask this to test your understanding of <strong>Expected Value vs. Outcome Bias</strong>, emotional stability, and whether you experience 'tilt'. What is the optimal structure to answer this?`,
+        solution: `<strong>Critical Pitfalls to Avoid:</strong><br>
+• Do NOT pick a careless mistake where you were unprepared.<br>
+• Do NOT blame bad luck in a whiny tone.<br><br>
+<strong>Winning Structure:</strong><br>
+1. <strong>The Setup:</strong> Describe a genuine decision (poker, trading, project, or competition) where you calculated that the Expected Value was positive ($EV > 0$) with a known variance.<br>
+2. <strong>The Execution:</strong> Explain why you sized the bet appropriately according to Kelly criterion or bankroll management.<br>
+3. <strong>The Loss:</strong> Acknowledge that the negative tail event materialized.<br>
+4. <strong>The Reaction (No Tilt):</strong> Emphasize that you separated the <em>process</em> from the <em>outcome</em>. You didn't double down aggressively to 'chase losses' (tilt), nor did you become paralyzed by fear. You reviewed your assumptions, verified that the model had edge, and maintained disciplined execution.`
+      }
+      },
+      {
+        id: "comm-08",
+        category: "commodities",
+        difficulty: "hard",
+        firms: ["Vitol", "Trafigura", "Glencore"],
+        title: "Brent vs. WTI Spread & Export Arbitrage Economics",
+        prompt: `Explain the fundamental drivers of the <strong>Brent vs. WTI crude spread</strong>. Why has WTI historically traded at a discount to Brent despite having a higher API gravity (lighter) and lower sulfur content (sweeter)? When does the US crude export arbitrage window open?`,
+        solution: `<strong>1. Quality vs. Location Reality:</strong><br>
+• <strong>Quality:</strong> WTI (API ~40°, Sulfur ~0.24%) is chemically superior to Brent (API ~38°, Sulfur ~0.40%). Based purely on refining yield, WTI should trade at a $1.00 - $1.50/bbl <em>premium</em> to Brent.<br>
+• <strong>Location & Logistics:</strong> WTI is priced inland at <strong>Cushing, Oklahoma</strong> (a landlocked pipeline junction). Brent is waterborne in the North Sea (loaded directly onto ocean tankers at Sullom Voe and Hound Point).<br><br>
+<strong>2. The US Shale Bottleneck & Discount:</strong><br>
+With the US shale boom, Cushing became overwhelmed with crude supply. Because crude had to flow from Cushing via pipeline to the US Gulf Coast, and then be loaded onto VLCCs to reach international refiners, WTI had to discount by the full cost of domestic pipeline transport + terminal loading + transatlantic freight.<br><br>
+<strong>3. Export Arbitrage Formula:</strong><br>
+Export Arb opens when:<br>
+<code>Brent Price - WTI (Houston) > Ocean Freight to Europe/Asia + Insurance + Financing</code><br>
+If Brent - WTI is $6.00/bbl, pipeline from Cushing to Gulf is $2.50, and VLCC freight to Rotterdam is $2.00/bbl, a physical trader locks in: $6.00 - ($2.50 + $2.00) = <strong>+$1.50/bbl profit</strong>.`
+      },
+      {
+        id: "comm-09",
+        category: "commodities",
+        difficulty: "hard",
+        firms: ["Glencore", "Trafigura"],
+        title: "Metal Warehousing Arbitrage & LME Cancelled Warrants",
+        prompt: `On the London Metal Exchange (LME), what is a <strong>Warehouse Warrant</strong>? What does a surge in <strong>Cancelled Warrants</strong> indicate about market supply, and how do physical traders profit from warehousing rent queues?`,
+        solution: `<strong>1. LME Warrants Explained:</strong><br>
+An LME warrant is a bearer document of title representing specific physical parcels of metal (e.g. 25 tonnes of copper or aluminum) stored in an LME-approved warehouse (e.g. Rotterdam, Johor, Vlissingen).<br><br>
+<strong>2. Cancelled Warrants:</strong><br>
+• When a metal owner decides to withdraw physical metal from the warehouse system (either for delivery to a manufacturer or to move to a cheaper off-market storage facility), the warrant is 'cancelled'.<br>
+• <strong>Market Signal:</strong> A surge in cancelled warrants signals that physical availability on the exchange is plunging. It is the most reliable precursor to a <strong>cash-to-3-month backwardation spike (squeeze)</strong>.<br><br>
+<strong>3. Warehousing Arbitrage & Rent Queues:</strong><br>
+Warehouse operators historically charged daily rent on metal trapped in queue waiting to be loaded out. Traders and warehouse operators shared in this rent cashflow while hedging the forward price curve via cash-and-carry financing.`
+      },
+      {
+        id: "comm-10",
+        category: "commodities",
+        difficulty: "medium",
+        firms: ["Citadel Commodities", "Mercuria", "BP Trading"],
+        title: "Weather Derivatives: Heating Degree Days (HDD) & Cooling Degree Days (CDD)",
+        prompt: `Explain how <strong>Heating Degree Days (HDD)</strong> and <strong>Cooling Degree Days (CDD)</strong> are calculated against the 65°F baseline. How do European energy desks use degree days to forecast natural gas withdrawal rates during winter?`,
+        solution: `<strong>1. Definition & Formula (Base 65°F / 18°C):</strong><br>
+• $T_{\\text{mean}} = \\frac{T_{\\text{max}} + T_{\\text{min}}}{2}$<br>
+• <strong>Heating Degree Day (HDD):</strong> $\\max(0, 65 - T_{\\text{mean}})$. Measures heating demand (colder weather = higher HDD = more gas burned).<br>
+• <strong>Cooling Degree Day (CDD):</strong> $\\max(0, T_{\\text{mean}} - 65)$. Measures air conditioning demand (hotter weather = higher CDD = more power/gas burned).<br><br>
+<strong>2. Application on European & US Gas Desks:</strong><br>
+Gas desks build volumetric regression models linking total population-weighted HDDs across key regions (e.g. Germany/UK or US Midwest/Northeast) to daily storage withdrawal in Bcf (billion cubic feet) or TWh. A weather forecast shift showing an unexpected Arctic polar vortex (+50 HDDs over baseline) causes traders to immediately buy prompt gas futures ahead of EIA/GIE storage reports.`
+      },
+      {
+        id: "comm-11",
+        category: "commodities",
+        difficulty: "hard",
+        firms: ["Trafigura", "Gunvor", "BP Trading"],
+        title: "Fuel Oil Blending Economics & IMO 2020 0.5% Sulfur Specification",
+        prompt: `You have 40,000 metric tonnes of High-Sulfur Fuel Oil (HSFO, <strong>3.2% sulfur</strong>) priced at <strong>$410/tonne</strong>.<br>
+You have access to Low-Sulfur Marine Gasoil (LSMGO, <strong>0.1% sulfur</strong>) priced at <strong>$720/tonne</strong>.<br>
+You wish to blend these two streams to produce Very Low Sulfur Fuel Oil (VLSFO, <strong>maximum 0.5% sulfur</strong>) to sell into the bunker market at <strong>$590/tonne</strong>.<br>
+<strong>Question:</strong> How many tonnes of LSMGO must be blended with the 40,000 tonnes of HSFO, and what is the total blending profit?`,
+        solution: `<strong>1. Linear Sulfur Blending Mass Balance:</strong><br>
+Let $M_H = 40,000$ tonnes (HSFO, $S_H = 3.2\\% = 0.032$).<br>
+Let $M_L$ be tonnes of LSMGO needed ($S_L = 0.1\\% = 0.001$).<br>
+Target blended sulfur $S_T = 0.5\\% = 0.005$.<br><br>
+<code>(M_H \\times S_H) + (M_L \\times S_L) = (M_H + M_L) \\times S_T</code><br>
+$(40,000 \\times 0.032) + (M_L \\times 0.001) = (40,000 + M_L) \\times 0.005$<br>
+$1,280 + 0.001 M_L = 200 + 0.005 M_L$<br>
+$1,080 = 0.004 M_L$<br>
+<code>M_L = \\frac{1,080}{0.004} = \\mathbf{270,000 \\text{ tonnes of LSMGO}}</code><br><br>
+<strong>2. Total Blended Output:</strong><br>
+$M_{\\text{Total}} = 40,000 + 270,000 = <strong>310,000 tonnes of VLSFO</strong>.<br><br>
+<strong>3. P&L Economics:</strong><br>
+• Total Input Cost = (40,000 × $410) + (270,000 × $720) = $16,400,000 + $194,400,000 = <strong>$210,800,000</strong>.<br>
+• Blended VLSFO Revenue = 310,000 × $590 = <strong>$182,900,000</strong>.<br>
+• <em>Notice:</em> $182.9M - $210.8M = <strong>-$27.9M Loss!</strong><br>
+<strong>Key Trading Takeaway:</strong> Diluting 3.2% HSFO all the way down to 0.5% with expensive 0.1% gasoil is uneconomic when the gasoil-fueloil crack is wide. Successful blending desks instead use sweet vacuum gas oil (VGO) or low-sulfur straight-run (LSSR) atmospheric residue with low viscosity to optimize margin.`
+      }
+    ];
+
+    let currentCategory = 'all';
+
+    function init() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const catParam = urlParams.get('category');
+      if (catParam) {
+        currentCategory = catParam;
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(`'${catParam}'`)) {
+            btn.classList.add('active');
+          }
+        });
+      }
+      updateCounters();
+      renderQuestions();
+    }
+
+    function updateCounters() {
+      document.getElementById('countAll').textContent = QUESTIONS_DATA.length;
+      document.getElementById('countComm').textContent = QUESTIONS_DATA.filter(q => q.category === 'commodities').length;
+      document.getElementById('countProb').textContent = QUESTIONS_DATA.filter(q => q.category === 'probability').length;
+      document.getElementById('countFin').textContent = QUESTIONS_DATA.filter(q => q.category === 'finance').length;
+      document.getElementById('countBrain').textContent = QUESTIONS_DATA.filter(q => q.category === 'brainteasers').length;
+      document.getElementById('countBehav').textContent = QUESTIONS_DATA.filter(q => q.category === 'behavioral').length;
+    }
+
+    function setCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      renderQuestions();
+    }
+
+    function filterQuestions() {
+      renderQuestions();
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById('questionsContainer');
+      const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+
+      const filtered = QUESTIONS_DATA.filter(q => {
+        const matchesCategory = (currentCategory === 'all') || (q.category === currentCategory);
+        const matchesSearch = !searchVal || 
+          q.title.toLowerCase().includes(searchVal) ||
+          q.prompt.toLowerCase().includes(searchVal) ||
+          q.solution.toLowerCase().includes(searchVal) ||
+          q.firms.some(f => f.toLowerCase().includes(searchVal));
+
+        return matchesCategory && matchesSearch;
+      });
+
+      document.getElementById('visibleCounter').textContent = `Showing ${filtered.length} of ${QUESTIONS_DATA.length} questions`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding: 40px; color: var(--subtext);">
+            <h3>No questions found matching your filter criteria.</h3>
+            <p>Try searching for broader keywords like 'oil', 'probability', 'dice', or reset filters.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(q => {
+        const catClass = q.category === 'commodities' ? 'tag-comm' : (q.category === 'probability' ? 'tag-math' : 'tag-category');
+        const diffClass = q.difficulty === 'easy' ? 'tag-diff-easy' : (q.difficulty === 'medium' ? 'tag-diff-med' : 'tag-diff-hard');
+
+        return `
+          <div class="q-card" id="${q.id}">
+            <div class="q-top-row">
+              <div class="q-badges">
+                <span class="tag ${catClass}">${q.category}</span>
+                <span class="tag ${diffClass}">${q.difficulty}</span>
+                ${q.firms.map(f => `<span class="tag tag-firm">${f}</span>`).join('')}
+              </div>
+            </div>
+
+            <div class="q-title">${q.title}</div>
+            <div class="q-prompt">${q.prompt}</div>
+
+            <div class="solution-panel" id="sol-${q.id}">
+              <div class="solution-title">💡 Detailed Technical Solution & Trader Intuition</div>
+              <div>${q.solution}</div>
+            </div>
+
+            <div class="q-actions">
+              <button class="btn-toggle-sol" onclick="toggleSolution('${q.id}')">
+                Reveal Solution & Intuition
+              </button>
+              <label class="mastered-label">
+                <input type="checkbox" onchange="toggleMastered('${q.id}', this.checked)">
+                Mark Mastered
+              </label>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleSolution(id) {
+      const panel = document.getElementById(`sol-${id}`);
+      const btn = event.currentTarget;
+      if (panel.classList.contains('open')) {
+        panel.classList.remove('open');
+        btn.textContent = 'Reveal Solution & Intuition';
+      } else {
+        panel.classList.add('open');
+        btn.textContent = 'Hide Solution';
+      }
+    }
+
+    function toggleMastered(id, isMastered) {
+      try {
+        localStorage.setItem(`mastered_${id}`, isMastered);
+      } catch(e) {}
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

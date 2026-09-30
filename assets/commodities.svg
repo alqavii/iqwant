@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="bgComm" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1c160c"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="oilGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bgComm)"/>
+
+  <!-- Oil Barrel Graphic -->
+  <g transform="translate(180, 150)">
+    <!-- Oil Barrel -->
+    <ellipse cx="100" cy="60" rx="90" ry="35" fill="#334155" stroke="#64748b" stroke-width="4"/>
+    <rect x="10" y="60" width="180" height="200" fill="#1e293b" stroke="#475569" stroke-width="3"/>
+    <ellipse cx="100" cy="260" rx="90" ry="35" fill="#0f172a" stroke="#475569" stroke-width="4"/>
+    
+    <!-- Barrel Ridges -->
+    <line x1="10" y1="120" x2="190" y2="120" stroke="#f59e0b" stroke-width="5"/>
+    <line x1="10" y1="190" x2="190" y2="190" stroke="#f59e0b" stroke-width="5"/>
+    
+    <!-- Oil Drop Symbol -->
+    <path d="M 100,135 C 100,135 125,165 125,180 C 125,195 113,205 100,205 C 87,205 75,195 75,180 C 75,165 100,135 100,135 Z" fill="url(#oilGrad)"/>
+  </g>
+
+  <!-- Commodity Forward Curve & Spreads Graphic -->
+  <g transform="translate(420, 160)">
+    <!-- Chart axes -->
+    <line x1="20" y1="280" x2="320" y2="280" stroke="#475569" stroke-width="4"/>
+    <line x1="20" y1="280" x2="20" y2="40" stroke="#475569" stroke-width="4"/>
+    
+    <!-- Contango Curve (Upward Sloping) -->
+    <path d="M 30,240 Q 150,220 300,90" fill="none" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+    <!-- Backwardation Curve (Downward Sloping) -->
+    <path d="M 30,90 Q 150,190 300,240" fill="none" stroke="#22c55e" stroke-width="5" stroke-dasharray="10 8" stroke-linecap="round"/>
+    
+    <!-- Labels -->
+    <text x="310" y="85" font-family="'DM Sans', Arial" font-size="20" font-weight="bold" fill="#f59e0b">Contango</text>
+    <text x="310" y="255" font-family="'DM Sans', Arial" font-size="18" font-weight="bold" fill="#22c55e">Backwardation</text>
+    
+    <!-- Wheat / Gas icons -->
+    <circle cx="90" cy="90" r="28" fill="rgba(245, 158, 11, 0.2)" stroke="#f59e0b" stroke-width="2"/>
+    <text x="90" y="100" font-size="26" text-anchor="middle">🌾</text>
+    <circle cx="210" cy="70" r="28" fill="rgba(56, 189, 248, 0.2)" stroke="#38bdf8" stroke-width="2"/>
+    <text x="210" y="80" font-size="26" text-anchor="middle">⚡</text>
+  </g>
+</svg>

@@ -1,222 +1,434 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shape Reaction Game</title>
-    <style>
-        body {
-            margin: 0;
-            background-color: orange;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-        #score {
-            font-size: 2rem;
-            color: white;
-            margin-top: 20px;
-        }
-        #shape {
-            position: absolute;
-            width: 40vmin;
-            height: 40vmin;
-            display: none;
-            background-color: white;
-        }
-        #crosshair {
-            position: absolute;
-            width: 4.5px;
-            height: 35px;
-            background-color: white;
-            z-index: 10;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        #crosshair::before {
-            content: '';
-            position: absolute;
-            width: 35px;
-            height: 4.5px;
-            background-color: white;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        #controls {
-            position: absolute;
-            bottom: 20px;
-            width: 80%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        #slider-label, #game-duration-label {
-            color: white;
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-        }
-        #start-button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            color: white;
-            background-color: blue;
-            border: none;
-            cursor: pointer;
-        }
-        #statistics {
-            display: none;
-            color: white;
-            font-size: 1.2rem;
-            text-align: center;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IQwant - Shape Reaction Speed (Optiver Zap)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05060a;
+      --glass: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.12);
+      --primary: #8b5cf6;
+      --primary-strong: #6d28d9;
+      --accent: #38bdf8;
+      --ok: #22c55e;
+      --bad: #ef4444;
+      --text: #ffffff;
+      --subtext: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 50% 20%, rgba(245, 158, 11, 0.12), transparent 60%),
+                  radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15), transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    nav {
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+    .brand .iq {
+      background: linear-gradient(90deg, #a78bfa, #8b5cf6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand .want { color: #fff; }
+    .nav-links { display: flex; gap: 16px; align-items: center; }
+    .nav-links a { color: var(--subtext); text-decoration: none; font-size: 0.95rem; font-weight: 600; }
+    .nav-links a:hover { color: #fff; }
+
+    .container {
+      width: min(920px, 94vw);
+      position: relative;
+      z-index: 1;
+      padding: 30px 0 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .glass-card {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(20px) saturate(140%);
+      -webkit-backdrop-filter: blur(20px) saturate(140%);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(139, 92, 246, 0.15);
+      padding: 32px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 14px;
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid #f59e0b;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fde68a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .game-arena {
+      position: relative;
+      height: 380px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      margin: 20px 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .crosshair {
+      position: absolute;
+      width: 4px;
+      height: 36px;
+      background: rgba(255,255,255,0.4);
+      z-index: 5;
+    }
+    .crosshair::before {
+      content: '';
+      position: absolute;
+      width: 36px;
+      height: 4px;
+      background: rgba(255,255,255,0.4);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .target-shape {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      display: none;
+      box-shadow: 0 0 30px rgba(255,255,255,0.3);
+      transition: transform 0.05s ease;
+    }
+    .shape-circle { border-radius: 50%; background: #38bdf8; }
+    .shape-square { border-radius: 12px; background: #a855f7; }
+
+    .game-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 16px;
+    }
+    .hud-item { display: flex; flex-direction: column; align-items: center; }
+    .hud-item .title { font-size: 0.75rem; text-transform: uppercase; color: var(--subtext); letter-spacing: 1px; }
+    .hud-item .val { font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 800; }
+
+    .btn-action {
+      background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 800;
+      border: none;
+      border-radius: 14px;
+      padding: 16px 36px;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+      transition: all 0.2s;
+    }
+    .btn-action:hover { transform: translateY(-2px); box-shadow: 0 0 35px rgba(139, 92, 246, 0.6); }
+
+    .control-keys-hint {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 14px;
+    }
+    .key-badge {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    #endScreen { display: none; }
+  </style>
 </head>
 <body>
-    <div id="score">Score: 0</div>
-    <div id="crosshair"></div>
-    <div id="shape"></div>
-    <div id="controls">
-        <div id="slider-label">Flashing Duration: 375ms</div>
-        <input type="range" id="duration-slider" min="25" max="500" value="375" step="25">
-        <div id="game-duration-label">Game Duration: 30s</div>
-        <input type="range" id="game-duration-slider" min="10" max="120" value="30" step="5">
-        <button id="start-button">Start Game</button>
+  <nav>
+    <a href="index.html" class="brand">
+      <span class="iq">IQ</span><span class="want">want</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">← All Games</a>
+      <a href="optiver80.html">80 in 8</a>
+      <a href="switchgame.html">Switch Challenge</a>
+      <a href="questions.html">Question Banks</a>
     </div>
-    <div id="statistics">
-        <p>Game Over!</p>
-        <p>Shapes Shown: <span id="shapes-shown">0</span></p>
-        <p>Correct Answers: <span id="correct-answers">0</span></p>
-        <p>Wrong Answers: <span id="wrong-answers">0</span></p>
-        <p>Correct Percentage: <span id="correct-percentage">0</span>%</p>
-        <p>Average Time Per Shape: <span id="average-time">0</span> ms</p>
+  </nav>
+
+  <div class="container">
+    <div id="setupScreen" class="glass-card">
+      <span class="badge">Visual Reaction Test</span>
+      <h1>Shape Reaction Speed (Optiver Zap)</h1>
+      <p style="color:var(--subtext); max-width:600px; margin: 0 auto 20px; line-height:1.5;">
+        Simulates the Optiver Zap assessment. Shapes flash rapidly on the left or right of the crosshair. Your goal is to react immediately to the shape's side and type.
+      </p>
+
+      <div style="background:rgba(0,0,0,0.3); padding:20px; border-radius:14px; margin-bottom:24px; text-align:left; color:var(--subtext); line-height:1.6; border-left:4px solid #f59e0b;">
+        <strong style="color:white;">Instructions:</strong>
+        <ul style="list-style:inside disc; margin-top:8px;">
+          <li>Focus your eyes on the central crosshair.</li>
+          <li>When a shape flashes on the <strong>LEFT</strong>, press <strong>[Left Arrow]</strong> or <strong>[A]</strong>.</li>
+          <li>When a shape flashes on the <strong>RIGHT</strong>, press <strong>[Right Arrow]</strong> or <strong>[D]</strong>.</li>
+          <li>If the shape is a <strong>Circle</strong>, press <strong>[Spacebar]</strong> instead!</li>
+          <li>Test duration: 30 seconds. Speed and sub-300ms reaction times determine score.</li>
+        </ul>
+      </div>
+
+      <button class="btn-action" onclick="startGame()">Start Reaction Sprint</button>
     </div>
-    <script>
-        const shape = document.getElementById('shape');
-        const scoreDisplay = document.getElementById('score');
-        const flashSlider = document.getElementById('duration-slider');
-        const flashSliderLabel = document.getElementById('slider-label');
-        const durationSlider = document.getElementById('game-duration-slider');
-        const durationSliderLabel = document.getElementById('game-duration-label');
-        const startButton = document.getElementById('start-button');
-        const statistics = document.getElementById('statistics');
-        const shapesShownElem = document.getElementById('shapes-shown');
-        const correctAnswersElem = document.getElementById('correct-answers');
-        const wrongAnswersElem = document.getElementById('wrong-answers');
-        const correctPercentageElem = document.getElementById('correct-percentage');
-        const averageTimeElem = document.getElementById('average-time');
 
-        let score = 0;
-        let flashDuration = parseInt(flashSlider.value);
-        let gameDuration = parseInt(durationSlider.value) * 1000; // Convert to milliseconds
-        let gameInterval;
-        let shapesShown = 0;
-        let correctAnswers = 0;
-        let wrongAnswers = 0;
-        let startTime;
-        let totalReactionTime = 0;
+    <!-- LIVE GAME -->
+    <div id="gameScreen" class="glass-card" style="display:none;">
+      <div class="game-hud">
+        <div class="hud-item">
+          <span class="title">Score</span>
+          <span class="val" style="color:var(--ok)" id="liveScore">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="title">Time Left</span>
+          <span class="val" style="color:var(--accent)" id="liveTimer">30s</span>
+        </div>
+        <div class="hud-item">
+          <span class="title">Avg Reaction</span>
+          <span class="val" style="color:var(--primary)" id="liveAvgTime">0 ms</span>
+        </div>
+      </div>
 
-        flashSlider.addEventListener('input', () => {
-            flashDuration = parseInt(flashSlider.value);
-            flashSliderLabel.textContent = `Flashing Duration: ${flashDuration}ms`;
-        });
+      <div class="game-arena" id="arena">
+        <div class="crosshair"></div>
+        <div id="targetShape" class="target-shape"></div>
+      </div>
 
-        durationSlider.addEventListener('input', () => {
-            gameDuration = parseInt(durationSlider.value) * 1000;
-            durationSliderLabel.textContent = `Game Duration: ${durationSlider.value}s`;
-        });
+      <div class="control-keys-hint">
+        <div class="key-badge">LEFT SHAPE: [←] or [A]</div>
+        <div class="key-badge" style="color:#38bdf8; border-color:#38bdf8;">ANY CIRCLE: [SPACE]</div>
+        <div class="key-badge">RIGHT SHAPE: [→] or [D]</div>
+      </div>
+    </div>
 
-        function randomPosition() {
-            const position = Math.random() > 0.5 ? 'left' : 'right';
-            shape.style.top = '50%';
-            shape.style.transform = 'translate(-50%, -50%)';
-            shape.style.left = position === 'left' ? '25%' : '75%';
+    <!-- END SCREEN -->
+    <div id="endScreen" class="glass-card">
+      <span class="badge">Assessment Result</span>
+      <h1 id="endTitle">Fast Latency Reaction</h1>
+      <p style="color:var(--subtext); margin-bottom:24px;">Summary of your reaction time distribution and accuracy under visual pressure.</p>
+
+      <div class="game-hud" style="justify-content:space-around; margin-bottom:28px;">
+        <div class="hud-item">
+          <span class="title">Accuracy</span>
+          <span class="val" style="color:var(--ok);" id="resAcc">0%</span>
+        </div>
+        <div class="hud-item">
+          <span class="title">Mean Latency</span>
+          <span class="val" style="color:var(--accent);" id="resMeanLatency">0 ms</span>
+        </div>
+        <div class="hud-item">
+          <span class="title">Hits / Total</span>
+          <span class="val" style="color:var(--primary);" id="resHits">0 / 0</span>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:16px;">
+        <button class="btn-action" style="max-width:240px;" onclick="location.reload()">Try Again</button>
+        <button class="btn-action" style="max-width:240px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2);" onclick="location.href='index.html'">Back to Hub</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let score = 0;
+    let totalShown = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let reactionTimes = [];
+    let flashStartTime = 0;
+    let isShapeVisible = false;
+    let currentSide = 'left';
+    let currentIsCircle = false;
+    let sessionTimer = null;
+    let timeLeft = 30;
+
+    const shapeEl = document.getElementById('targetShape');
+
+    function startGame() {
+      score = 0;
+      totalShown = 0;
+      correctCount = 0;
+      wrongCount = 0;
+      reactionTimes = [];
+      timeLeft = 30;
+
+      document.getElementById('setupScreen').style.display = 'none';
+      document.getElementById('endScreen').style.display = 'none';
+      document.getElementById('gameScreen').style.display = 'block';
+
+      sessionTimer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('liveTimer').textContent = `${timeLeft}s`;
+        if (timeLeft <= 0) finishGame();
+      }, 1000);
+
+      scheduleNextShape();
+    }
+
+    function scheduleNextShape() {
+      if (timeLeft <= 0) return;
+      const delay = Math.floor(Math.random() * 800) + 400; // 400ms - 1200ms
+      setTimeout(showShape, delay);
+    }
+
+    function showShape() {
+      if (timeLeft <= 0) return;
+      currentSide = Math.random() < 0.5 ? 'left' : 'right';
+      currentIsCircle = Math.random() < 0.4;
+
+      shapeEl.className = currentIsCircle ? 'target-shape shape-circle' : 'target-shape shape-square';
+      shapeEl.style.left = currentSide === 'left' ? '20%' : '80%';
+      shapeEl.style.top = '50%';
+      shapeEl.style.transform = 'translate(-50%, -50%)';
+      shapeEl.style.display = 'block';
+
+      isShapeVisible = true;
+      flashStartTime = Date.now();
+      totalShown++;
+
+      // Disappear after 400ms if no response
+      setTimeout(() => {
+        if (isShapeVisible) {
+          isShapeVisible = false;
+          shapeEl.style.display = 'none';
+          wrongCount++;
+          scheduleNextShape();
         }
+      }, 450);
+    }
 
-        function randomShape() {
-            const isCircle = Math.random() > 0.5;
-            shape.style.borderRadius = isCircle ? '50%' : '0';
-            shape.dataset.type = isCircle ? 'circle' : 'square';
-        }
+    function handleInput(key) {
+      if (!isShapeVisible) {
+        // False alarm penalty
+        score = Math.max(0, score - 5);
+        document.getElementById('liveScore').textContent = score;
+        return;
+      }
 
-        function showShape() {
-            randomPosition();
-            randomShape();
-            shape.style.display = 'block';
-            shapesShown++;
-            startTime = Date.now();
+      const elapsed = Date.now() - flashStartTime;
+      isShapeVisible = false;
+      shapeEl.style.display = 'none';
 
-            const hideTimeout = setTimeout(() => {
-                shape.style.display = 'none';
-                if (gameInterval) startGame();
-            }, flashDuration); // Shape appears for duration set by slider
+      let isCorrect = false;
+      if (currentIsCircle) {
+        isCorrect = (key === 'space');
+      } else {
+        isCorrect = (key === currentSide);
+      }
 
-            shape.dataset.hideTimeout = hideTimeout;
-        }
+      if (isCorrect) {
+        correctCount++;
+        reactionTimes.push(elapsed);
+        score += Math.max(10, Math.floor(1000 - elapsed));
+      } else {
+        wrongCount++;
+        score = Math.max(0, score - 20);
+      }
 
-        function startGame() {
-            gameInterval = setTimeout(() => {
-                showShape();
-            }, 500); // Delay between shapes
-        }
+      const avg = reactionTimes.length > 0 ? Math.round(reactionTimes.reduce((a,b)=>a+b,0)/reactionTimes.length) : 0;
+      document.getElementById('liveScore').textContent = score;
+      document.getElementById('liveAvgTime').textContent = `${avg} ms`;
 
-        function endGame() {
-            clearTimeout(gameInterval);
-            shape.style.display = 'none';
+      scheduleNextShape();
+    }
 
-            const correctPercentage = correctAnswers > 0 ? ((correctAnswers / shapesShown) * 100).toFixed(2) : 0;
-            const averageTime = correctAnswers > 0 ? (totalReactionTime / correctAnswers).toFixed(2) : 0;
+    window.addEventListener('keydown', (e) => {
+      if (document.getElementById('gameScreen').style.display !== 'block') return;
+      if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
+        handleInput('left');
+      } else if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') {
+        handleInput('right');
+      } else if (e.code === 'Space') {
+        e.preventDefault();
+        handleInput('space');
+      }
+    });
 
-            shapesShownElem.textContent = shapesShown;
-            correctAnswersElem.textContent = correctAnswers;
-            wrongAnswersElem.textContent = wrongAnswers;
-            correctPercentageElem.textContent = correctPercentage;
-            averageTimeElem.textContent = averageTime;
+    function finishGame() {
+      clearInterval(sessionTimer);
+      shapeEl.style.display = 'none';
+      document.getElementById('gameScreen').style.display = 'none';
+      document.getElementById('endScreen').style.display = 'block';
 
-            statistics.style.display = 'block';
-        }
+      const acc = totalShown > 0 ? Math.round((correctCount / totalShown) * 100) : 0;
+      const meanLat = reactionTimes.length > 0 ? Math.round(reactionTimes.reduce((a,b)=>a+b,0)/reactionTimes.length) : 0;
 
-        startButton.addEventListener('click', () => {
-            score = 0;
-            shapesShown = 0;
-            correctAnswers = 0;
-            wrongAnswers = 0;
-            totalReactionTime = 0;
-            statistics.style.display = 'none';
-            scoreDisplay.textContent = `Score: ${score}`;
-            setTimeout(endGame, gameDuration);
-            startGame();
-        });
+      document.getElementById('resAcc').textContent = `${acc}%`;
+      document.getElementById('resMeanLatency').textContent = `${meanLat} ms`;
+      document.getElementById('resHits').textContent = `${correctCount} / ${totalShown}`;
 
-        document.addEventListener('keydown', (event) => {
-            if (shape.style.display === 'block') {
-                const type = shape.dataset.type;
-                clearTimeout(shape.dataset.hideTimeout); // Prevent auto-hide if key is pressed
-
-                const reactionTime = Date.now() - startTime;
-                totalReactionTime += reactionTime;
-
-                if ((event.key === 'ArrowLeft' && type === 'square') ||
-                    (event.key === 'ArrowRight' && type === 'circle')) {
-                    correctAnswers++;
-                    scoreDisplay.textContent = `Score: ${++score}`;
-                    console.log('Correct!');
-                } else {
-                    wrongAnswers++;
-                    scoreDisplay.textContent = `Score: ${--score}`;
-                    console.log('Wrong!');
-                }
-
-                
-                shape.style.display = 'none';
-                if (gameInterval) startGame();
-            }
-        });
-    </script>
+      const title = document.getElementById('endTitle');
+      if (meanLat < 300 && acc >= 85) {
+        title.textContent = '⚡ Optiver Zap Ready (Top 5% Reflexes)';
+        title.style.color = '#4ade80';
+      } else if (meanLat < 380 && acc >= 70) {
+        title.textContent = 'Solid Reaction Latency';
+        title.style.color = '#38bdf8';
+      } else {
+        title.textContent = 'High Visual Latency / High False Alarm Rate';
+        title.style.color = '#ef4444';
+      }
+    }
+  </script>
 </body>
 </html>

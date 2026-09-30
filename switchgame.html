@@ -3,291 +3,508 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reaction Game</title>
+  <title>IQwant - Switch Challenge (Optiver & SHL)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #05060a;
+      --glass: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.12);
+      --primary: #8b5cf6;
+      --primary-strong: #6d28d9;
+      --accent: #38bdf8;
+      --ok: #22c55e;
+      --bad: #ef4444;
+      --text: #ffffff;
+      --subtext: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow: hidden;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      position: relative;
     }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 40% 15%, rgba(139, 92, 246, 0.15), transparent 60%),
+                  radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.1), transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    nav {
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+    .brand .iq {
+      background: linear-gradient(90deg, #a78bfa, #8b5cf6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand .want { color: #fff; }
+    .nav-links { display: flex; gap: 16px; align-items: center; }
+    .nav-links a { color: var(--subtext); text-decoration: none; font-size: 0.95rem; font-weight: 600; }
+    .nav-links a:hover { color: #fff; }
 
     .container {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      flex: 1;
-      padding: 20px;
-    }
-
-    .score {
-      font-size: 24px;
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-
-    .timers {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .box-container {
+      width: min(920px, 94vw);
+      position: relative;
+      z-index: 1;
+      padding: 30px 0 60px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap: 24px;
     }
 
-    .box {
-      border: 2px solid #ccc;
-      padding: 20px;
-      margin: 10px;
-      font-size: 24px;
-      font-weight: bold;
-      min-height: 100px;
-      min-width: 800px;
+    .glass-card {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(20px) saturate(140%);
+      -webkit-backdrop-filter: blur(20px) saturate(140%);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(139, 92, 246, 0.15);
+      padding: 32px;
+      width: 100%;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 14px;
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid var(--primary);
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #c4b5fd;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .setup-header { text-align: center; margin-bottom: 24px; }
+    .setup-header h1 { font-size: 2.3rem; font-weight: 800; margin-bottom: 8px; }
+    .setup-header p { color: var(--subtext); font-size: 1rem; max-width: 650px; margin: 0 auto; line-height: 1.5; }
+
+    .game-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 24px;
+    }
+    .hud-item { display: flex; flex-direction: column; align-items: center; }
+    .hud-item .title { font-size: 0.75rem; text-transform: uppercase; color: var(--subtext); letter-spacing: 1px; }
+    .hud-item .val { font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 800; }
+
+    .switch-cards-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .switch-card {
+      background: rgba(0,0,0,0.35);
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      transition: all 0.2s ease;
       position: relative;
     }
+    .switch-card.active-target {
+      border-color: var(--primary);
+      background: rgba(139, 92, 246, 0.15);
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.35);
+      transform: scale(1.02);
+    }
+    .switch-card.inactive-target {
+      opacity: 0.35;
+      filter: grayscale(0.6);
+    }
 
-    .content-left {
+    .card-content-left {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: white;
       flex: 1;
-      font-size: 36px;
       text-align: center;
     }
-
-    .content-right {
+    .card-content-right {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--accent);
       flex: 1;
-      font-size: 36px;
       text-align: center;
-      font-family: 'Arial';
-      padding-left: 10px;
+      letter-spacing: 4px;
+    }
+    .rule-caption {
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      padding: 2px 14px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      color: var(--subtext);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
     }
 
-    .question {
-      font-size: 14px;
-      color: grey;
-      margin-top: 5px;
+    .active-prompt-banner {
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 24px;
+      animation: pulse 2s infinite;
     }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.85; } }
 
-    .buttons {
+    .buttons-row {
       display: flex;
       justify-content: center;
-      margin: 50px 0;
-      position: relative;
-      top: -20px;
+      gap: 20px;
     }
-
-    button {
-      font-size: 18px;
-      padding: 10px 20px;
-      margin: 0 10px;
-      cursor: pointer;
+    .btn-choice {
+      flex: 1;
+      max-width: 240px;
+      padding: 18px 24px;
+      font-size: 1.25rem;
+      font-weight: 800;
       border: none;
-      border-radius: 5px;
-      position: relative;
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.15s ease;
+    }
+    .btn-no {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      color: white;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.35);
+    }
+    .btn-yes {
+      background: linear-gradient(135deg, #22c55e, #15803d);
+      color: white;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.35);
+    }
+    .btn-choice:hover { transform: translateY(-2px); }
+    .btn-choice:active { transform: scale(0.97); }
+
+    .key-hint {
+      font-size: 0.75rem;
+      background: rgba(0,0,0,0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
     }
 
-    #yes-button {
-      background-color: green;
-      color: white;
-    }
-
-    #no-button {
-      background-color: red;
-      color: white;
-    }
-
-    #yes-button::after {
-      content: "→";
-      font-size: 24px;
-      color: white;
-      position: absolute;
-      right: -40px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    #no-button::after {
-      content: "←";
-      font-size: 24px;
-      color: white;
-      position: absolute;
-      left: -40px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
+    #endScreen { display: none; text-align: center; }
   </style>
 </head>
 <body>
+  <nav>
+    <a href="index.html" class="brand">
+      <span class="iq">IQ</span><span class="want">want</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">← All Games</a>
+      <a href="optiver80.html">80 in 8</a>
+      <a href="balloon.html">Balloon BART</a>
+      <a href="questions.html">Question Banks</a>
+    </div>
+  </nav>
+
   <div class="container">
-    <div class="score">
-      Right: <span id="right-score">0</span> | Wrong: <span id="wrong-score">0</span>
-    </div>
-    <div class="timers">
-      Game Timer: <span id="game-timer">0</span>s | Question Timer: <span id="question-timer">0</span>s
-    </div>
-    <div class="box-container">
-      <div id="top-box" class="box">
-        <div class="content-left" id="top-math"></div>
-        <div class="content-right" id="top-arrows"></div>
+    <!-- SETUP -->
+    <div id="setupScreen" class="glass-card">
+      <div class="setup-header">
+        <span class="badge">Cognitive Flexibility</span>
+        <h1>Switch Challenge (Optiver & SHL)</h1>
+        <p>Measures cognitive switching latency and selective attention. The assessment randomly alternates between evaluating arithmetic parity (Is the result Odd?) and arrow direction symmetry.</p>
       </div>
-      <div id="top-question" class="question">Is the result odd?</div>
-    </div>
-    <div class="box-container">
-      <div id="bottom-box" class="box">
-        <div class="content-left" id="bottom-math"></div>
-        <div class="content-right" id="bottom-arrows"></div>
+
+      <div style="background:rgba(0,0,0,0.3); padding:20px; border-radius:14px; margin-bottom:24px; text-align:left; line-height:1.6; color:var(--subtext); border-left:4px solid var(--primary);">
+        <strong style="color:white;">Instructions:</strong>
+        <ul style="list-style:inside disc; margin-top:8px;">
+          <li>When the <strong>Top Card</strong> is active: Calculate the math problem. Is the result <strong>Odd</strong>?</li>
+          <li>When the <strong>Bottom Card</strong> is active: Inspect the two arrows. Are they <strong>Identical</strong>?</li>
+          <li>Answer accurately as fast as possible using the mouse or keyboard: <strong style="color:#ef4444;">[A] or [←] for NO</strong>, and <strong style="color:#22c55e;">[D] or [→] for YES</strong>.</li>
+          <li>Complete 35 rounds to generate your cognitive agility profile.</li>
+        </ul>
       </div>
-      <div id="bottom-question" class="question">Are the arrows identical?</div>
+
+      <button class="btn-choice btn-yes" style="max-width:100%;" onclick="startSwitchGame()">Begin 35-Round Challenge</button>
     </div>
-    <div class="buttons">
-      <button id="no-button">No</button>
-      <button id="yes-button">Yes</button>
+
+    <!-- LIVE GAME -->
+    <div id="gameScreen" class="glass-card" style="display:none;">
+      <div class="game-hud">
+        <div class="hud-item">
+          <span class="title">Round</span>
+          <span class="val" style="color:var(--accent)" id="hudRound">1 / 35</span>
+        </div>
+        <div class="hud-item">
+          <span class="title">Correct</span>
+          <span class="val" style="color:var(--ok)" id="hudCorrect">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="title">Wrong</span>
+          <span class="val" style="color:var(--bad)" id="hudWrong">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="title">Latency</span>
+          <span class="val" style="color:var(--primary)" id="hudLatency">0.0s</span>
+        </div>
+      </div>
+
+      <div class="active-prompt-banner" id="activePromptText">
+        Active Task: Is the result ODD?
+      </div>
+
+      <div class="switch-cards-container">
+        <!-- Top Box: Math -->
+        <div id="topBox" class="switch-card">
+          <div class="card-content-left" id="topMath">4 + 3</div>
+          <div class="card-content-right" id="topArrows">↑ ↑</div>
+          <div class="rule-caption">Task A: Is result ODD?</div>
+        </div>
+
+        <!-- Bottom Box: Arrows -->
+        <div id="bottomBox" class="switch-card">
+          <div class="card-content-left" id="bottomMath">8 - 2</div>
+          <div class="card-content-right" id="bottomArrows">↑ ↓</div>
+          <div class="rule-caption">Task B: Are arrows IDENTICAL?</div>
+        </div>
+      </div>
+
+      <div class="buttons-row">
+        <button class="btn-choice btn-no" onclick="handleAnswer(false)">
+          NO <span class="key-hint">A / ←</span>
+        </button>
+        <button class="btn-choice btn-yes" onclick="handleAnswer(true)">
+          YES <span class="key-hint">D / →</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- END SCREEN -->
+    <div id="endScreen" class="glass-card">
+      <span class="badge">Challenge Completed</span>
+      <h1 id="resTitle">High Cognitive Flexibility</h1>
+      <p style="color:var(--subtext); max-width:600px; margin: 0 auto 24px;">Here is your performance breakdown across 35 task-switching trials.</p>
+
+      <div class="game-hud" style="justify-content:space-around; margin-bottom:28px;">
+        <div class="hud-item">
+          <span class="title">Accuracy</span>
+          <span class="val" style="color:var(--ok);" id="resAcc">0%</span>
+        </div>
+        <div class="hud-item">
+          <span class="title">Mean Latency</span>
+          <span class="val" style="color:var(--accent);" id="resAvgTime">0.0s</span>
+        </div>
+        <div class="hud-item">
+          <span class="title">Switch Cost</span>
+          <span class="val" style="color:var(--primary);" id="resSwitchCost">0.0s</span>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:16px;">
+        <button class="btn-choice btn-yes" style="max-width:240px;" onclick="location.reload()">Retry Assessment</button>
+        <button class="btn-choice btn-no" style="max-width:240px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2);" onclick="location.href='index.html'">Back to Hub</button>
+      </div>
     </div>
   </div>
 
   <script>
-    const topMath = document.getElementById("top-math");
-    const topArrows = document.getElementById("top-arrows");
-    const bottomMath = document.getElementById("bottom-math");
-    const bottomArrows = document.getElementById("bottom-arrows");
-    const yesButton = document.getElementById("yes-button");
-    const noButton = document.getElementById("no-button");
-    const rightScoreEl = document.getElementById("right-score");
-    const wrongScoreEl = document.getElementById("wrong-score");
-    const gameTimerEl = document.getElementById("game-timer");
-    const questionTimerEl = document.getElementById("question-timer");
-
-    let rightScore = 0;
-    let wrongScore = 0;
-    let answer = false;
-    let isOddTask = false; // Determines which question is being asked
-    let rounds = 0;
+    const arrows = ["↑", "↓", "←", "→"];
+    let round = 0;
     const maxRounds = 35;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let isOddTask = true;
+    let currentAnswer = false;
+    let qStartTime = 0;
+    let switchTimes = [];
+    let nonSwitchTimes = [];
+    let lastWasOddTask = null;
 
-    let gameStartTime = Date.now();
-    let questionStartTime = Date.now();
-    let questionTimes = [];
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
-    const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    function startSwitchGame() {
+      round = 0;
+      correctCount = 0;
+      wrongCount = 0;
+      switchTimes = [];
+      nonSwitchTimes = [];
+      lastWasOddTask = null;
 
-    const generateTask = () => {
-      const num1 = getRandomInt(1, 20);
-      const num2 = getRandomInt(1, 20);
-      const arrows1 = Array.from({ length: 4 }, () => (Math.random() < 0.5 ? "←" : "→"));
-      const identical = Math.random() < 0.5;
-      const arrows2 = identical
-        ? [...arrows1]
-        : Array.from({ length: 4 }, () => (Math.random() < 0.5 ? "←" : "→"));
+      document.getElementById('setupScreen').style.display = 'none';
+      document.getElementById('endScreen').style.display = 'none';
+      document.getElementById('gameScreen').style.display = 'block';
 
-      const mathTask = `${num1} + ${num2}`;
-      const arrowTask = `${arrows1.join(" ")} | ${arrows2.join(" ")}`;
+      generateTask();
+    }
 
-      return { mathTask, arrowTask, isOdd: (num1 + num2) % 2 !== 0, identical };
-    };
-
-    const displayTask = () => {
-      questionStartTime = Date.now();
-      const { mathTask, arrowTask, isOdd, identical } = generateTask();
-      const showOnTop = Math.random() < 0.5;
-
-      const randomizePosition = Math.random() < 0.5;
-
-      const leftContent = randomizePosition ? mathTask : arrowTask;
-      const rightContent = randomizePosition ? arrowTask : mathTask;
-
-      isOddTask = showOnTop; // If on top, check for odd; if on bottom, check for identical
-
-      if (showOnTop) {
-        topMath.textContent = leftContent;
-        topArrows.textContent = rightContent;
-        bottomMath.textContent = "";
-        bottomArrows.textContent = "";
-        answer = isOdd; // Answer depends on odd calculation
-      } else {
-        bottomMath.textContent = leftContent;
-        bottomArrows.textContent = rightContent;
-        topMath.textContent = "";
-        topArrows.textContent = "";
-        answer = identical; // Answer depends on arrows being identical
-      }
-    };
-
-    const handleAnswer = (userAnswer) => {
-      if (rounds >= maxRounds) return;
-
-      const questionEndTime = Date.now();
-      const questionTime = (questionEndTime - questionStartTime) / 1000;
-      questionTimes.push({ time: questionTime, taskType: isOddTask ? "Odd" : "Arrow" });
-
-      if (userAnswer === answer) {
-        rightScore++;
-      } else {
-        wrongScore++;
+    function generateTask() {
+      if (round >= maxRounds) {
+        finishGame();
+        return;
       }
 
-      rightScoreEl.textContent = rightScore;
-      wrongScoreEl.textContent = wrongScore;
+      // Random task assignment
+      isOddTask = Math.random() < 0.5;
 
-      rounds++;
+      const topBox = document.getElementById('topBox');
+      const bottomBox = document.getElementById('bottomBox');
+      const promptBanner = document.getElementById('activePromptText');
 
-      if (rounds < maxRounds) {
-        displayTask();
+      if (isOddTask) {
+        topBox.className = 'switch-card active-target';
+        bottomBox.className = 'switch-card inactive-target';
+        promptBanner.textContent = 'TASK A: Is the math result ODD?';
+        promptBanner.style.color = '#c4b5fd';
       } else {
-        showResults();
+        topBox.className = 'switch-card inactive-target';
+        bottomBox.className = 'switch-card active-target';
+        promptBanner.textContent = 'TASK B: Are the arrows IDENTICAL?';
+        promptBanner.style.color = '#38bdf8';
       }
-    };
 
-    const showResults = () => {
-      const gameEndTime = Date.now();
-      const totalGameTime = (gameEndTime - gameStartTime) / 1000;
-      const correctPercentage = ((rightScore / maxRounds) * 100).toFixed(2);
+      // Generate Top Math
+      const a = getRandomInt(1, 15);
+      const b = getRandomInt(1, 15);
+      const isSub = Math.random() < 0.5 && a > b;
+      const mathRes = isSub ? a - b : a + b;
+      document.getElementById('topMath').textContent = `${a} ${isSub ? '-' : '+'} ${b}`;
 
-      const oddTimes = questionTimes.filter(q => q.taskType === "Odd").map(q => q.time);
-      const arrowTimes = questionTimes.filter(q => q.taskType === "Arrow").map(q => q.time);
-      const avgOddTime = (oddTimes.reduce((a, b) => a + b, 0) / oddTimes.length || 0).toFixed(2);
-      const avgArrowTime = (arrowTimes.reduce((a, b) => a + b, 0) / arrowTimes.length || 0).toFixed(2);
-      const avgQuestionTime = (questionTimes.reduce((a, b) => a + b.time, 0) / questionTimes.length || 0).toFixed(2);
+      // Top arrows (distractor)
+      document.getElementById('topArrows').textContent = `${arrows[getRandomInt(0, 3)]} ${arrows[getRandomInt(0, 3)]}`;
 
-      const results = questionTimes
-        .map((q, index) => `Question ${index + 1} (${q.taskType}): ${q.time.toFixed(2)}s`)
-        .join("<br>");
+      // Generate Bottom Arrows
+      const arrow1 = arrows[getRandomInt(0, 3)];
+      const isIdentical = Math.random() < 0.5;
+      const arrow2 = isIdentical ? arrow1 : arrows.filter(x => x !== arrow1)[getRandomInt(0, 2)];
+      document.getElementById('bottomArrows').textContent = `${arrow1} ${arrow2}`;
 
-      document.body.innerHTML = `
-        <h1>Game Over!</h1>
-        <p>Total Game Time: ${totalGameTime.toFixed(2)}s</p>
-        <p>Average Time Per Question: ${avgQuestionTime}s</p>
-        <p>Average Odd Question Time: ${avgOddTime}s</p>
-        <p>Average Arrow Question Time: ${avgArrowTime}s</p>
-        <p>Correct Percentage: ${correctPercentage}%</p>
-        <h2>Question Times:</h2>
-        <p>${results}</p>
-      `;
-    };
+      // Bottom math (distractor)
+      document.getElementById('bottomMath').textContent = `${getRandomInt(1, 10)} + ${getRandomInt(1, 10)}`;
 
-    const updateTimers = () => {
-      const now = Date.now();
-      gameTimerEl.textContent = ((now - gameStartTime) / 1000).toFixed(1);
-      questionTimerEl.textContent = ((now - questionStartTime) / 1000).toFixed(1);
-      requestAnimationFrame(updateTimers);
-    };
+      // Target answer
+      currentAnswer = isOddTask ? (mathRes % 2 !== 0) : isIdentical;
+      qStartTime = Date.now();
 
-    yesButton.addEventListener("click", () => handleAnswer(true));
-    noButton.addEventListener("click", () => handleAnswer(false));
+      document.getElementById('hudRound').textContent = `${round + 1} / ${maxRounds}`;
+    }
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowRight") handleAnswer(true);
-      if (event.key === "ArrowLeft") handleAnswer(false);
+    function handleAnswer(userChoice) {
+      if (round >= maxRounds) return;
+      const timeSpent = (Date.now() - qStartTime) / 1000;
+
+      if (lastWasOddTask !== null) {
+        if (lastWasOddTask !== isOddTask) {
+          switchTimes.push(timeSpent);
+        } else {
+          nonSwitchTimes.push(timeSpent);
+        }
+      }
+      lastWasOddTask = isOddTask;
+
+      if (userChoice === currentAnswer) {
+        correctCount++;
+      } else {
+        wrongCount++;
+      }
+
+      document.getElementById('hudCorrect').textContent = correctCount;
+      document.getElementById('hudWrong').textContent = wrongCount;
+      document.getElementById('hudLatency').textContent = `${timeSpent.toFixed(2)}s`;
+
+      round++;
+      generateTask();
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (document.getElementById('gameScreen').style.display !== 'block') return;
+      if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
+        handleAnswer(false);
+      } else if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') {
+        handleAnswer(true);
+      }
     });
 
-    displayTask();
-    updateTimers();
+    function finishGame() {
+      document.getElementById('gameScreen').style.display = 'none';
+      document.getElementById('endScreen').style.display = 'block';
+
+      const acc = Math.round((correctCount / maxRounds) * 100);
+      const allTimes = [...switchTimes, ...nonSwitchTimes];
+      const meanTime = allTimes.length > 0 ? (allTimes.reduce((a, b) => a + b, 0) / allTimes.length).toFixed(2) : '0.0';
+
+      const avgSwitch = switchTimes.length > 0 ? (switchTimes.reduce((a,b)=>a+b,0)/switchTimes.length) : 0;
+      const avgNonSwitch = nonSwitchTimes.length > 0 ? (nonSwitchTimes.reduce((a,b)=>a+b,0)/nonSwitchTimes.length) : 0;
+      const switchCost = Math.max(0, avgSwitch - avgNonSwitch).toFixed(2);
+
+      document.getElementById('resAcc').textContent = `${acc}%`;
+      document.getElementById('resAvgTime').textContent = `${meanTime}s`;
+      document.getElementById('resSwitchCost').textContent = `+${switchCost}s`;
+
+      const title = document.getElementById('resTitle');
+      if (acc >= 90 && meanTime <= 1.2) {
+        title.textContent = '🌟 Elite Switch Agility (Optiver Benchmark Passed)';
+        title.style.color = '#4ade80';
+      } else if (acc >= 75) {
+        title.textContent = 'Solid Performance (Competitive)';
+        title.style.color = '#38bdf8';
+      } else {
+        title.textContent = 'High Switch Latency / Error Rate';
+        title.style.color = '#ef4444';
+      }
+    }
   </script>
 </body>
 </html>

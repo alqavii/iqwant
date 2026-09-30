@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="bgMM" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#091b29"/>
+      <stop offset="100%" stop-color="#040b12"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bgMM)"/>
+
+  <!-- Order Book Visualizer -->
+  <g transform="translate(140, 120)">
+    <!-- Order book border -->
+    <rect x="0" y="0" width="520" height="360" rx="20" fill="rgba(15, 23, 42, 0.7)" stroke="#1e293b" stroke-width="4"/>
+    
+    <!-- Bid / Ask Header -->
+    <rect x="40" y="30" width="200" height="50" rx="10" fill="rgba(34, 197, 94, 0.2)" stroke="#22c55e" stroke-width="2"/>
+    <text x="140" y="65" font-family="'DM Sans', Arial" font-size="24" font-weight="bold" fill="#4ade80" text-anchor="middle">BID: 104.20</text>
+    
+    <rect x="280" y="30" width="200" height="50" rx="10" fill="rgba(239, 68, 68, 0.2)" stroke="#ef4444" stroke-width="2"/>
+    <text x="380" y="65" font-family="'DM Sans', Arial" font-size="24" font-weight="bold" fill="#f87171" text-anchor="middle">ASK: 104.60</text>
+
+    <!-- Spread Tag -->
+    <rect x="200" y="95" width="120" height="30" rx="15" fill="#3b82f6"/>
+    <text x="260" y="116" font-family="Arial" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">SPREAD: 0.40</text>
+
+    <!-- Depth Bars - Green Bids -->
+    <rect x="50" y="150" width="180" height="24" rx="6" fill="#15803d" opacity="0.8"/>
+    <rect x="90" y="185" width="140" height="24" rx="6" fill="#15803d" opacity="0.6"/>
+    <rect x="130" y="220" width="100" height="24" rx="6" fill="#15803d" opacity="0.4"/>
+    <rect x="70" y="255" width="160" height="24" rx="6" fill="#15803d" opacity="0.3"/>
+
+    <!-- Depth Bars - Red Asks -->
+    <rect x="290" y="150" width="170" height="24" rx="6" fill="#b91c1c" opacity="0.8"/>
+    <rect x="290" y="185" width="130" height="24" rx="6" fill="#b91c1c" opacity="0.6"/>
+    <rect x="290" y="220" width="190" height="24" rx="6" fill="#b91c1c" opacity="0.4"/>
+    <rect x="290" y="255" width="110" height="24" rx="6" fill="#b91c1c" opacity="0.3"/>
+
+    <!-- Dice / Card element for Market Making Game -->
+    <circle cx="260" cy="305" r="28" fill="#8b5cf6" filter="drop-shadow(0 0 10px rgba(139,92,246,0.6))"/>
+    <text x="260" y="315" font-family="Arial" font-size="28" font-weight="900" fill="#ffffff" text-anchor="middle">🎲</text>
+  </g>
+</svg>

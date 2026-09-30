@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="bg80" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e1136"/>
+      <stop offset="100%" stop-color="#0a0b16"/>
+    </linearGradient>
+    <linearGradient id="boltGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg80)"/>
+  
+  <!-- Outer Dashboard Circle / Timer Ring -->
+  <circle cx="400" cy="300" r="210" fill="none" stroke="#1f293d" stroke-width="14"/>
+  <circle cx="400" cy="300" r="210" fill="none" stroke="#8b5cf6" stroke-width="14" stroke-dasharray="1320" stroke-dashoffset="330" stroke-linecap="round"/>
+  
+  <!-- Speed Math Grid & Lighting -->
+  <g transform="translate(240, 160)">
+    <!-- Number 80 in 8 Badge -->
+    <rect x="30" y="30" width="260" height="90" rx="20" fill="rgba(139, 92, 246, 0.15)" stroke="#a855f7" stroke-width="3"/>
+    <text x="160" y="92" font-family="'DM Sans', Arial, sans-serif" font-size="52" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="2">80 in 8</text>
+    
+    <!-- Mental Math Operators -->
+    <text x="30" y="210" font-family="Arial, sans-serif" font-size="44" font-weight="bold" fill="#38bdf8">74 × 16</text>
+    <text x="210" y="210" font-family="Arial, sans-serif" font-size="44" font-weight="bold" fill="#22c55e">= 1184</text>
+    
+    <!-- Lightning bolt -->
+    <path d="M 290,130 L 250,210 L 285,210 L 230,300 L 320,195 L 280,195 Z" fill="url(#boltGrad)" filter="drop-shadow(0 0 12px rgba(139,92,246,0.8))"/>
+  </g>
+</svg>
