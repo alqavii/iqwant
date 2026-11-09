@@ -70,7 +70,6 @@
   <div class="hud" id="rHud"></div>
   <h3>By question type</h3>
   <table id="byCat"></table>
-  <h3>Misses, with working</h3>
   <div id="review"></div>
   <div class="row" style="margin-top:18px"><button class="btn" onclick="location.reload()">Again</button><a class="btn ghost" href="bp.html">Back to BP hub</a></div>
 </div>
@@ -122,7 +121,7 @@ const GEN = {
     const st = pick([0.3, 0.35, 0.4, 0.45, 0.5, 0.55]);
     const fin = pick([0.1, 0.15, 0.2, 0.25]);
     const net = spread - m * (st + fin);
-    return { q: `The ${m}-month contango is $${spread.toFixed(2)}/bbl. Storage costs $${st.toFixed(2)}/bbl/month and financing $${fin.toFixed(2)}/bbl/month. Profit per barrel from cash-and-carry? <span class="unit">(negative if it doesn't work)</span>`, a: net, work: `Cost = ${m} × (${st} + ${fin}) = $${fmt(r2(m * (st + fin)))}. Profit = ${spread} − ${fmt(r2(m * (st + fin)))} = $${fmt(r2(net))}/bbl.`, tol: 0.006 };
+    return { q: `The ${m}-month contango is $${spread.toFixed(2)}/bbl. Storage costs $${st.toFixed(2)}/bbl/month and financing $${fin.toFixed(2)}/bbl/month. Profit per barrel from cash-and-carry? <span class="unit">(negative if it doesn't work)</span>`, a: net, work: `Cost = ${m} × (${st} + ${fin}) = $${fmt(r2(m * (st + fin)))}. Profit = ${spread} − ${fmt(r2(m * (st + fin)))} = ${net < 0 ? '−' : ''}$${fmt(Math.abs(r2(net)))}/bbl.`, tol: 0.006 };
   },
   'Volumes & flows': () => {
     const k = pick([50, 75, 120, 150, 180, 250, 300, 400, 450, 600]);
@@ -147,7 +146,7 @@ const GEN = {
     const other = pick([0.2, 0.3, 0.4, 0.5]);
     const del = fob + fr + other + pick([-1.5, -1, -0.5, 0.5, 1, 1.5, 2]);
     const m = del - fob - fr - other;
-    return { q: `FOB West Africa $${fob}, freight $${fr.toFixed(2)}, insurance/losses $${other.toFixed(2)} (all $/bbl). Delivered Rotterdam value $${del.toFixed(2)}. Arb margin per bbl? <span class="unit">(negative = arb shut)</span>`, a: m, work: `${del} − (${fob} + ${fr} + ${other}) = $${fmt(r2(m))}/bbl. ${m > 0 ? 'Arb open.' : 'Arb shut.'}`, tol: 0.006 };
+    return { q: `FOB West Africa $${fob}, freight $${fr.toFixed(2)}, insurance/losses $${other.toFixed(2)} (all $/bbl). Delivered Rotterdam value $${del.toFixed(2)}. Arb margin per bbl? <span class="unit">(negative = arb shut)</span>`, a: m, work: `${del} − (${fob} + ${fr} + ${other}) = ${m < 0 ? '−' : ''}$${fmt(Math.abs(r2(m)))}/bbl. ${m > 0 ? 'Arb open.' : 'Arb shut.'}`, tol: 0.006 };
   },
   'Percentages': () => {
     const base = pick([64, 72, 80, 84, 90, 96, 120, 150]), pct = pick([2.5, 4, 5, 7.5, 8, 12.5, 15, 20, 25]);
@@ -213,11 +212,11 @@ function end() {
   $('rTitle').textContent = `Score ${score}`;
   $('rHud').innerHTML = `<div><div class="l">Attempted</div><div class="v">${att}</div></div><div><div class="l">Accuracy</div><div class="v">${att ? Math.round(100 * right / att) : 0}%</div></div><div><div class="l">Skipped</div><div class="v">${log.filter(l => l.given === 'skip').length}</div></div>`;
   $('byCat').innerHTML = '<tr><th>Type</th><th>Right / seen</th></tr>' + Object.entries(stats).map(([k, v]) => `<tr><td>${k}</td><td class="${v.r / v.n >= .8 ? 'good' : v.r / v.n >= .5 ? 'meh' : 'bad'}">${v.r} / ${v.n}</td></tr>`).join('');
-  const miss = log.filter(l => !l.ok);
-  $('review').innerHTML = miss.length ? miss.map(m => `<div class="explain"><div>${m.q}</div><p style="margin-top:6px">You: <span class="mono bad">${m.given}</span> · Answer: <span class="mono good">${fmt(r2(m.a))}</span></p><p>${m.work}</p></div>`).join('') : '<p>No misses.</p>';
+  IQReview.mount('review', { title: 'Review your answers, with working', cols: [{ key: 'cat', label: 'Type' }, { key: 'q', label: 'Question' }, { key: 'yours', label: 'You', mono: true }, { key: 'ans', label: 'Answer', mono: true }, { key: 'work', label: 'Working' }], rows: log.map(l => ({ cat: l.cat, q: l.q, yours: l.given === 'skip' ? 'skipped' : fmt(l.given), ans: fmt(r2(l.a)), work: l.work, ok: l.given === 'skip' ? null : l.ok, result: l.given === 'skip' ? 'Skipped' : undefined })) });
 }
 $('start').onclick = start; $('f').onsubmit = submit; $('skip').onclick = skip; $('stop').onclick = end;
 document.addEventListener('keydown', e => { if (e.key === 'Tab' && !$('game').classList.contains('hidden')) { e.preventDefault(); if (!waiting) skip(); } });
 </script>
+<script src="assets/review.js"></script>
 </body>
 </html>

@@ -309,6 +309,8 @@
     let currentRef = "";
     let correctIdx = 0;
     let canClick = true;
+    let log = [], shownAt = 0;
+    function diffNote(a, b) { const d = []; for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) d.push(`pos ${i + 1}: ${a[i]}→${b[i]}`); return d.join(', '); }
 
     document.getElementById('dispBest').textContent = bestScore;
 
@@ -366,6 +368,7 @@
       score = 0;
       correctAttempts = 0;
       totalAttempts = 0;
+      log = [];
       canClick = true;
 
       document.getElementById('startScreen').style.display = 'none';
@@ -407,6 +410,7 @@
       // Shuffle options
       options.sort(() => Math.random() - 0.5);
       correctIdx = options.indexOf(currentRef);
+      shownAt = performance.now();
 
       const grid = document.getElementById('optionsGrid');
       grid.innerHTML = options.map((opt, i) => `
@@ -420,6 +424,8 @@
       totalAttempts++;
 
       const btn = document.getElementById(`opt-${idx}`);
+      const picked = btn.textContent;
+      log.push({ ref: currentRef, picked, ok: idx === correctIdx, time: ((performance.now() - shownAt) / 1000).toFixed(2) + 's', note: idx === correctIdx ? '' : 'Differs at ' + diffNote(currentRef, picked) });
       if (idx === correctIdx) {
         score += 1;
         correctAttempts++;
@@ -453,8 +459,11 @@
         <h3 style="font-size:1.6rem; font-weight:700; margin-bottom:8px;">Final Net Score: ${score}</h3>
         <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:24px;">Total attempts: ${totalAttempts} &bull; Accuracy: ${totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 0}% &bull; Speed: ${(totalAttempts / 60).toFixed(2)} ops/sec.</p>
         <button class="btn-main" onclick="startGame()">Play Again</button>
+        <div id="reviewBox" style="text-align:left"></div>
       `;
+      IQReview.mount('reviewBox', { cols: [{ key: 'ref', label: 'Reference', mono: true }, { key: 'picked', label: 'You picked', mono: true }, { key: 'time', label: 'Time', mono: true }], rows: log });
     }
   </script>
+<script src="assets/review.js"></script>
 </body>
 </html>

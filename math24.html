@@ -344,6 +344,8 @@
 
       <div class="feedback-msg" id="feedbackMsg"></div>
       <div class="solution-hint" id="solutionHint"></div>
+      <button class="btn-aux" style="margin-top:14px" onclick="showReview()">Review this session</button>
+      <div id="reviewBox"></div>
     </div>
   </main>
 
@@ -373,12 +375,23 @@
     let solvedCount = 0;
     let streak = 0;
     let solveTimes = [];
+    let sessionLog = [];
+    let revealed = false;
+    const pretty = t => t.join(' ').replace(/\*/g, '×').replace(/\//g, '÷');
+    function logPuzzle(result, ok, yours) {
+      sessionLog.push({ nums: currentPuzzle.join('  '), yours: yours || '–', sol: (solve24(currentPuzzle) || 'none') + ' = 24', time: ((Date.now() - timerStart) / 1000).toFixed(1) + 's', ok, result });
+    }
+    function showReview() {
+      IQReview.mount('reviewBox', { title: 'Session review', cols: [{ key: 'nums', label: 'Numbers', mono: true }, { key: 'yours', label: 'Your expression', mono: true }, { key: 'sol', label: 'A solution', mono: true }, { key: 'time', label: 'Time', mono: true }], rows: sessionLog, summary: `${sessionLog.filter(r => r.ok).length} solved, ${sessionLog.filter(r => r.result === 'Revealed').length} revealed, ${sessionLog.filter(r => r.result === 'Skipped').length} skipped.` });
+    }
     let timerStart = Date.now();
     let timerInterval = null;
 
     function initPuzzle() {
       // Pick random puzzle that is guaranteed solvable
-      currentPuzzle = PUZZLES[Math.floor(Math.random() * PUZZLES.length)];
+      const solvable = PUZZLES.filter(p => solve24(p));
+      currentPuzzle = solvable[Math.floor(Math.random() * solvable.length)];
+      revealed = false;
       usedIndices.clear();
       tokens = [];
       document.getElementById('solutionHint').classList.remove('active');
@@ -458,6 +471,7 @@
         if (Math.abs(res - 24) < 1e-5) {
           fb.className = 'feedback-msg ok';
           fb.textContent = `✓ Correct! Result = 24.`;
+          if (!revealed) logPuzzle('Solved', true, pretty(tokens));
           solvedCount++;
           streak++;
           const duration = (Date.now() - timerStart) / 1000;
@@ -520,6 +534,8 @@
     }
 
     function giveUpAndShow() {
+      if (!revealed) logPuzzle('Revealed', false, tokens.length ? pretty(tokens) : '');
+      revealed = true;
       streak = 0;
       document.getElementById('dispStreak').textContent = 0;
       const sol = solve24(currentPuzzle);
@@ -529,6 +545,7 @@
     }
 
     function nextPuzzle() {
+      if (!revealed) logPuzzle('Skipped', null, tokens.length ? pretty(tokens) : '');
       streak = 0;
       document.getElementById('dispStreak').textContent = 0;
       initPuzzle();
@@ -536,5 +553,6 @@
 
     initPuzzle();
   </script>
+<script src="assets/review.js"></script>
 </body>
 </html>

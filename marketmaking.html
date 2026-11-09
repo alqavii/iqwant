@@ -541,6 +541,9 @@
       pnlEl.textContent = `${settlementPnL >= 0 ? '+' : ''}$${settlementPnL.toFixed(2)}`;
       pnlEl.style.color = settlementPnL >= 0 ? 'var(--green)' : 'var(--red)';
 
+      let box = document.getElementById('reviewBox');
+      if (!box) { box = document.createElement('div'); box.id = 'reviewBox'; document.getElementById('endScreen').appendChild(box); }
+      IQReview.mount(box, { title: 'Trade-by-trade review', summary: `Each fill is marked against the final settlement value of ${finalVal}. Selling above it or buying below it was a good trade.`, cols: [{ key: 'quote', label: 'Your quote', mono: true }, { key: 'counterparty', label: 'Counterparty' }, { key: 'action', label: 'Fill' }, { key: 'edge', label: 'Edge vs settle', mono: true }, { key: 'posT', label: 'Position', mono: true }], rows: tradeHistory.map(t => { const px = parseFloat(t.execPrice); let edge = null; if (t.action.includes('Bought')) edge = px - finalVal; else if (t.action.includes('Sold')) edge = finalVal - px; return { ...t, edge: edge === null ? '–' : (edge >= 0 ? '+' : '') + edge.toFixed(1), posT: (t.pos > 0 ? '+' : '') + t.pos, ok: edge === null ? null : edge >= 0, result: edge === null ? 'No trade' : undefined, note: t.action.includes('Bought') ? 'Counterparty bought from you at your ask' : t.action.includes('Sold') ? 'Counterparty sold to you at your bid' : '' }; }) });
       const title = document.getElementById('resAnalysisTitle');
       const desc = document.getElementById('resAnalysisText');
 
@@ -556,5 +559,6 @@
       }
     }
   </script>
+<script src="assets/review.js"></script>
 </body>
 </html>

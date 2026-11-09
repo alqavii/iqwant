@@ -306,6 +306,8 @@
     let currentIsCircle = false;
     let sessionTimer = null;
     let timeLeft = 30;
+    let log = [];
+    const want = () => currentIsCircle ? 'Space (circle)' : (currentSide === 'left' ? 'Left' : 'Right');
 
     const shapeEl = document.getElementById('targetShape');
 
@@ -316,6 +318,7 @@
       wrongCount = 0;
       reactionTimes = [];
       timeLeft = 30;
+      log = [];
 
       document.getElementById('setupScreen').style.display = 'none';
       document.getElementById('endScreen').style.display = 'none';
@@ -356,6 +359,7 @@
           isShapeVisible = false;
           shapeEl.style.display = 'none';
           wrongCount++;
+          log.push({ shape: currentIsCircle ? 'Circle' : 'Square', side: currentSide, right: want(), you: 'No response', rt: '> 420 ms', ok: false, note: 'Missed: too slow' });
           scheduleNextShape();
         }
       }, 420);
@@ -363,6 +367,7 @@
 
     function handleInput(key) {
       if (!isShapeVisible) {
+        log.push({ shape: '–', side: '–', right: 'Wait', you: key, rt: '–', ok: false, note: 'False alarm: pressed with no shape showing (−5)' });
         score = Math.max(0, score - 5);
         document.getElementById('liveScore').textContent = score;
         return;
@@ -373,6 +378,7 @@
       shapeEl.style.display = 'none';
 
       let isCorrect = currentIsCircle ? (key === 'space') : (key === currentSide);
+      log.push({ shape: currentIsCircle ? 'Circle' : 'Square', side: currentSide, right: want(), you: key === 'space' ? 'Space' : key[0].toUpperCase() + key.slice(1), rt: elapsed + ' ms', ok: isCorrect, note: isCorrect ? '' : (currentIsCircle ? 'Circles need Space, whatever the side' : 'Wrong key') });
 
       if (isCorrect) {
         correctCount++;
@@ -413,10 +419,14 @@
       document.getElementById('resMeanLatency').textContent = `${meanLat} ms`;
       document.getElementById('resHits').textContent = `${correctCount} / ${totalShown}`;
 
+      let box = document.getElementById('reviewBox');
+      if (!box) { box = document.createElement('div'); box.id = 'reviewBox'; document.getElementById('endScreen').appendChild(box); }
+      IQReview.mount(box, { title: 'Response-by-response review', cols: [{ key: 'shape', label: 'Shape' }, { key: 'side', label: 'Side' }, { key: 'right', label: 'Correct key' }, { key: 'you', label: 'You' }, { key: 'rt', label: 'Reaction', mono: true }], rows: log });
       const title = document.getElementById('endTitle');
       if (meanLat < 300 && acc >= 85) title.textContent = 'High Speed Latency Profile';
       else title.textContent = 'Session Complete';
     }
   </script>
+<script src="assets/review.js"></script>
 </body>
 </html>

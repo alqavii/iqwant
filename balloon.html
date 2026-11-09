@@ -476,7 +476,7 @@
       popMsg.textContent = `BURST (−$${(currentPumps * PUMP_VALUE).toFixed(2)})`;
       popMsg.style.display = 'block';
 
-      burstHistory.push({ round: round + 1, outcome: 'pop', pumps: currentPumps });
+      burstHistory.push({ round: round + 1, outcome: 'pop', pumps: currentPumps, type: balloons[round].type, burst: balloons[round].burstPoint });
       if (round > 0 && lastRoundWasPop) pumpsAfterPop.push(currentPumps);
       else if (round > 0) pumpsAfterCollect.push(currentPumps);
       lastRoundWasPop = true;
@@ -498,7 +498,7 @@
       playBeep(520, 0.12);
 
       unpoppedPumps.push(currentPumps);
-      burstHistory.push({ round: round + 1, outcome: 'banked', pumps: currentPumps, cash: gained });
+      burstHistory.push({ round: round + 1, outcome: 'banked', pumps: currentPumps, cash: gained, type: balloons[round].type, burst: balloons[round].burstPoint });
 
       if (round > 0 && lastRoundWasPop) pumpsAfterPop.push(currentPumps);
       else if (round > 0) pumpsAfterCollect.push(currentPumps);
@@ -547,6 +547,9 @@
         else lossReaction = 'Invariant';
       }
 
+      let box = document.getElementById('reviewBox');
+      if (!box) { box = document.createElement('div'); box.id = 'reviewBox'; document.getElementById('endScreen').appendChild(box); }
+      IQReview.mount(box, { title: 'Balloon-by-balloon review', summary: 'There is no right answer in BART, but the expected-value-maximising target for a balloon that bursts uniformly between 1 and N pumps is about N/2 pumps.', cols: [{ key: 'colour', label: 'Balloon' }, { key: 'pumps', label: 'Your pumps', mono: true }, { key: 'target', label: 'EV target', mono: true }, { key: 'burst', label: 'Would burst at', mono: true }, { key: 'cashT', label: 'Banked', mono: true }], rows: burstHistory.map(h => ({ colour: `${h.type.name} (max ${h.type.maxPumps})`, pumps: h.pumps, target: h.type.maxPumps / 2, burst: h.burst, cashT: h.outcome === 'pop' ? '$0.00' : '$' + h.cash.toFixed(2), ok: null, result: h.outcome === 'pop' ? 'Popped' : 'Banked', note: h.outcome === 'pop' ? '' : `Left ${h.burst - 1 - h.pumps} safe pumps ($${((h.burst - 1 - h.pumps) * 0.05).toFixed(2)})` })) });
       document.getElementById('endBank').textContent = `$${totalBanked.toFixed(2)}`;
       document.getElementById('endBart').textContent = avgBart;
       document.getElementById('endPops').textContent = `${popCount}/30`;
@@ -572,5 +575,6 @@
       }
     }
   </script>
+<script src="assets/review.js"></script>
 </body>
 </html>

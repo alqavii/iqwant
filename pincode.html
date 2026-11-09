@@ -282,7 +282,8 @@
             <tr>
               <th>#</th>
               <th>Mode</th>
-              <th>Target</th>
+              <th>Shown</th>
+              <th>Correct</th>
               <th>Input</th>
               <th>Status</th>
               <th>Time</th>
@@ -423,6 +424,7 @@
       tr.innerHTML = `
         <td style="color:var(--text-dim);">${attemptCount}</td>
         <td style="font-family:var(--font-mono);">${currentMode.toUpperCase()}</td>
+        <td style="font-family:var(--font-mono);color:var(--text-muted);">${randomNumber}</td>
         <td style="font-family:var(--font-mono);">${target}</td>
         <td style="font-family:var(--font-mono);">${val}</td>
         <td style="color:${isCorrect ? 'var(--green)' : 'var(--red)'}; font-family:var(--font-mono); font-weight:600;">${isCorrect ? 'OK' : 'ERR'}</td>

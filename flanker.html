@@ -307,6 +307,12 @@
     let trialStartTime = 0;
     let trialActive = false;
     let trialData = [];
+    let currentDisplay = '';
+    function mountReview(parent) {
+      let box = document.getElementById('reviewBox');
+      if (!box) { box = document.createElement('div'); box.id = 'reviewBox'; parent.appendChild(box); }
+      IQReview.mount(box, { title: 'Trial-by-trial review', cols: [{ key: 'display', label: 'Stimulus', mono: true }, { key: 'condition', label: 'Condition' }, { key: 'target', label: 'Correct' }, { key: 'choice', label: 'You pressed' }, { key: 'rtTxt', label: 'Reaction', mono: true }], rows: trialData.map(d => ({ ...d, ok: d.correct, rtTxt: d.rt + ' ms', note: !d.correct && d.condition === 'incongruent' ? 'Followed the flankers, not the centre arrow' : '' })) });
+    }
 
     function startTest() {
       trialIndex = 0;
@@ -355,6 +361,7 @@
 
         currentTarget = dir;
         currentCondition = cond;
+        currentDisplay = [flankerDir === 'left' ? '←' : flankerDir === 'right' ? '→' : '—'].map(f => `${f} ${f} ${dir === 'left' ? '←' : '→'} ${f} ${f}`)[0];
 
         const arrowChar = (dir === 'left') ? '←' : '→';
         let flankChar;
@@ -381,7 +388,8 @@
         target: currentTarget,
         choice: choice,
         correct: isCorrect,
-        rt: latency
+        rt: latency,
+        display: currentDisplay
       });
 
       trialIndex++;
@@ -413,6 +421,7 @@
       document.getElementById('dispCong').textContent = `${congRT}ms`;
       document.getElementById('dispCost').textContent = `+${cost}ms`;
 
+      mountReview(rep);
       const tbody = document.getElementById('reportTableBody');
       tbody.innerHTML = `
         <tr>
@@ -446,5 +455,6 @@
       else if (e.key === 'ArrowRight') respond('right');
     });
   </script>
+<script src="assets/review.js"></script>
 </body>
 </html>

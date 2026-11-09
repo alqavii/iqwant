@@ -304,12 +304,15 @@
     let nextExpected = 1;
     let isMasked = false;
     let numberLocations = {}; // number -> cellIndex
+    let log = [];
+    const cellName = i => String.fromCharCode(65 + Math.floor(i / COLS)) + (i % COLS + 1);
 
     document.getElementById('dispBest').textContent = bestScore;
 
     function startGame() {
       itemCount = 4;
       strikes = 0;
+      log = [];
       updateHeader();
       startRound();
     }
@@ -376,6 +379,7 @@
 
         if (nextExpected > itemCount) {
           // Round won!
+          log.push({ n: itemCount, got: `${itemCount} / ${itemCount}`, ok: true, detail: 'Full sequence recalled' });
           if (itemCount > bestScore) {
             bestScore = itemCount;
             localStorage.setItem('iqwant_chimp_best', bestScore);
@@ -386,6 +390,7 @@
         }
       } else {
         // Strike!
+        log.push({ n: itemCount, got: `${nextExpected - 1} / ${itemCount}`, ok: false, detail: `Clicked ${clickedNum} (cell ${cellName(+tile.dataset.index)}) when ${nextExpected} was next; ${nextExpected} was at ${cellName(numberLocations[nextExpected])}` });
         tile.className = 'tile-cell wrong-tile';
         tile.textContent = clickedNum;
         revealAll();
@@ -430,8 +435,11 @@
         <h3 style="font-size:1.6rem; font-weight:700; margin-bottom:8px;">Max Sequential Span: ${itemCount - 1} Numbers</h3>
         <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:24px;">Working memory buffer capacity saturated at 3 strikes. Human average is 7–9. High-performing trading candidates typically reach 11–14+.</p>
         <button class="btn-main" onclick="startGame()">Try Again</button>
+        <div id="reviewBox" style="text-align:left"></div>
       `;
+      IQReview.mount('reviewBox', { title: 'Round-by-round review', summary: 'Cells are labelled by row (A–E) and column (1–8).', cols: [{ key: 'n', label: 'Numbers shown', mono: true }, { key: 'got', label: 'Recalled in order', mono: true }, { key: 'detail', label: 'What happened' }], rows: log });
     }
   </script>
+<script src="assets/review.js"></script>
 </body>
 </html>

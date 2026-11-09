@@ -362,6 +362,7 @@
     let switchTimes = [];
     let nonSwitchTimes = [];
     let lastWasOddTask = null;
+    let log = [], curStim = '';
 
     function getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -374,6 +375,7 @@
       switchTimes = [];
       nonSwitchTimes = [];
       lastWasOddTask = null;
+      log = [];
 
       document.getElementById('setupScreen').style.display = 'none';
       document.getElementById('endScreen').style.display = 'none';
@@ -417,6 +419,7 @@
       document.getElementById('bottomMath').textContent = `${getRandomInt(1, 10)} + ${getRandomInt(1, 10)}`;
 
       currentAnswer = isOddTask ? (mathRes % 2 !== 0) : isIdentical;
+      curStim = isOddTask ? `${a} ${isSub ? '−' : '+'} ${b} = ${mathRes}` : `${arrow1} ${arrow2}`;
       qStartTime = Date.now();
       document.getElementById('hudRound').textContent = `${round + 1}/${maxRounds}`;
     }
@@ -429,7 +432,9 @@
         if (lastWasOddTask !== isOddTask) switchTimes.push(timeSpent);
         else nonSwitchTimes.push(timeSpent);
       }
+      const sw = lastWasOddTask !== null && lastWasOddTask !== isOddTask;
       lastWasOddTask = isOddTask;
+      log.push({ task: isOddTask ? 'A: odd result?' : 'B: arrows identical?', stim: curStim, right: currentAnswer ? 'Yes' : 'No', you: userChoice ? 'Yes' : 'No', ok: userChoice === currentAnswer, t: timeSpent.toFixed(2) + 's' + (sw ? ' (switch)' : '') });
 
       if (userChoice === currentAnswer) correctCount++;
       else wrongCount++;
@@ -463,6 +468,9 @@
       document.getElementById('resAvgTime').textContent = `${meanTime}s`;
       document.getElementById('resSwitchCost').textContent = `+${switchCost}s`;
 
+      let box = document.getElementById('reviewBox');
+      if (!box) { box = document.createElement('div'); box.id = 'reviewBox'; document.getElementById('endScreen').appendChild(box); }
+      IQReview.mount(box, { title: 'Trial-by-trial review', cols: [{ key: 'task', label: 'Task' }, { key: 'stim', label: 'Stimulus', mono: true }, { key: 'right', label: 'Answer' }, { key: 'you', label: 'You' }, { key: 't', label: 'Time', mono: true }], rows: log });
       const title = document.getElementById('resTitle');
       if (acc >= 85 && meanTime <= 1.3) {
         title.textContent = 'High Cognitive Flexibility (Benchmark Passed)';
@@ -471,5 +479,6 @@
       }
     }
   </script>
+<script src="assets/review.js"></script>
 </body>
 </html>

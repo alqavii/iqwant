@@ -433,6 +433,7 @@
         <div class="board-stage">
           <div class="status-msg" id="status">Press "Start Round" to begin</div>
           <div class="board" id="board"></div>
+          <div id="reviewBox"></div>
           <div class="legend-text" id="legend">Click cells to set marks. Submit when ready.</div>
           <div class="board-actions">
             <button id="submitBtn" class="btn-primary">Submit</button>
@@ -480,6 +481,12 @@
     let score = 0;
     let round = 0;
     let best = 0;
+    let log = [], lastChange = null;
+    const cname = i => String.fromCharCode(65 + Math.floor(i / gridSize)) + (i % gridSize + 1);
+    function pushLog(row) {
+      log.push({ round, mode: modeEl.value === 'pattern' ? 'Pattern' : 'Orientation', setup: `${gridSize}×${gridSize}, ${countEl.value} items, ${flashEl.value} ms`, ...row });
+      IQReview.mount('reviewBox', { title: 'Session review', summary: 'Cells are labelled by row letter and column number.', cols: [{ key: 'round', label: 'Round', mono: true }, { key: 'mode', label: 'Mode' }, { key: 'setup', label: 'Setup', mono: true }, { key: 'detail', label: 'Detail' }], rows: log });
+    }
 
     function rngInt(max) { return Math.floor(Math.random() * max); }
     function pickUnique(n, max) {
@@ -620,6 +627,7 @@
             let newDir = rngInt(ARROWS.length);
             if (newDir === orig) newDir = (newDir + 1) % ARROWS.length;
 
+            lastChange = { idx: changePick, from: ARROWS[orig], to: ARROWS[newDir] };
             const cells2 = boardEl.querySelectorAll('.cell');
             positions.forEach(i => {
               const val = i === changePick ? newDir : arrowMap.get(i);
@@ -647,6 +655,8 @@
         }
       }
 
+      const missed = [...targetCells].filter(i => !userOn.has(i)).map(cname), extra = [...userOn].filter(i => !targetCells.has(i)).map(cname);
+      pushLog({ ok, detail: ok ? `All ${targetCells.size} cells recalled` : `Missed: ${missed.join(', ') || 'none'} · Extra: ${extra.join(', ') || 'none'}` });
       if (!ok) {
         score = 0;
         scoreEl.textContent = score;
@@ -674,6 +684,7 @@
 
     function checkOddGuess(idx) {
       const cells = boardEl.querySelectorAll('.cell');
+      pushLog({ ok: idx === changedIndex, detail: `Changed arrow at ${cname(changedIndex)} (${lastChange.from} → ${lastChange.to})` + (idx === changedIndex ? '' : `; you clicked ${cname(idx)}`) });
       if (idx === changedIndex) {
         score += 1;
         scoreEl.textContent = score;
@@ -721,5 +732,6 @@
     roundEl.textContent = '0';
     scoreEl.textContent = '0';
   </script>
+<script src="assets/review.js"></script>
 </body>
 </html>

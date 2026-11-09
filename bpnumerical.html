@@ -152,7 +152,7 @@ function finish() {
   $('rTitle').textContent = `${right} / ${qs.length}`;
   $('rHud').innerHTML = `<div><div class="l">Answered</div><div class="v">${done}</div></div><div><div class="l">Accuracy</div><div class="v">${done ? Math.round(100 * right / done) : 0}%</div></div>`;
   $('review').innerHTML = qs.map((q, i) => { const ok = answers[i] !== undefined && q.opts[answers[i]].ok; const c = q.opts.find(o => o.ok).text;
-    return `<div class="explain"><p style="color:var(--text)">${i + 1}. ${q.q}</p><p>${ok ? '<span class="good">✓ Correct</span>' : `<span class="bad">✗ ${answers[i] === undefined ? 'Not answered' : 'You chose ' + q.opts[answers[i]].text}</span>`} · Answer <span class="good">${c}</span></p><p class="calc">${q.work}</p></div>`; }).join('');
+    return `<div class="explain"><p style="color:var(--text)">${i + 1}. ${q.q}</p><p>${ok ? '<span class="good">✓ Correct</span>' : `<span class="bad">✗ ${answers[i] === undefined ? 'Not answered' : 'You chose ' + q.opts[answers[i]].text}</span>`} · Answer <span class="good">${c}</span></p><p class="calc">${q.work}</p><details style="margin-top:8px"><summary style="cursor:pointer;font-size:.82rem;color:var(--text-muted)">Show the data</summary><div class="data" style="margin-top:8px">${q.html}</div></details></div>`; }).join('');
 }
 $('start').onclick = () => {
   const [n, secs] = $('len').value.split('|').map(Number);

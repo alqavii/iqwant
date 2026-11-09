@@ -61,7 +61,6 @@
   <h1 id="rTitle"></h1>
   <div class="hud" id="rHud"></div>
   <p id="rText"></p>
-  <h3>Review your misses</h3>
   <div id="review"></div>
   <div class="row" style="margin-top:18px"><button class="btn" onclick="location.reload()">Try again</button><a class="btn ghost" href="bp.html">Back to BP hub</a></div>
 </div>
@@ -69,7 +68,8 @@
 <script>
 const SYMS = [['●','#df4a56'],['■','#3a8ee0'],['▲','#e0a43a'],['◆','#2fa872'],['★','#b072e0'],['✚','#e06fa6'],['⬟','#39c2c9'],['♥','#ededed']];
 const $ = id => document.getElementById(id);
-let left, timer, correct = 0, wrong = 0, level = 1, streak = 0, current, misses = [], times = [], shownAt;
+let left, timer, correct = 0, wrong = 0, level = 1, streak = 0, current, misses = [], times = [], shownAt, all = [];
+const mini = arr => arr.map(s => `<span style="color:${s[1]};font-size:1.1rem">${s[0]}</span>`).join(' ');
 
 function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function randPerm() { let p; do { p = shuffle([0,1,2,3]); } while (p.every((v,i)=>v===i)); return p; }
@@ -93,17 +93,19 @@ function newItem() {
     answer = randPerm();
     const out = apply(input, answer);
     html = lane(input) + `<div class="arrow">↓</div><div class="op"><div class="opbox unknown">? ? ? ?</div></div><div class="arrow">↓</div>` + lane(out);
+    current = { mini: mini(input) + ' → ' + mini(out), ops: '?' };
   } else {
     const p1 = randPerm(), p2 = randPerm();
     const out = apply(apply(input, p1), p2);
     const unknownFirst = Math.random() < .5;
     answer = unknownFirst ? p1 : p2;
     const known = unknownFirst ? p2 : p1;
+    current = { mini: mini(input) + ' → ' + mini(out), ops: unknownFirst ? `? then ${codeStr(known)}` : `${codeStr(known)} then ?` };
     const box = (p, unk) => `<div class="op"><div class="opbox ${unk ? 'unknown' : ''}">${unk ? '? ? ? ?' : codeStr(p).split('').join(' ')}</div></div>`;
     html = lane(input) + `<div class="arrow">↓</div>` + (unknownFirst ? box(null, true) + `<div class="arrow">↓</div>` + box(known) : box(known) + `<div class="arrow">↓</div>` + box(null, true)) + `<div class="arrow">↓</div>` + lane(out);
   }
   const opts = shuffle([answer, ...distractors(answer, 3)]);
-  current = { answer: codeStr(answer), html, level };
+  current = { ...current, answer: codeStr(answer), html, level };
   $('stage').innerHTML = html;
   $('codes').innerHTML = opts.map((o, i) => `<button class="code" data-c="${codeStr(o)}">${codeStr(o)}</button>`).join('');
   [...$('codes').children].forEach(b => b.onclick = () => pick(b));
@@ -112,6 +114,7 @@ function newItem() {
 function pick(b) {
   const ok = b.dataset.c === current.answer;
   times.push(performance.now() - shownAt);
+  all.push({ item: current.mini, ops: current.ops, picked: b.dataset.c, answer: current.answer, t: ((performance.now() - shownAt) / 1000).toFixed(1) + 's', ok: b.dataset.c === current.answer, note: current.level === 2 ? 'Two-step item' : '' });
   if (ok) { correct++; streak++; if (level === 1 && streak >= 6) { level = 2; streak = 0; } }
   else { wrong++; streak = 0; misses.push({ ...current, picked: b.dataset.c }); if (level === 2 && misses.slice(-2).filter(m => m.level === 2).length === 2 && wrong % 3 === 0) level = 1; }
   b.classList.add(ok ? 'flash-ok' : 'flash-bad');
@@ -136,10 +139,11 @@ function end() {
   $('rHud').innerHTML = `<div><div class="l">Accuracy</div><div class="v">${acc}%</div></div><div><div class="l">Avg time</div><div class="v">${avg}s</div></div><div><div class="l">Correct / min</div><div class="v">${perMin}</div></div>`;
   let verdict = acc < 80 ? 'Accuracy is the weak point. Slow down slightly: a wrong answer usually costs more than the time saved.' : perMin < 4 ? 'Accurate but slow. Practise reading the code position by position: take output slot 1, find where that symbol sits in the top row, write that digit, repeat.' : perMin < 7 ? 'Solid. To push higher, try eliminating options instead of building the code: check the first digit against the first output symbol, discard, then the second.' : 'Strong pace and accuracy. Practise two-step items until they feel as quick as single ones.';
   $('rText').textContent = verdict;
-  $('review').innerHTML = misses.length ? misses.slice(-6).map(m => `<div class="explain">${m.html}<p style="margin-top:8px">You picked <span class="mono bad">${m.picked}</span>, answer <span class="mono good">${m.answer}</span>.</p></div>`).join('') : '<p>No misses.</p>';
+  IQReview.mount('review', { summary: 'Each code digit says which input position fills that output slot.', cols: [{ key: 'item', label: 'Input → output' }, { key: 'ops', label: 'Operators', mono: true }, { key: 'picked', label: 'You', mono: true }, { key: 'answer', label: 'Answer', mono: true }, { key: 't', label: 'Time', mono: true }], rows: all });
 }
 $('start').onclick = start;
 document.addEventListener('keydown', e => { if ($('game').classList.contains('hidden')) return; const n = +e.key; if (n >= 1 && n <= 4) { const b = $('codes').children[n - 1]; if (b) pick(b); } });
 </script>
+<script src="assets/review.js"></script>
 </body>
 </html>
