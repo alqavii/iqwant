@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IQwant — Oil Desk Mental Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/bp.css">
+<style>
+  .q { font-size: 1.25rem; font-weight: 500; line-height: 1.5; min-height: 90px; margin: 6px 0 18px; }
+  .q .unit { color: var(--text-muted); }
+  #ans { width: 100%; font-size: 1.4rem; font-family: var(--font-mono); padding: 14px; }
+  .cat { margin-bottom: 6px; }
+  .chk { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 14px; margin: 10px 0 18px; }
+  .chk label { font-size: .86rem; color: var(--text-muted); display: flex; gap: 8px; align-items: center; }
+  .fb { min-height: 24px; font-family: var(--font-mono); font-size: .88rem; margin-top: 10px; }
+  .cheat td, .cheat th { font-size: .8rem; }
+</style>
+</head>
+<body>
+<header><div class="nav-container"><a class="brand" href="index.html">IQwant</a><nav class="nav-links"><a href="bp.html">BP hub</a><a href="index.html" class="hide-sm">All tests</a></nav></div></header>
+<main>
+<div class="panel" id="intro">
+  <div class="eyebrow">Oil trading · Mental maths</div>
+  <h1>Oil Desk Mental Maths</h1>
+  <p class="lead">Fast arithmetic the way it actually comes up on an oil desk: barrel and tonne conversions, lot P&amp;L, crack spreads, contango carry, freight and cargo values. No calculator. Answers within ±0.5% of the exact figure are accepted unless stated.</p>
+  <div class="cat mono" style="font-size:.75rem;color:var(--text-dim)">Question types</div>
+  <div class="chk" id="cats"></div>
+  <div class="row">
+    <label class="mono" style="font-size:.8rem;color:var(--text-muted)">Mode
+      <select id="mode"><option value="480" selected>8 min sprint</option><option value="300">5 min sprint</option><option value="0">Untimed practice (with working)</option></select>
+    </label>
+    <label class="mono" style="font-size:.8rem;color:var(--text-muted)">Marking
+      <select id="mark"><option value="neg" selected>+1 / −1 / skip 0</option><option value="pos">+1 / 0</option></select>
+    </label>
+  </div>
+  <div style="margin-top:18px"><button class="btn block" id="start">Start</button></div>
+  <h3>Cheat sheet (learn these)</h3>
+  <table class="cheat">
+    <tr><th>Fact</th><th>Value</th></tr>
+    <tr><td>Barrels per US gallon</td><td>1 bbl = 42 gal</td></tr>
+    <tr><td>¢/gal → $/bbl</td><td>× 0.42</td></tr>
+    <tr><td>Crude (Brent-type) bbl per tonne</td><td>≈ 7.5 (7.33–7.6)</td></tr>
+    <tr><td>Gasoline / jet / diesel / fuel oil bbl/t</td><td>8.45 / 7.88 / 7.45 / 6.35</td></tr>
+    <tr><td>ICE Brent / NYMEX WTI lot</td><td>1,000 bbl</td></tr>
+    <tr><td>RBOB / ULSD (heating oil) lot</td><td>42,000 gal</td></tr>
+    <tr><td>VLCC / Suezmax / Aframax cargo</td><td>≈ 2m / 1m / 700k bbl</td></tr>
+    <tr><td>1 kb/d for a year</td><td>365 kb ≈ 0.365 mb</td></tr>
+  </table>
+</div>
+
+<div class="panel hidden" id="game">
+  <div class="hud">
+    <div><div class="l">Time</div><div class="v" id="t">–</div></div>
+    <div><div class="l">Score</div><div class="v" id="s">0</div></div>
+    <div><div class="l">Right</div><div class="v good" id="r">0</div></div>
+    <div><div class="l">Wrong</div><div class="v bad" id="w">0</div></div>
+  </div>
+  <div class="tag" id="qcat"></div>
+  <div class="q" id="q"></div>
+  <form id="f" autocomplete="off"><input id="ans" type="text" inputmode="decimal" placeholder="answer, then Enter"></form>
+  <div class="row" style="margin-top:12px"><button class="btn ghost" id="skip" type="button">Skip (Tab)</button><button class="btn ghost" id="stop" type="button">Finish</button></div>
+  <div class="fb" id="fb"></div>
+  <div class="explain hidden" id="work"></div>
+</div>
+
+<div class="panel hidden" id="result">
+  <div class="eyebrow">Result</div>
+  <h1 id="rTitle"></h1>
+  <div class="hud" id="rHud"></div>
+  <h3>By question type</h3>
+  <table id="byCat"></table>
+  <h3>Misses, with working</h3>
+  <div id="review"></div>
+  <div class="row" style="margin-top:18px"><button class="btn" onclick="location.reload()">Again</button><a class="btn ghost" href="bp.html">Back to BP hub</a></div>
+</div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const R = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const r2 = x => Math.round(x * 100) / 100;
+const fmt = x => Number.isInteger(x) ? x.toLocaleString('en-GB') : x.toLocaleString('en-GB', { maximumFractionDigits: 2 });
+
+// Each generator returns {q, a, work, tol?(relative)}
+const GEN = {
+  'Lot P&L': () => {
+    const lots = pick([5, 10, 15, 20, 25, 40, 50, 75, 100, 150, 200]);
+    const d = pick([0.15, 0.25, 0.35, 0.4, 0.6, 0.75, 1.2, 1.35, 1.8, 2.25, 3.1]);
+    const side = pick(['long', 'short']), up = Math.random() < .5;
+    const pnl = lots * 1000 * d * ((side === 'long') === up ? 1 : -1);
+    return { q: `You're ${side} ${lots} lots of Brent. The price ${up ? 'rises' : 'falls'} $${d.toFixed(2)}/bbl. P&amp;L in $? <span class="unit">(negative for a loss)</span>`, a: pnl, work: `${lots} lots × 1,000 bbl × $${d} = $${fmt(Math.abs(pnl))}, ${pnl >= 0 ? 'a gain' : 'a loss'}.` };
+  },
+  '¢/gal ↔ $/bbl': () => {
+    if (Math.random() < .6) {
+      const c = pick([180, 195, 210, 225, 240, 250, 265, 280, 300, 315]) + pick([0, 5, 2.5]);
+      return { q: `RBOB is ${c}¢/gal. What is that in $/bbl?`, a: c * 0.42, work: `${c}¢/gal × 42 gal/bbl ÷ 100 = ${c} × 0.42 = $${fmt(r2(c * .42))}/bbl.` };
+    }
+    const b = pick([84, 88, 92, 96, 100, 105, 110, 115, 126]);
+    return { q: `ULSD is $${b}/bbl. What is that in ¢/gal?`, a: b / 0.42, work: `$${b} ÷ 42 gal × 100 = ${fmt(r2(b / .42))}¢/gal.` };
+  },
+  '$/bbl ↔ $/t': () => {
+    const prods = [['crude', 7.5], ['gasoline', 8.45], ['diesel', 7.45], ['jet', 7.88], ['fuel oil', 6.35]];
+    const [p, f] = pick(prods);
+    if (Math.random() < .5) {
+      const t = pick([450, 520, 560, 600, 640, 680, 720, 750, 800]);
+      return { q: `${p[0].toUpperCase() + p.slice(1)} trades at $${t}/t. Using ${f} bbl/t, what is it in $/bbl?`, a: t / f, work: `$${t} ÷ ${f} = $${fmt(r2(t / f))}/bbl.` };
+    }
+    const b = pick([72, 75, 78, 80, 82, 85, 88, 90, 95]);
+    return { q: `${p[0].toUpperCase() + p.slice(1)} is $${b}/bbl. Using ${f} bbl/t, what is it in $/t?`, a: b * f, work: `$${b} × ${f} = $${fmt(r2(b * f))}/t.` };
+  },
+  'Crack spreads': () => {
+    const c = pick([72, 75, 78, 80, 82, 85]) + pick([0, .5]);
+    const g = c + pick([8, 10, 12, 14, 16, 18]) + pick([0, .5]);
+    const d = c + pick([18, 20, 22, 24, 26, 28, 30]) + pick([0, .5]);
+    if (Math.random() < .5) return { q: `3:2:1 crack. Crude $${c}, gasoline $${g}, diesel $${d} (all $/bbl). Crack in $/bbl?`, a: (2 * g + d - 3 * c) / 3, work: `(2 × ${g} + ${d} − 3 × ${c}) ÷ 3 = (${2 * g} + ${d} − ${3 * c}) ÷ 3 = ${fmt(r2((2 * g + d - 3 * c) / 3))}. Shortcut: (2 × ${r2(g - c)} + ${r2(d - c)}) ÷ 3.` };
+    return { q: `Diesel is $${d}/bbl and Brent is $${c}/bbl. A refiner runs 150 kb/d and gets 0.4 bbl diesel per bbl crude. Daily diesel crack margin in $ thousands?`, a: 150 * 0.4 * (d - c), work: `Diesel output = 150 × 0.4 = 60 kb/d. Crack = $${r2(d - c)}. 60 × ${r2(d - c)} = $${fmt(r2(60 * (d - c)))}k per day.` };
+  },
+  'Contango carry': () => {
+    const m = pick([1, 2, 3, 6]);
+    const spread = pick([0.6, 0.8, 1.0, 1.2, 1.5, 1.8, 2.4, 3.0, 3.6]);
+    const st = pick([0.3, 0.35, 0.4, 0.45, 0.5, 0.55]);
+    const fin = pick([0.1, 0.15, 0.2, 0.25]);
+    const net = spread - m * (st + fin);
+    return { q: `The ${m}-month contango is $${spread.toFixed(2)}/bbl. Storage costs $${st.toFixed(2)}/bbl/month and financing $${fin.toFixed(2)}/bbl/month. Profit per barrel from cash-and-carry? <span class="unit">(negative if it doesn't work)</span>`, a: net, work: `Cost = ${m} × (${st} + ${fin}) = $${fmt(r2(m * (st + fin)))}. Profit = ${spread} − ${fmt(r2(m * (st + fin)))} = $${fmt(r2(net))}/bbl.`, tol: 0.006 };
+  },
+  'Volumes & flows': () => {
+    const k = pick([50, 75, 120, 150, 180, 250, 300, 400, 450, 600]);
+    const t = pick([['a 30-day month', 30], ['a quarter (90 days)', 90], ['a year (365 days)', 365]]);
+    if (Math.random() < .5) return { q: `A field produces ${k} kb/d. How many million barrels over ${t[0]}?`, a: k * t[1] / 1000, work: `${k},000 × ${t[1]} = ${fmt(k * t[1] * 1000)} bbl = ${fmt(r2(k * t[1] / 1000))} mb.` };
+    const car = pick([['VLCC', 2000], ['Suezmax', 1000], ['Aframax', 700]]);
+    return { q: `How many ${car[0]} cargoes (~${fmt(car[1])} kb each) does ${k} kb/d fill over ${t[0]}?`, a: k * t[1] / car[1], work: `${k} × ${t[1]} = ${fmt(k * t[1])} kb, ÷ ${fmt(car[1])} = ${fmt(r2(k * t[1] / car[1]))} cargoes.`, tol: 0.01 };
+  },
+  'Cargo value & freight': () => {
+    if (Math.random() < .5) {
+      const car = pick([['VLCC', 2], ['Suezmax', 1], ['Aframax', 0.7]]);
+      const p = pick([68, 72, 75, 78, 82, 85, 88]) + pick([0, .5]);
+      return { q: `A ${car[0]} of ${car[1]}m bbl at $${p}/bbl. Cargo value in $ millions?`, a: car[1] * p, work: `${car[1]} × ${p} = $${fmt(r2(car[1] * p))}m.` };
+    }
+    const fr = pick([12, 15, 18, 20, 24, 27, 30, 36]);
+    const f = pick([7.3, 7.5]);
+    return { q: `Freight is $${fr}/t on crude at ${f} bbl/t. Freight cost in $/bbl?`, a: fr / f, work: `$${fr} ÷ ${f} = $${fmt(r2(fr / f))}/bbl.` };
+  },
+  'Arb check': () => {
+    const fob = pick([74, 76, 78, 80]) + pick([0, .5]);
+    const fr = pick([1.5, 2.0, 2.5, 3.0, 3.5]);
+    const other = pick([0.2, 0.3, 0.4, 0.5]);
+    const del = fob + fr + other + pick([-1.5, -1, -0.5, 0.5, 1, 1.5, 2]);
+    const m = del - fob - fr - other;
+    return { q: `FOB West Africa $${fob}, freight $${fr.toFixed(2)}, insurance/losses $${other.toFixed(2)} (all $/bbl). Delivered Rotterdam value $${del.toFixed(2)}. Arb margin per bbl? <span class="unit">(negative = arb shut)</span>`, a: m, work: `${del} − (${fob} + ${fr} + ${other}) = $${fmt(r2(m))}/bbl. ${m > 0 ? 'Arb open.' : 'Arb shut.'}`, tol: 0.006 };
+  },
+  'Percentages': () => {
+    const base = pick([64, 72, 80, 84, 90, 96, 120, 150]), pct = pick([2.5, 4, 5, 7.5, 8, 12.5, 15, 20, 25]);
+    if (Math.random() < .5) return { q: `Brent at $${base} moves ${Math.random() < .5 ? 'up' : 'down'} ${pct}%. Size of the move in $?`, a: base * pct / 100, work: `${base} × ${pct}% = $${fmt(r2(base * pct / 100))}.` };
+    const a1 = pick([60, 70, 75, 80, 90]), a2 = a1 + pick([-9, -6, -3, 3, 6, 9, 12]);
+    return { q: `Price goes from $${a1} to $${a2}. Percentage change? <span class="unit">(sign matters)</span>`, a: (a2 - a1) / a1 * 100, work: `(${a2} − ${a1}) ÷ ${a1} × 100 = ${fmt(r2((a2 - a1) / a1 * 100))}%.`, tol: 0.01 };
+  },
+  'Straight arithmetic': () => {
+    const t = R(0, 3);
+    if (t === 0) { const a = R(12, 99), b = R(12, 99); return { q: `${a} × ${b}`, a: a * b, work: `${a * b}` }; }
+    if (t === 1) { const b = R(3, 19), a = b * R(12, 99); return { q: `${a} ÷ ${b}`, a: a / b, work: `${a / b}` }; }
+    if (t === 2) { const a = R(1.5, 9.5) + .25 * R(0, 3), b = R(11, 49); return { q: `${a} × ${b}`, a: a * b, work: `${a * b}` }; }
+    const a = R(1000, 9999), b = R(100, 999); return { q: `${a} − ${b}`, a: a - b, work: `${a - b}` };
+  }
+};
+const cats = Object.keys(GEN);
+$('cats').innerHTML = cats.map(c => `<label><input type="checkbox" value="${c}" checked> ${c}</label>`).join('');
+
+let left, timer, cur, score = 0, right = 0, wrong = 0, log = [], untimed = false, waiting = false;
+const stats = {};
+function next() {
+  const on = [...document.querySelectorAll('#cats input:checked')].map(i => i.value);
+  const c = pick(on.length ? on : cats);
+  cur = { cat: c, ...GEN[c]() };
+  $('qcat').textContent = c; $('q').innerHTML = cur.q; $('ans').value = ''; $('ans').focus();
+  $('work').classList.add('hidden'); waiting = false;
+}
+function isRight(v, a, tol = 0.005) {
+  if (Math.abs(a) < 1e-9) return Math.abs(v) < 0.01;
+  return Math.abs(v - a) <= Math.max(Math.abs(a) * tol, 0.011);
+}
+function record(ok, given) {
+  stats[cur.cat] = stats[cur.cat] || { r: 0, n: 0 };
+  stats[cur.cat].n++; if (ok) stats[cur.cat].r++;
+  log.push({ ...cur, ok, given });
+}
+function submit(e) {
+  e.preventDefault();
+  if (waiting) { next(); return; }
+  const raw = $('ans').value.replace(/[,$¢%\s]/g, ''); if (raw === '') return;
+  const v = parseFloat(raw); if (isNaN(v)) return;
+  const ok = isRight(v, cur.a, cur.tol);
+  if (ok) { right++; score++; } else { wrong++; if ($('mark').value === 'neg') score--; }
+  record(ok, v);
+  $('fb').innerHTML = ok ? `<span class="good">✓ ${fmt(r2(cur.a))}</span>` : `<span class="bad">✗ answer ${fmt(r2(cur.a))}</span>`;
+  upd();
+  if (untimed) { $('work').innerHTML = cur.work; $('work').classList.remove('hidden'); waiting = true; $('ans').value = ''; $('ans').placeholder = 'Enter for next'; }
+  else next();
+}
+function skip() { record(false, 'skip'); $('fb').innerHTML = `<span class="meh">skipped — ${fmt(r2(cur.a))}</span>`; next(); }
+function upd() { $('s').textContent = score; $('r').textContent = right; $('w').textContent = wrong; }
+const mmss = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+function start() {
+  const m = +$('mode').value; untimed = m === 0;
+  $('intro').classList.add('hidden'); $('game').classList.remove('hidden');
+  if (!untimed) { left = m; $('t').textContent = mmss(left); timer = setInterval(() => { left--; $('t').textContent = mmss(left); if (left <= 0) end(); }, 1000); } else $('t').textContent = '∞';
+  next();
+}
+function end() {
+  clearInterval(timer);
+  $('game').classList.add('hidden'); $('result').classList.remove('hidden');
+  const att = right + wrong;
+  $('rTitle').textContent = `Score ${score}`;
+  $('rHud').innerHTML = `<div><div class="l">Attempted</div><div class="v">${att}</div></div><div><div class="l">Accuracy</div><div class="v">${att ? Math.round(100 * right / att) : 0}%</div></div><div><div class="l">Skipped</div><div class="v">${log.filter(l => l.given === 'skip').length}</div></div>`;
+  $('byCat').innerHTML = '<tr><th>Type</th><th>Right / seen</th></tr>' + Object.entries(stats).map(([k, v]) => `<tr><td>${k}</td><td class="${v.r / v.n >= .8 ? 'good' : v.r / v.n >= .5 ? 'meh' : 'bad'}">${v.r} / ${v.n}</td></tr>`).join('');
+  const miss = log.filter(l => !l.ok);
+  $('review').innerHTML = miss.length ? miss.map(m => `<div class="explain"><div>${m.q}</div><p style="margin-top:6px">You: <span class="mono bad">${m.given}</span> · Answer: <span class="mono good">${fmt(r2(m.a))}</span></p><p>${m.work}</p></div>`).join('') : '<p>No misses.</p>';
+}
+$('start').onclick = start; $('f').onsubmit = submit; $('skip').onclick = skip; $('stop').onclick = end;
+document.addEventListener('keydown', e => { if (e.key === 'Tab' && !$('game').classList.contains('hidden')) { e.preventDefault(); if (!waiting) skip(); } });
+</script>
+</body>
+</html>

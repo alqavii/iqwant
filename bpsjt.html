@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IQwant — BP Situational Judgement</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/bp.css">
+<style>
+  .scen { font-size: 1rem; color: var(--text); line-height: 1.65; margin: 10px 0 6px; }
+  .resp { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; font-size: .9rem; color: var(--text); }
+  .resp.best-key { border-color: var(--green); } .resp.worst-key { border-color: var(--red); }
+  .mark { font-family: var(--font-mono); font-size: .72rem; padding: 6px 10px; border-radius: 5px; border: 1px solid var(--border-hover); background: transparent; color: var(--text-muted); cursor: pointer; }
+  .mark.on.m { background: var(--green); color: #fff; border-color: var(--green); }
+  .mark.on.l { background: var(--red); color: #fff; border-color: var(--red); }
+  @media (max-width: 560px) { .resp { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header><div class="nav-container"><a class="brand" href="index.html">IQwant</a><nav class="nav-links"><a href="bp.html">BP hub</a><a href="index.html" class="hide-sm">All tests</a></nav></div></header>
+<main>
+<div class="panel" id="intro">
+  <div class="eyebrow">BP · Situational judgement</div>
+  <h1>Situational Judgement Test</h1>
+  <p class="lead">Twenty workplace scenarios set in a supply, trading and shipping business. For each, mark the <strong class="good">most effective</strong> and the <strong class="bad">least effective</strong> response. This is the most/least format candidates report from BP's screen.</p>
+  <div class="info-strip">
+    <strong>What's being judged.</strong> BP's stated values are safety, respect, excellence, courage and one team. In trading, add the non-negotiables: compliance, honest communication of risk and P&amp;L, and escalating fast. The best answer is usually the one that fixes the problem <em>and</em> involves the right people, not the most cautious or the most heroic one.<br><br>
+    <strong>Scoring.</strong> 1 point for each of most and least that matches the key (40 max). The scenarios and key are original practice material, not BP's own questions.
+  </div>
+  <div class="row"><label class="mono" style="font-size:.8rem;color:var(--text-muted)">Feedback
+    <select id="fbmode"><option value="end" selected>At the end (test mode)</option><option value="each">After each scenario</option></select></label></div>
+  <div style="margin-top:18px"><button class="btn block" id="start">Start</button></div>
+</div>
+
+<div class="panel hidden" id="game">
+  <div class="progress"><div id="bar"></div></div>
+  <div class="row" style="justify-content:space-between"><span class="tag" id="num"></span><span class="tag" id="val"></span></div>
+  <p class="scen" id="scen"></p>
+  <div id="resps" style="margin-top:14px"></div>
+  <div class="explain hidden" id="exp"></div>
+  <div style="margin-top:16px"><button class="btn block" id="next" disabled>Next</button></div>
+</div>
+
+<div class="panel hidden" id="result">
+  <div class="eyebrow">Result</div>
+  <h1 id="rTitle"></h1>
+  <div class="hud" id="rHud"></div>
+  <p id="rText"></p>
+  <h3>Full review</h3>
+  <div id="review"></div>
+  <div class="row" style="margin-top:18px"><button class="btn" onclick="location.reload()">Retake</button><a class="btn ghost" href="bp.html">Back to BP hub</a></div>
+</div>
+</main>
+<script>
+// [scenario, value tested, [responses], mostIdx, leastIdx, explanation]
+const S = [
+["You're a graduate on the crude desk. A counterparty's trader, whom you've dealt with often, sends you two tickets to a sold-out football final as thanks for \"a good year\". The gifts policy needs pre-approval for anything above a low threshold.", "Compliance",
+ ["Accept and enjoy them; it's relationship building and everyone does it.", "Thank them, explain you need to check the gifts policy, and log it with compliance before saying yes or no.", "Decline politely without mentioning it to anyone, to avoid fuss.", "Accept, but give the tickets to a friend so you're not personally benefiting."],
+ 1, 3, "Raising it with compliance is right: it's transparent and lets the firm decide. Passing the tickets to a friend still accepts the gift, hides it, and adds a layer of concealment, which is worse than accepting openly. Declining quietly is safe but misses a reportable approach."],
+["At 4:45pm you notice that a cargo you booked this morning was entered in the system at the wrong price, $1.50/bbl higher than agreed. Your trader has left for the day and the book closes at 5pm.", "Courage · Excellence",
+ ["Leave it; your trader can fix it tomorrow.", "Correct the price yourself in the system so tonight's P&L is right.", "Call or message your trader now, and tell middle office so it's flagged before close, with the deal recap as evidence.", "Email your trader about it and wait for a reply."],
+ 2, 1, "Mistakes on booked trades are fixed through the proper controls, quickly and visibly. Editing a booked trade yourself bypasses those controls, which is a serious breach even if your number is right. Leaving it until tomorrow lets wrong P&L and risk run overnight."],
+["During a site visit to a terminal, you see a contractor working near a loading arm without the required harness. Your host is mid-way through an important commercial presentation.", "Safety",
+ ["Wait until the presentation ends and mention it to your host.", "Say nothing; it's not your site and the contractor knows the risks.", "Stop work by alerting the nearest supervisor or using the site's stop-work process straight away.", "Take a photo to report it later through the safety system."],
+ 2, 1, "At BP anyone can and should stop unsafe work. An immediate, visible intervention beats any delay. Ignoring it is the worst response; reporting later is better than nothing but leaves the risk live."],
+["A senior trader asks you to send her your analyst model with the formulas \"cleaned up\" so a counterparty can't see your fundamental assumptions. You're unsure whether sharing the model at all is allowed.", "Compliance",
+ ["Send it as asked; she's senior and responsible for the decision.", "Ask her directly whether sharing it with the counterparty has been cleared, and check the information-sharing policy before sending.", "Refuse and report her to compliance immediately.", "Send a cut-down version without telling her what you've removed."],
+ 1, 3, "Ask first: there may be a legitimate reason, but you're accountable for what you send. Quietly altering the file is dishonest to your own colleague and may still breach policy. Escalating straight to compliance without asking is premature."],
+["Your team lead presents your freight analysis to the desk head without mentioning you. A colleague tells you they noticed.", "Respect · One team",
+ ["Bring it up privately with your lead, saying you'd value being involved in presenting work you've built.", "Mention to the desk head that the analysis was yours.", "Do nothing; credit doesn't matter.", "Stop sharing your work with your lead until it's resolved."],
+ 0, 3, "A direct, private conversation keeps trust and gets you visibility next time. Withholding work damages the team and the business. Going over your lead's head is likely to backfire."],
+["You're given two urgent tasks at once: a trader wants a forward curve check in 30 minutes, and operations needs nomination paperwork for a vessel before a 1-hour deadline. You can't do both well in time.", "Excellence",
+ ["Do the curve check first because traders are more senior.", "Tell both people the clash, give your estimate, and agree priorities, escalating to your manager if they can't agree.", "Do both quickly and accept some errors.", "Do the nomination first without telling the trader."],
+ 1, 2, "Surfacing the conflict lets the business decide. A missed vessel nomination can mean real demurrage costs, so it may well win, but that's a call to make openly. Knowingly rushing both risks errors on a physical cargo, the most costly outcome."],
+["A graduate on your scheme seems stressed and has started making small mistakes. They haven't said anything.", "Respect · One team",
+ ["Check in with them privately and ask how they're doing.", "Tell your manager they're struggling.", "Fix their mistakes quietly so nobody notices.", "Leave it; it's their business."],
+ 0, 2, "A private check-in is caring and lets them decide what to share. Silently fixing their errors hides problems from controls and from them."],
+["In a team meeting, everyone agrees on a cargo route that your numbers suggest is $0.40/bbl worse than an alternative. You're the most junior person there.", "Courage",
+ ["Stay quiet; they have more experience.", "Say that your numbers show a different answer and offer to walk through them.", "Re-run the numbers after the meeting and send them only to your manager.", "Argue firmly until they change the decision."],
+ 1, 0, "Speaking up with evidence, open to being wrong, is exactly what trading desks want. Staying silent when you think the desk is losing money is the least effective response."],
+["You realise a spreadsheet you've been sending the desk daily for two weeks had a units error. Some numbers were overstated by about 5%.", "Courage · Excellence",
+ ["Fix the formula and say nothing, since recent decisions were probably unaffected.", "Tell your manager and the users immediately, explain the impact and send corrected figures.", "Fix it and mention it casually next week.", "Wait to see if anyone notices."],
+ 1, 3, "Own it quickly and quantify the impact. Waiting to see if anyone notices is the worst response for trust and risk."],
+["A client calls in a panic: their refinery has an unplanned outage and they want to defer a cargo due to load in three days. You're the only person available on the desk.", "Excellence · One team",
+ ["Agree to the deferral to keep the client happy.", "Tell them that's impossible under the contract.", "Take full details, say you'll get back within the hour, and escalate to your trader and operations immediately.", "Ask them to email so you have it in writing, and look at it tomorrow."],
+ 2, 0, "Gather the facts, commit to a timeline and escalate: changes to a physical cargo have contract, freight and hedging consequences. Agreeing on your own commits the company to something you can't authorise."],
+["You overhear a colleague in the lift mentioning a large unannounced refinery acquisition by a company you trade with.", "Compliance",
+ ["Trade on it in your personal account; you heard it by chance.", "Tell your desk so they can position early.", "Report what you heard to compliance and don't act on it.", "Ignore it."],
+ 2, 0, "This may be inside information. Report to compliance and don't trade. Trading on it personally is the most serious breach of all the options; telling the desk spreads it and is nearly as bad."],
+["Your manager gives you feedback that your presentations are too detailed and lose the audience.", "Excellence",
+ ["Thank them, ask for an example, and practise a shorter version with them before your next one.", "Explain why the detail is necessary.", "Agree, but carry on as before.", "Ask a peer whether they agree with your manager."],
+ 0, 2, "Act on feedback and test the change. Agreeing and changing nothing is the least effective; it signals you'll say what people want to hear."],
+["A new colleague from another country keeps getting talked over in desk discussions.", "Respect · One team",
+ ["Bring them into the discussion by asking for their view.", "Tell the people interrupting that they're being rude in front of everyone.", "Do nothing; they'll adapt.", "Suggest to the colleague that they speak louder."],
+ 0, 2, "Making space for them is inclusive and low-friction. Doing nothing lets the problem continue."],
+["You're asked to help on the LNG desk for a week, outside your main area. You know little about LNG.", "Excellence",
+ ["Say yes, ask for a short brief, and spend the evenings reading up.", "Decline; you'd add little.", "Say yes and figure it out as you go without telling anyone you're new to it.", "Say yes but keep working mainly on your usual tasks."],
+ 0, 1, "Rotations and learning across commodities are valued. Saying yes while being honest about what you know is best. Declining closes off development and isn't helpful."],
+["A trader asks you to run a hedge order through without the usual credit check because \"the counterparty is fine and we'll miss the price\".", "Compliance",
+ ["Do it; the trader owns the risk.", "Explain that you can't skip the check, and start it immediately while you both look for a way to lock the price within limits.", "Run the check slowly to make a point.", "Ask another analyst to place it instead."],
+ 1, 3, "Controls exist for exactly this pressure. Help solve the commercial problem within the rules. Passing it to a colleague to avoid your responsibility is the least effective, as it spreads the breach."],
+["Your project group of four is behind schedule because one member isn't contributing.", "One team",
+ ["Do their part yourself to hit the deadline.", "Talk to them directly to understand why and agree what they'll deliver, raising it with the project lead if nothing changes.", "Tell the project lead immediately.", "Leave their section blank so it's clear who failed."],
+ 1, 3, "Direct conversation first, escalation if needed. Deliberately letting the project fail to expose someone harms the team's output and is the least effective."],
+["Market data feeds are down for an hour. A trader asks you for a price estimate for a product you assess daily.", "Excellence",
+ ["Give your best estimate, clearly labelled with how you got it and how confident you are.", "Refuse until data is back.", "Give a number without caveats so you sound confident.", "Tell them to ask someone more senior."],
+ 0, 2, "Traders work with imperfect information, but they need to know how imperfect. An uncaveated guess presented as fact is the most dangerous option."],
+["A shipping broker offers to share a competitor's fixture details with you \"off the record\".", "Compliance · Respect",
+ ["Accept; information is the edge in trading.", "Decline, and let your manager or compliance know about the offer.", "Accept but don't use it.", "Decline and say nothing."],
+ 1, 0, "Confidential competitor information obtained this way can breach competition law. Decline and flag it. Accepting and using it is the least effective."],
+["You've finished your work early on a quiet day.", "Excellence",
+ ["Ask your manager or a trader if there's something you can help with, or pick up an analysis you think would be useful.", "Leave early.", "Browse the news until the end of the day.", "Start on a personal project."],
+ 0, 1, "Initiative matters most on a graduate scheme. Leaving early without checking is the least effective."],
+["A risk report shows the desk is close to its VaR limit. Your trader tells you to delay sending the report until after a trade he's working on goes through.", "Courage · Compliance",
+ ["Delay it as asked.", "Send the report on time and tell the trader you can't hold it, suggesting he checks the trade against the limit with risk first.", "Send it to risk but leave out the line about the limit.", "Ask a colleague what they'd do."],
+ 1, 2, "Risk reporting can't be delayed or edited to fit a trade. Removing the line is falsifying a control report, the worst option; delaying is close behind."]
+];
+
+const $ = id => document.getElementById(id);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+let order, i = 0, ans = [], most = null, least = null, perMode;
+
+function render() {
+  const s = S[order[i]];
+  most = least = null;
+  $('bar').style.width = (100 * i / S.length) + '%';
+  $('num').textContent = `Scenario ${i + 1} / ${S.length}`; $('val').textContent = s[1];
+  $('scen').textContent = s[0];
+  $('resps').innerHTML = s[2].map((r, k) => `<div class="resp" id="r${k}"><span>${String.fromCharCode(65 + k)}. ${r}</span><button class="mark m" data-k="${k}" data-t="m">Most</button><button class="mark l" data-k="${k}" data-t="l">Least</button></div>`).join('');
+  $('resps').querySelectorAll('.mark').forEach(b => b.onclick = () => mark(+b.dataset.k, b.dataset.t));
+  $('exp').classList.add('hidden'); $('next').disabled = true; $('next').textContent = 'Next';
+}
+function mark(k, t) {
+  if (t === 'm') { most = k; if (least === k) least = null; } else { least = k; if (most === k) most = null; }
+  $('resps').querySelectorAll('.mark').forEach(b => b.classList.toggle('on', (b.dataset.t === 'm' && +b.dataset.k === most) || (b.dataset.t === 'l' && +b.dataset.k === least)));
+  $('next').disabled = most === null || least === null;
+}
+function showKey(s) {
+  $(`r${s[3]}`).classList.add('best-key'); $(`r${s[4]}`).classList.add('worst-key');
+  $('exp').innerHTML = `<strong>Most effective: ${String.fromCharCode(65 + s[3])}. Least effective: ${String.fromCharCode(65 + s[4])}.</strong><br>${s[5]}`;
+  $('exp').classList.remove('hidden');
+}
+$('next').onclick = () => {
+  const s = S[order[i]];
+  if (perMode && $('exp').classList.contains('hidden')) { ans.push([most, least]); showKey(s); $('resps').querySelectorAll('.mark').forEach(b => b.disabled = true); $('next').textContent = 'Continue'; return; }
+  if (!perMode) ans.push([most, least]);
+  i++; if (i < S.length) render(); else finish();
+};
+function finish() {
+  $('game').classList.add('hidden'); $('result').classList.remove('hidden');
+  let pts = 0, bestHits = 0, worstHits = 0, flips = 0; const byVal = {};
+  order.forEach((idx, n) => { const s = S[idx], [m, l] = ans[n];
+    if (m === s[3]) { pts++; bestHits++; } if (l === s[4]) { pts++; worstHits++; } if (m === s[4] || l === s[3]) flips++;
+    s[1].split(' · ').forEach(v => { byVal[v] = byVal[v] || [0, 0]; byVal[v][0] += (m === s[3]) + (l === s[4]); byVal[v][1] += 2; }); });
+  $('rTitle').textContent = `${pts} / 40`;
+  $('rHud').innerHTML = `<div><div class="l">Most matched</div><div class="v">${bestHits}/20</div></div><div><div class="l">Least matched</div><div class="v">${worstHits}/20</div></div><div><div class="l">Reversed</div><div class="v ${flips ? 'bad' : 'good'}">${flips}</div></div>`;
+  const weak = Object.entries(byVal).sort((a, b) => a[1][0] / a[1][1] - b[1][0] / b[1][1])[0];
+  $('rText').innerHTML = `${pts >= 32 ? 'Strong alignment with the key.' : pts >= 24 ? 'Reasonable, with some gaps.' : 'Big gaps against the key; read the explanations below carefully.'} ${flips ? `<span class="bad">You picked a key "least" as your "most" (or the reverse) ${flips} time(s). Those reversals hurt most in real SJTs.</span>` : ''} Weakest area: <strong>${weak[0]}</strong> (${weak[1][0]}/${weak[1][1]}).`;
+  $('review').innerHTML = order.map((idx, n) => { const s = S[idx], [m, l] = ans[n];
+    return `<div class="explain"><p style="color:var(--text)">${n + 1}. ${s[0]}</p><ol type="A" style="margin:8px 0">${s[2].map((r, k) => `<li class="${k === s[3] ? 'good' : k === s[4] ? 'bad' : ''}">${r}${k === m ? ' <span class="tag">your most</span>' : ''}${k === l ? ' <span class="tag">your least</span>' : ''}</li>`).join('')}</ol><p>${s[5]}</p></div>`; }).join('');
+}
+$('start').onclick = () => { perMode = $('fbmode').value === 'each'; order = shuffle([...S.keys()]); $('intro').classList.add('hidden'); $('game').classList.remove('hidden'); render(); };
+</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IQwant — BP Verbal Reasoning</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/bp.css">
+<style>
+  .passage { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; font-size: .92rem; color: var(--text); line-height: 1.7; margin-bottom: 18px; }
+  .stmt { font-size: 1rem; color: var(--text); margin: 6px 0 14px; font-weight: 500; }
+  .tfc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .tfc .opt { text-align: center; }
+</style>
+</head>
+<body>
+<header><div class="nav-container"><a class="brand" href="index.html">IQwant</a><nav class="nav-links"><a href="bp.html">BP hub</a><a href="index.html" class="hide-sm">All tests</a></nav></div></header>
+<main>
+<div class="panel" id="intro">
+  <div class="eyebrow">BP · Verbal reasoning</div>
+  <h1>Verbal Reasoning</h1>
+  <p class="lead">Short passages on energy markets and operations. For each statement, decide whether it is <strong>True</strong>, <strong>False</strong>, or <strong>Cannot say</strong> based only on the passage. 30 statements, 20 minutes.</p>
+  <div class="info-strip"><strong>The rule that catches people:</strong> use only what the passage says. Outside knowledge doesn't count, even if you're sure it's correct. "Cannot say" means the passage neither confirms nor contradicts it. Watch for absolute words (always, all, only) and for statements that swap cause and effect.</div>
+  <div class="row"><label class="mono" style="font-size:.8rem;color:var(--text-muted)">Time
+    <select id="len"><option value="1200" selected>20 min</option><option value="900">15 min (harder)</option><option value="0">Untimed</option></select></label></div>
+  <div style="margin-top:18px"><button class="btn block" id="start">Start</button></div>
+</div>
+<div class="panel hidden" id="game">
+  <div class="hud"><div><div class="l">Time</div><div class="v" id="t">–</div></div><div><div class="l">Statement</div><div class="v" id="n">1</div></div></div>
+  <div class="passage" id="p"></div>
+  <p class="stmt" id="s"></p>
+  <div class="tfc" id="o"></div>
+  <div class="row" style="justify-content:space-between;margin-top:16px"><button class="btn ghost" id="prev">← Back</button><button class="btn" id="next">Next →</button></div>
+</div>
+<div class="panel hidden" id="result">
+  <div class="eyebrow">Result</div><h1 id="rTitle"></h1><div class="hud" id="rHud"></div><p id="rText"></p>
+  <h3>Review</h3><div id="review"></div>
+  <div class="row" style="margin-top:18px"><button class="btn" onclick="location.reload()">Retake</button><a class="btn ghost" href="bp.html">Back to BP hub</a></div>
+</div>
+</main>
+<script>
+// T = true, F = false, C = cannot say
+const P = [
+{ text: "Refining margins depend on the difference between the value of the products a refinery makes and the cost of the crude it buys. Complex refineries, which have upgrading units such as cokers and hydrocrackers, can convert heavy, cheaper crudes into high-value light products. Simple refineries lack these units and produce a larger share of low-value fuel oil. When the price gap between light and heavy crude narrows, the advantage of complex refineries shrinks, although they generally remain more profitable. Many simple refineries in Europe have closed over the past two decades.",
+  s: [["Complex refineries can process heavy crude into light products.", "T", "Stated directly."],
+      ["Simple refineries are always unprofitable.", "C", "The passage only says complex refineries are generally more profitable. It never says whether simple ones make or lose money, so you cannot say."],
+      ["A narrowing light–heavy spread benefits complex refineries.", "F", "It says their advantage shrinks when the gap narrows."],
+      ["European simple refineries closed mainly because of environmental regulation.", "C", "Closures are mentioned; their cause is not."],
+      ["Simple refineries produce a higher proportion of fuel oil than complex refineries.", "T", "Simple refineries 'produce a larger share of low-value fuel oil'; the comparison is with complex refineries in context."]] },
+{ text: "When near-dated oil futures trade below later-dated ones, the market is said to be in contango. Contango can make it profitable to buy oil now, store it, and sell it forward, provided the price difference exceeds the cost of storage and financing. In 2020, contango became so steep that traders chartered tankers purely as floating storage. Floating storage is usually more expensive than onshore tanks, so it tends to be used only once onshore capacity fills. The opposite structure, backwardation, discourages storage and tends to draw inventories down.",
+  s: [["In contango, later-dated futures are priced above near-dated futures.", "T", "That is the definition given."],
+      ["Storing oil in contango is always profitable.", "F", "Only if the spread exceeds storage and financing costs."],
+      ["In 2020 some tankers were used for storage rather than transport.", "T", "Stated: chartered purely as floating storage."],
+      ["Onshore tank capacity was full worldwide in 2020.", "C", "The passage implies floating storage is used once onshore fills, but doesn't say global onshore capacity was full in 2020."],
+      ["Backwardation tends to increase inventories.", "F", "It says backwardation tends to draw inventories down."]] },
+{ text: "A trading company's physical oil business earns money by moving barrels across time, location and quality. Location arbitrage involves buying crude in one region and selling it in another where it is worth more after freight. These arbitrages often close quickly as other traders spot the same opportunity. Scale helps: large traders can charter ships more cheaply, blend cargoes to meet specifications, and use their own storage. However, scale also brings exposure to operational risks, such as vessel delays and quality disputes, which can erase a cargo's margin.",
+  s: [["Arbitrage opportunities may close because competitors act on them.", "T", "Stated: they close as other traders spot the same opportunity."],
+      ["Large traders never suffer from vessel delays.", "F", "Scale brings exposure to operational risks including vessel delays."],
+      ["Blending cargoes is one advantage of scale mentioned in the passage.", "T", "Listed as an advantage."],
+      ["Most of a trading company's profit comes from location arbitrage.", "C", "The passage lists location as one source; it gives no breakdown."],
+      ["A quality dispute can wipe out the profit on a cargo.", "T", "Stated: can erase a cargo's margin."]] },
+{ text: "Liquefied natural gas (LNG) is natural gas cooled to around minus 162°C, which reduces its volume roughly 600-fold and allows it to be shipped by sea. Some cargo evaporates during the voyage; this 'boil-off' is often used to fuel the ship. Historically, most LNG was sold under long-term contracts linked to oil prices. Over the past decade, spot and short-term trading has grown, and more contracts now reference gas hub prices. Destination flexibility allows sellers or buyers to divert cargoes to whichever market pays most.",
+  s: [["Cooling gas to LNG reduces its volume by about 600 times.", "T", "Stated."],
+      ["Boil-off gas is always wasted.", "F", "It is often used to fuel the ship."],
+      ["Today, most LNG is sold on the spot market.", "C", "Spot trading has grown, but the passage doesn't say it is now the majority."],
+      ["Oil-linked pricing was historically common in LNG contracts.", "T", "Stated."],
+      ["Destination flexibility lets cargoes be redirected to higher-paying markets.", "T", "Stated."]] },
+{ text: "Companies hedge to reduce the effect of price moves on their earnings. An airline that buys jet fuel futures locks in part of its fuel cost; if prices rise, gains on the futures offset higher physical costs. Hedging does not make a company more profitable on average, and it can produce losses on the hedge when prices fall. Some investors prefer companies not to hedge, arguing they can diversify price risk themselves. Others value the predictability hedging provides, particularly for highly indebted firms.",
+  s: [["Hedging reduces the impact of price movements on earnings.", "T", "Stated as the purpose."],
+      ["An airline that buys jet fuel futures can make a loss on the hedge if fuel prices fall.", "T", "Stated: losses on the hedge when prices fall (for a buyer of futures)."],
+      ["Hedging increases a company's average profitability.", "F", "It explicitly does not."],
+      ["All investors prefer companies to hedge.", "F", "Some investors prefer companies not to hedge."],
+      ["Airlines with high debt are the most likely to hedge.", "C", "The passage says some investors value predictability for indebted firms; it doesn't say which airlines hedge most."]] },
+{ text: "Shipping costs for crude are often quoted using Worldscale, a system that gives each route a 'flat rate' in dollars per tonne. Freight is then negotiated as a percentage of that flat rate, so WS 100 means the full flat rate and WS 50 means half. Flat rates are revised annually to reflect changes in fuel and port costs. Because different vessel sizes trade at different Worldscale levels, a smaller vessel may have a higher WS figure while still costing less per voyage.",
+  s: [["WS 50 means freight equal to half the route's flat rate.", "T", "Stated."],
+      ["Flat rates stay fixed over time.", "F", "They are revised annually."],
+      ["A higher WS figure always means a more expensive voyage.", "F", "A smaller vessel may have a higher WS and still cost less per voyage."],
+      ["Worldscale is the only system used to quote tanker freight.", "C", "It says 'often quoted using Worldscale', which leaves room for others but doesn't say whether others exist. Strictly: cannot say."],
+      ["Fuel costs are one factor in flat rate revisions.", "T", "Stated."]] }
+];
+const ITEMS = []; P.forEach((p, pi) => p.s.forEach(s => ITEMS.push({ pi, s })));
+const $ = id => document.getElementById(id);
+let idx = 0, ans = [], left, timer;
+const L = { T: 'True', F: 'False', C: 'Cannot say' };
+function show() {
+  const it = ITEMS[idx];
+  $('n').textContent = `${idx + 1}/${ITEMS.length}`; $('p').textContent = P[it.pi].text; $('s').textContent = it.s[0];
+  $('o').innerHTML = ['T', 'F', 'C'].map(k => `<button class="opt ${ans[idx] === k ? 'sel' : ''}" data-k="${k}">${L[k]}</button>`).join('');
+  $('o').querySelectorAll('.opt').forEach(b => b.onclick = () => { ans[idx] = b.dataset.k; if (idx < ITEMS.length - 1) { idx++; } show(); });
+  $('prev').disabled = idx === 0; $('next').textContent = idx === ITEMS.length - 1 ? 'Finish' : 'Next →';
+}
+const mmss = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+function finish() {
+  clearInterval(timer); $('game').classList.add('hidden'); $('result').classList.remove('hidden');
+  let right = 0; const by = { T: [0, 0], F: [0, 0], C: [0, 0] };
+  ITEMS.forEach((it, i) => { by[it.s[1]][1]++; if (ans[i] === it.s[1]) { right++; by[it.s[1]][0]++; } });
+  $('rTitle').textContent = `${right} / ${ITEMS.length}`;
+  $('rHud').innerHTML = Object.entries(by).map(([k, v]) => `<div><div class="l">${L[k]}</div><div class="v">${v[0]}/${v[1]}</div></div>`).join('');
+  const weak = Object.entries(by).sort((a, b) => a[1][0] / a[1][1] - b[1][0] / b[1][1])[0][0];
+  $('rText').textContent = weak === 'C' ? 'Your weakest category is Cannot say: you are probably filling gaps with outside knowledge or reasonable assumptions. Ask: does the passage itself settle this?' : weak === 'F' ? 'Your weakest category is False: look for the exact sentence that contradicts the statement, especially absolute words like always, never, all.' : 'Your weakest category is True: you may be over-using Cannot say. If the passage states it, even in different words, it is True.';
+  $('review').innerHTML = ITEMS.map((it, i) => `<div class="explain"><p style="color:var(--text)">${i + 1}. ${it.s[0]}</p><p>${ans[i] === it.s[1] ? '<span class="good">✓</span>' : `<span class="bad">✗ you: ${ans[i] ? L[ans[i]] : '—'}</span>`} · Answer <span class="good">${L[it.s[1]]}</span>. ${it.s[2]}</p></div>`).join('');
+}
+$('start').onclick = () => { const s = +$('len').value; $('intro').classList.add('hidden'); $('game').classList.remove('hidden');
+  if (s) { left = s; $('t').textContent = mmss(left); timer = setInterval(() => { left--; $('t').textContent = mmss(left); if (left <= 0) finish(); }, 1000); } else $('t').textContent = '∞'; show(); };
+$('prev').onclick = () => { if (idx > 0) { idx--; show(); } };
+$('next').onclick = () => { if (idx < ITEMS.length - 1) { idx++; show(); } else finish(); };
+</script>
+</body>
+</html>

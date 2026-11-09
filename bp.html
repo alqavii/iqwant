@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IQwant — BP Supply, Trading &amp; Shipping</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/bp.css">
+<style>
+  .stages { display: grid; gap: 10px; margin: 14px 0 6px; }
+  .stage { display: grid; grid-template-columns: 34px 1fr auto; gap: 14px; align-items: start; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+  .stage .num { font-family: var(--font-mono); font-weight: 600; color: var(--bp); font-size: 1.1rem; }
+  .stage h3 { margin: 0 0 4px; } .stage p { margin: 0; font-size: .86rem; }
+  .stage .links { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+  .stage .links a { font-size: .8rem; white-space: nowrap; }
+  .conf { font-size: .66rem; } .conf.c { color: var(--green); border-color: var(--green); } .conf.r { color: var(--amber); border-color: var(--amber); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin: 14px 0; }
+  .card { background: var(--surface-card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; min-height: 150px; }
+  .card:hover { background: var(--surface-hover); border-color: var(--border-hover); }
+  .card .t { font-weight: 600; margin: 6px 0; } .card .d { font-size: .84rem; color: var(--text-muted); }
+  .card .go { font-size: .8rem; color: var(--text-muted); margin-top: 10px; }
+  details { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; margin: 8px 0; }
+  summary { cursor: pointer; color: var(--text); font-size: .92rem; }
+  details p, details li { font-size: .86rem; }
+  @media (max-width: 560px) { .stage { grid-template-columns: 26px 1fr; } .stage .links { grid-column: 2; align-items: flex-start; flex-direction: row; flex-wrap: wrap; } }
+</style>
+</head>
+<body>
+<header><div class="nav-container"><a class="brand" href="index.html">IQwant</a><nav class="nav-links"><a href="#tests">Tests</a><a href="#technical">Technical</a><a href="index.html" class="hide-sm">All tests</a></nav></div></header>
+<main class="wide">
+  <div class="eyebrow">bp · Supply, Trading &amp; Shipping</div>
+  <h1>BP ST&amp;S early careers prep</h1>
+  <p class="lead">Practice for every stage of BP's trading graduate and internship process, rebuilt from what BP says publicly and what candidates and prep sites report. BP doesn't publish its test provider or formats, and reports differ by year and region, so treat anything marked "reported" as likely rather than certain, and trust your own invitation over this page.</p>
+
+  <h2>The process, stage by stage</h2>
+  <div class="stages">
+    <div class="stage"><div class="num">1</div><div><h3>Application &amp; business area <span class="tag conf c">BP-stated</span></h3><p>CV and eligibility. ST&amp;S splits into Trading, Analytics, Origination, Operations, and Finance &amp; risk; know which one you're aiming for and why. BP's careers pages stress curiosity, resilience, and being "good under pressure".</p></div><div class="links"></div></div>
+    <div class="stage"><div class="num">2</div><div><h3>Online assessments <span class="tag conf r">reported</span></h3><p>Reported mixes include numerical and verbal reasoning, a situational judgement test (most/least effective), sometimes inductive/pattern reasoning, a personality questionnaire, and for some roles an Aon Switch Challenge. Providers named by different sources include SHL, Saville and Aon; none is confirmed by BP.</p></div><div class="links"><a href="bpnumerical.html">Numerical →</a><a href="bpverbal.html">Verbal →</a><a href="bpsjt.html">SJT →</a><a href="aonswitch.html">Aon Switch →</a></div></div>
+    <div class="stage"><div class="num">3</div><div><h3>Recorded video interview <span class="tag conf c">BP-stated</span></h3><p>On-demand video interview (HireVue). Reported: around 30 s prep and up to 3 min per answer, 5–7 questions on motivation, teamwork, change, obstacles and the energy transition.</p></div><div class="links"><a href="hirevue.html">HireVue sim →</a></div></div>
+    <div class="stage"><div class="num">4</div><div><h3>Technical interview <span class="tag conf c">BP-stated</span></h3><p>BP describes a technical interview stage. For trading expect market awareness, oil fundamentals, pricing and spreads, and mental maths under pressure. Reported advice: explain your assumptions and check your reasoning out loud.</p></div><div class="links"><a href="#technical">Question bank ↓</a><a href="oilmaths.html">Oil mental maths →</a></div></div>
+    <div class="stage"><div class="num">5</div><div><h3>Assessment centre <span class="tag conf r">reported</span></h3><p>Reported exercises: a case study (sometimes released the day before), a 10–15 minute presentation with Q&amp;A, a group discussion of four or so, competency interviews, and an ethics scenario (one report: a client gift against policy).</p></div><div class="links"><a href="bpcase.html">Trading case →</a><a href="bpsjt.html">Ethics/SJT →</a></div></div>
+  </div>
+
+  <h2 id="tests">Practice tests</h2>
+  <div class="grid">
+    <a class="card" href="oilmaths.html"><div><span class="tag">Trading · mental maths</span><div class="t">Oil Desk Mental Maths</div><div class="d">Lot P&amp;L, ¢/gal ↔ $/bbl, $/t conversions, crack spreads, contango carry, freight, arb checks. Timed with negative marking.</div></div><div class="go">Start →</div></a>
+    <a class="card" href="aonswitch.html"><div><span class="tag">Aon · 6 min</span><div class="t">Switch Challenge</div><div class="d">The symbol-and-code format: find the operator that maps input to output, including two-step chains.</div></div><div class="go">Start →</div></a>
+    <a class="card" href="bpnumerical.html"><div><span class="tag">20 Qs · 25 min</span><div class="t">Numerical Reasoning</div><div class="d">Refinery runs, export flows, Worldscale freight and segment results. Fresh numbers every run.</div></div><div class="go">Start →</div></a>
+    <a class="card" href="bpverbal.html"><div><span class="tag">30 statements · 20 min</span><div class="t">Verbal Reasoning</div><div class="d">True / False / Cannot say on passages about refining, contango, LNG, hedging and freight.</div></div><div class="go">Start →</div></a>
+    <a class="card" href="bpsjt.html"><div><span class="tag">20 scenarios</span><div class="t">Situational Judgement</div><div class="d">Most and least effective responses in trading-floor scenarios: compliance, safety, speaking up, teamwork.</div></div><div class="go">Start →</div></a>
+    <a class="card" href="hirevue.html"><div><span class="tag">Camera · 30 s / 3 min</span><div class="t">HireVue Simulator</div><div class="d">Timed prep, auto-recording, playback and a self-review checklist. Nothing leaves your browser.</div></div><div class="go">Start →</div></a>
+    <a class="card" href="bpcase.html"><div><span class="tag">45 min + 5 min present</span><div class="t">Case: The Suezmax Decision</div><div class="d">Rotterdam vs India vs storage for a West African cargo. Netbacks, freight sensitivity, hedging, model answer.</div></div><div class="go">Start →</div></a>
+    <a class="card" href="questions.html?category=commodities"><div><span class="tag">20 cases</span><div class="t">Commodities question bank</div><div class="d">The existing worked cases: storage arbitrage, cracks, demurrage, LNG boil-off and more.</div></div><div class="go">Open →</div></a>
+  </div>
+
+  <h2>Suggested mock day</h2>
+  <ol>
+    <li>Oil mental maths, 8 min sprint (warm-up)</li>
+    <li>Numerical, then verbal, back to back under time</li>
+    <li>SJT in test mode, then review every reversal</li>
+    <li>Aon Switch, 6 min</li>
+    <li>HireVue, 6 questions, one take each, then watch back</li>
+    <li>Case study: 45 min analysis, 5 min presentation out loud, then the assessor questions</li>
+  </ol>
+
+  <h2 id="technical">Technical interview question bank</h2>
+  <p>Questions typical of oil trading technical rounds. Answer out loud first, then open the outline.</p>
+  <details><summary>Where is Brent today, what's moved it this month, and where do you think it goes?</summary><p>Have a number (check it the morning of the interview), two or three drivers (OPEC+ policy, inventories, demand data, geopolitics, positioning), a view, and what would make you wrong. Never answer without a current price.</p></details>
+  <details><summary>What's the difference between Brent and WTI, and why does the spread move?</summary><p>Different crudes and delivery points: Brent is a waterborne North Sea benchmark (with WTI Midland now in the Dated Brent basket); WTI is priced at Cushing, Oklahoma. The spread reflects US export economics (pipeline to the Gulf Coast plus transatlantic freight), US inventories, and Atlantic Basin balances.</p></details>
+  <details><summary>What is Dated Brent and why do traders use CFDs?</summary><p>Dated Brent is the assessed price of physical North Sea cargoes loading 10 days to a month ahead. Physical cargoes often price over a window around loading or discharge, so CFDs (contracts for difference against forward Brent) let traders hedge the timing gap between when a cargo is bought and sold.</p></details>
+  <details><summary>Explain contango and backwardation. What does each say about the market?</summary><p>Contango: forward prices above prompt, signals oversupply, encourages storage. Backwardation: prompt above forward, signals tightness, drains inventories. Link to the cash-and-carry calculation: spread vs storage plus financing.</p></details>
+  <details><summary>What is a 3:2:1 crack spread and what drives it?</summary><p>Refining margin proxy: (2 × gasoline + 1 × diesel − 3 × crude) ÷ 3. Driven by product demand (driving season, distillate for freight and heating), refinery outages and maintenance, product inventories, and export flows.</p></details>
+  <details><summary>How would an OPEC+ cut of 1 mb/d affect prices, time spreads and freight?</summary><p>Flat price up; spreads more backwardated as prompt supply tightens; medium-sour grades (which OPEC+ mostly produces) strengthen versus light sweet; long-haul tanker demand from the Middle East falls, but Atlantic Basin barrels may travel further to fill the gap, so freight can go either way. Show you think in second-order effects.</p></details>
+  <details><summary>How does a physical trader make money if they don't bet on direction?</summary><p>Arbitrage across location, time and quality: moving barrels to where they're worth most, storing in contango, blending to meet specs, optimising logistics and freight. Flat price is usually hedged; margins come from spreads and optionality.</p></details>
+  <details><summary>A Suezmax freight rate is WS 90 on a flat rate of $18/t. What's the cost per barrel?</summary><p>$18 × 0.9 = $16.20/t; ÷ ~7.3 bbl/t ≈ $2.22/bbl.</p></details>
+  <details><summary>Why does BP have a trading business at all?</summary><p>To optimise its own system (supplying refineries, placing equity production), manage price risk, and earn third-party trading margin using its scale, logistics and information. Its trading arm also supports gas, LNG and power positions. Tie this to why you'd rather join an integrated major than a pure trading house.</p></details>
+  <details><summary>What does the energy transition mean for oil trading?</summary><p>Balanced answer: oil demand peaks and plateaus on uncertain timelines, so volatility and regional dislocations may increase, which is good for trading. Growth areas: LNG, power, biofuels and SAF, carbon markets. Avoid preaching either way; show you understand both the commercial and policy sides.</p></details>
+  <details><summary>Tell me about a trade you'd put on today.</summary><p>Instrument, direction, size relative to risk, entry, thesis, catalyst, stop or invalidation, and how you'd hedge the parts you don't want exposure to. A spread trade with a clear fundamental reason often impresses more than a flat-price punt.</p></details>
+  <details><summary>Quick-fire: how many barrels in a VLCC? What's 1 mb/d for a year? How many gallons in a barrel?</summary><p>~2m bbl. 365m bbl. 42 gallons. Practise these until instant: <a href="oilmaths.html">oil mental maths</a>.</p></details>
+
+  <h2>Sources</h2>
+  <p style="font-size:.82rem">BP careers site (ST&amp;S business areas and early-careers stages); candidate and prep-site reports including GraduatesFirst, CareerTestPrep, TestSolve and GameAssessmentPrep. Details vary by year and region; your invitation is the authority.</p>
+</main>
+</body>
+</html>

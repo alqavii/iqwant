@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IQwant — HireVue Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/bp.css">
+<style>
+  video { width: 100%; border-radius: 8px; background: #000; aspect-ratio: 4/3; object-fit: cover; }
+  .qbig { font-size: 1.2rem; font-weight: 500; color: var(--text); line-height: 1.5; margin: 10px 0 16px; }
+  .clock { font-family: var(--font-mono); font-size: 2.6rem; font-weight: 600; text-align: center; }
+  .phase { text-align: center; font-family: var(--font-mono); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); }
+  .rec { color: var(--red); } .rec::before { content: '● '; }
+  .chk label { display: flex; gap: 10px; font-size: .88rem; color: var(--text-muted); margin: 6px 0; }
+  .take { margin-bottom: 18px; }
+</style>
+</head>
+<body>
+<header><div class="nav-container"><a class="brand" href="index.html">IQwant</a><nav class="nav-links"><a href="bp.html">BP hub</a><a href="index.html" class="hide-sm">All tests</a></nav></div></header>
+<main class="wide">
+<div class="panel" id="intro">
+  <div class="eyebrow">BP · Recorded video interview</div>
+  <h1>HireVue-style Interview Simulator</h1>
+  <p class="lead">BP confirms that recorded video interviews are part of its early-careers process. This runs the same shape: a question appears, you get a short preparation window, then recording starts automatically and stops when time runs out. Recordings stay in your browser; nothing is uploaded.</p>
+  <div class="info-strip">Prep sites report about <strong>30 seconds to prepare and up to 3 minutes to answer</strong> per question, with 5–7 questions. Some candidates report being allowed a re-record; others don't get one, so practise one-take answers. Topics reported for BP: why BP, why trading/this business area, the energy transition, teamwork, adapting to change, overcoming obstacles.</div>
+  <div class="split">
+    <div>
+      <h3>Settings</h3>
+      <p><label>Question set <select id="set"><option value="sts" selected>Supply, Trading &amp; Shipping</option><option value="comp">Competency (all BP)</option><option value="mix">Mixed</option></select></label></p>
+      <p style="margin-top:8px"><label>Number of questions <select id="nq"><option>3</option><option selected>6</option><option>8</option></select></label></p>
+      <p style="margin-top:8px"><label>Prep time <select id="prep"><option value="30" selected>30 s</option><option value="60">60 s</option><option value="15">15 s</option></select></label></p>
+      <p style="margin-top:8px"><label>Answer time <select id="answer"><option value="180" selected>3 min</option><option value="120">2 min</option><option value="90">90 s</option><option value="60">60 s</option></select></label></p>
+      <p style="margin-top:8px"><label>Re-records <select id="retakes"><option value="0" selected>None (one take)</option><option value="1">1 allowed</option></select></label></p>
+    </div>
+    <div>
+      <h3>Camera check</h3>
+      <video id="preview" autoplay muted playsinline></video>
+      <div class="row" style="margin-top:10px"><button class="btn ghost" id="cam">Turn on camera &amp; mic</button><span id="camMsg" style="font-size:.82rem;color:var(--text-muted)"></span></div>
+    </div>
+  </div>
+  <div style="margin-top:22px"><button class="btn block" id="start">Start interview</button></div>
+  <p style="margin-top:10px;font-size:.8rem">No camera? You can still run it as a timed spoken practice; you just won't get playback.</p>
+</div>
+
+<div class="panel hidden" id="live">
+  <div class="split">
+    <div><video id="cam2" autoplay muted playsinline></video></div>
+    <div>
+      <div class="tag" id="qn"></div>
+      <p class="qbig" id="qtext"></p>
+      <div class="phase" id="phase"></div>
+      <div class="clock" id="clock"></div>
+      <div class="row" style="justify-content:center;margin-top:16px"><button class="btn" id="action"></button><button class="btn ghost hidden" id="redo">Re-record</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="panel hidden" id="review">
+  <div class="eyebrow">Review</div>
+  <h1>Watch yourself back</h1>
+  <p class="lead">Score each answer honestly against the checklist. Assessors reportedly look at motivation, communication and how well your examples show the qualities asked about.</p>
+  <div id="takes"></div>
+  <div class="row"><button class="btn" onclick="location.reload()">New interview</button><a class="btn ghost" href="bp.html">Back to BP hub</a></div>
+</div>
+</main>
+<script>
+const Q = {
+  sts: [
+    "Why do you want to work in supply, trading and shipping at bp rather than at a pure trading house?",
+    "Tell us about a time you made a decision quickly with incomplete information. What happened?",
+    "Walk us through something happening in oil, gas or power markets right now and how you think it affects prices.",
+    "Describe a time you took a calculated risk. How did you weigh the downside?",
+    "Tell us about a time you were wrong about something important. How did you find out and what did you do?",
+    "Trading floors are high-pressure. Describe a situation where you performed well under pressure.",
+    "Which business area in ST&S (trading, analytics, origination, operations, finance & risk) suits you best, and why?",
+    "Tell us about a time you had to persuade someone who disagreed with you.",
+    "What does the energy transition mean for an oil and gas trading business over the next ten years?",
+    "Describe a time you spotted a problem or opportunity others had missed."
+  ],
+  comp: [
+    "Why bp, and why this programme?",
+    "Tell us about a time you worked in a team to achieve a difficult goal. What was your role?",
+    "Describe a time you had to adapt quickly to a significant change.",
+    "Tell us about an obstacle you overcame. What did you learn?",
+    "Give an example of when you put safety or doing the right thing ahead of getting a task done faster.",
+    "Tell us about a time you received difficult feedback. What did you do with it?",
+    "Describe a time you had to manage several competing priorities.",
+    "Tell us about something you're proud of that isn't on your CV.",
+    "How have you developed yourself over the past year?",
+    "Tell us about a time you showed respect for a view very different from your own."
+  ]
+};
+const $ = id => document.getElementById(id);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+let stream = null, qs = [], qi = 0, tick, rec, chunks = [], takes = [], retakesLeft = 0, phase;
+async function camOn() {
+  try { stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); $('preview').srcObject = stream; $('camMsg').textContent = 'Camera on.'; }
+  catch (e) { $('camMsg').textContent = 'Camera unavailable: ' + e.name + '. You can still practise without playback.'; }
+}
+$('cam').onclick = camOn;
+const mmss = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+function countdown(secs, onEnd) {
+  clearInterval(tick); let left = secs; $('clock').textContent = mmss(left);
+  tick = setInterval(() => { left--; $('clock').textContent = mmss(Math.max(left, 0)); if (left <= 0) { clearInterval(tick); onEnd(); } }, 1000);
+}
+function prepPhase() {
+  phase = 'prep';
+  $('qn').textContent = `Question ${qi + 1} of ${qs.length}`; $('qtext').textContent = qs[qi];
+  $('phase').textContent = 'Preparation'; $('phase').classList.remove('rec');
+  $('action').textContent = 'Start answering now'; $('redo').classList.add('hidden');
+  countdown(+$('prep').value, recordPhase);
+}
+function recordPhase() {
+  phase = 'rec'; clearInterval(tick);
+  $('phase').textContent = 'Recording'; $('phase').classList.add('rec'); $('action').textContent = 'Finish answer';
+  chunks = [];
+  if (stream && window.MediaRecorder) {
+    rec = new MediaRecorder(stream);
+    rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+    rec.onstop = () => saveTake();
+    rec.start();
+  }
+  $('redo').classList.toggle('hidden', retakesLeft <= 0);
+  countdown(+$('answer').value, stopRec);
+}
+function stopRec() {
+  clearInterval(tick);
+  if (rec && rec.state === 'recording') rec.stop(); else saveTake();
+}
+function saveTake() {
+  const url = chunks.length ? URL.createObjectURL(new Blob(chunks, { type: chunks[0].type || 'video/webm' })) : null;
+  if (phase === 'redo') { phase = 'prep'; recordPhase(); return; }
+  takes.push({ q: qs[qi], url });
+  qi++; if (qi < qs.length) prepPhase(); else done();
+}
+$('action').onclick = () => { if (phase === 'prep') recordPhase(); else if (phase === 'rec') stopRec(); };
+$('redo').onclick = () => { if (retakesLeft <= 0) return; retakesLeft--; clearInterval(tick); phase = 'redo'; if (rec && rec.state === 'recording') rec.stop(); else { phase = 'prep'; recordPhase(); } };
+function done() {
+  $('live').classList.add('hidden'); $('review').classList.remove('hidden');
+  if (stream) stream.getTracks().forEach(t => t.stop());
+  const checks = ['Answered the actual question in the first 20 seconds', 'Used a specific example (Situation, Task, Action, Result)', 'Said what <em>I</em> did, not what "we" did', 'Quantified the result or impact', 'Linked back to bp / the role', 'Eye contact with the camera, steady pace, no long pauses', 'Finished cleanly before time ran out'];
+  $('takes').innerHTML = takes.map((t, i) => `<div class="take explain"><p style="color:var(--text);font-weight:600">${i + 1}. ${t.q}</p>${t.url ? `<video src="${t.url}" controls style="max-width:480px;margin:10px 0"></video><br><a class="tag" href="${t.url}" download="answer-${i + 1}.webm">Download</a>` : '<p>(no recording)</p>'}<div class="chk" style="margin-top:10px">${checks.map(c => `<label><input type="checkbox"> ${c}</label>`).join('')}</div></div>`).join('');
+}
+$('start').onclick = async () => {
+  const set = $('set').value, n = +$('nq').value;
+  let pool = set === 'mix' ? shuffle(Q.sts).slice(0, Math.ceil(n / 2)).concat(shuffle(Q.comp).slice(0, Math.floor(n / 2))) : shuffle(Q[set]).slice(0, n);
+  qs = shuffle(pool); retakesLeft = +$('retakes').value;
+  if (!stream) await camOn();
+  if (stream) $('cam2').srcObject = stream;
+  $('intro').classList.add('hidden'); $('live').classList.remove('hidden');
+  prepPhase();
+};
+</script>
+</body>
+</html>

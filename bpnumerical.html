@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IQwant — BP Numerical Reasoning</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/bp.css">
+<style>
+  .data { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 18px; }
+  .data h4 { font-size: .85rem; font-weight: 600; margin-bottom: 4px; } .data .note { font-size: .78rem; color: var(--text-dim); }
+  .qtext { font-size: 1rem; color: var(--text); margin: 6px 0; }
+  svg text { fill: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+  .calc { font-family: var(--font-mono); font-size: .8rem; }
+</style>
+</head>
+<body>
+<header><div class="nav-container"><a class="brand" href="index.html">IQwant</a><nav class="nav-links"><a href="bp.html">BP hub</a><a href="index.html" class="hide-sm">All tests</a></nav></div></header>
+<main>
+<div class="panel" id="intro">
+  <div class="eyebrow">BP · Numerical reasoning</div>
+  <h1>Numerical Reasoning</h1>
+  <p class="lead">Data-interpretation questions on energy-industry tables and charts: refinery runs, export volumes, freight and segment results. Each run generates fresh numbers. Reports put BP's numerical test at roughly 18–25 questions in about 25 minutes, under a minute and a half each, with a calculator allowed.</p>
+  <div class="info-strip">Use a calculator, as you would in the real test. Five options per question. The skill being tested is picking the right figures and the right operation fast, not the arithmetic itself.</div>
+  <div class="row"><label class="mono" style="font-size:.8rem;color:var(--text-muted)">Length
+    <select id="len"><option value="20|1500" selected>20 questions · 25 min</option><option value="10|750">10 questions · 12.5 min</option><option value="20|0">20 questions · untimed</option></select></label></div>
+  <div style="margin-top:18px"><button class="btn block" id="start">Start</button></div>
+</div>
+<div class="panel hidden" id="game">
+  <div class="hud"><div><div class="l">Time</div><div class="v" id="t">–</div></div><div><div class="l">Question</div><div class="v" id="n">1</div></div></div>
+  <div class="data" id="data"></div>
+  <p class="qtext" id="q"></p>
+  <div class="opts" id="opts"></div>
+  <div class="row" style="justify-content:space-between"><button class="btn ghost" id="prev">← Back</button><button class="btn" id="next">Next →</button></div>
+</div>
+<div class="panel hidden" id="result">
+  <div class="eyebrow">Result</div><h1 id="rTitle"></h1><div class="hud" id="rHud"></div>
+  <h3>Review</h3><div id="review"></div>
+  <div class="row" style="margin-top:18px"><button class="btn" onclick="location.reload()">New set</button><a class="btn ghost" href="bp.html">Back to BP hub</a></div>
+</div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const R = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const f = (x, dp = 1) => x.toLocaleString('en-GB', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+
+function options(ans, dp, unit = '', traps = []) {
+  const set = new Map(); const key = v => f(v, dp);
+  set.set(key(ans), ans);
+  for (const t of traps) if (isFinite(t) && t > 0 && !set.has(key(t)) && set.size < 5) set.set(key(t), t);
+  const mults = shuffle([0.8, 0.85, 0.9, 0.95, 1.05, 1.1, 1.15, 1.2, 1.25, 0.75]);
+  for (const m of mults) { if (set.size >= 5) break; const v = ans * m; if (!set.has(key(v))) set.set(key(v), v); }
+  return shuffle([...set.keys()]).map(k => ({ text: (unit === '$' ? '$' : '') + k + (unit && unit !== '$' ? unit : ''), ok: k === key(ans) }));
+}
+function bars(labels, series, names, unitLabel) {
+  const W = 620, H = 220, pad = 36, max = Math.max(...series.flat()) * 1.15;
+  const gw = (W - pad * 2) / labels.length, bw = gw / (series.length + 1);
+  const cols = ['#7ac943', '#3a8ee0', '#e0a43a', '#b072e0'];
+  let s = `<svg viewBox="0 0 ${W} ${H + 40}" width="100%" role="img">`;
+  for (let k = 0; k <= 4; k++) { const y = H - (H - 10) * k / 4; s += `<line x1="${pad}" x2="${W - 10}" y1="${y}" y2="${y}" stroke="#1b1f27"/><text x="2" y="${y + 4}">${Math.round(max * k / 4)}</text>`; }
+  labels.forEach((l, i) => { series.forEach((ser, j) => { const v = ser[i], h = (H - 10) * v / max, x = pad + i * gw + j * bw + bw / 2;
+    s += `<rect x="${x}" y="${H - h}" width="${bw - 3}" height="${h}" fill="${cols[j]}" rx="2"/><text x="${x + (bw - 3) / 2}" y="${H - h - 4}" text-anchor="middle">${v}</text>`; });
+    s += `<text x="${pad + i * gw + gw / 2}" y="${H + 16}" text-anchor="middle">${l}</text>`; });
+  names.forEach((n, j) => s += `<rect x="${pad + j * 130}" y="${H + 26}" width="10" height="10" fill="${cols[j]}"/><text x="${pad + j * 130 + 14}" y="${H + 35}">${n}</text>`);
+  return s + `</svg><div class="note">${unitLabel}</div>`;
+}
+
+// Each set returns {html, qs:[{q, ans, dp, unit, traps, work}]}
+const SETS = [
+() => { // Refinery runs
+  const names = ['Rotterdam', 'Gelsenkirchen', 'Castellón', 'Kwinana'].map(n => n + ' (illustrative)');
+  const short = ['Rotterdam', 'Gelsenkirchen', 'Castellón', 'Kwinana'];
+  const cap = [R(360, 420), R(240, 280), R(100, 120), R(130, 150)];
+  const util = [[R(78, 92), R(78, 92), R(78, 92)], [R(78, 92), R(78, 92), R(78, 92)], [R(78, 92), R(78, 92), R(78, 92)], [R(70, 90), R(70, 90), R(70, 90)]];
+  const runs = util.map((u, i) => u.map(p => Math.round(cap[i] * p / 100)));
+  const html = `<h4>Crude runs by refinery (kb/d)</h4><table><tr><th>Refinery</th><th>2023</th><th>2024</th><th>2025</th><th>2025 utilisation</th></tr>${short.map((n, i) => `<tr><td>${n}</td>${runs[i].map(v => `<td>${v}</td>`).join('')}<td>${util[i][2]}%</td></tr>`).join('')}</table><div class="note">Illustrative data. Utilisation = crude runs ÷ nameplate capacity.</div>`;
+  const a = R(0, 3), b = (a + 1 + R(0, 2)) % 4;
+  const tot = y => runs.reduce((s, r) => s + r[y], 0);
+  return { html, qs: [
+    { q: `What was the percentage change in ${short[a]}'s crude runs from 2023 to 2025?`, ans: (runs[a][2] - runs[a][0]) / runs[a][0] * 100, dp: 1, unit: '%', traps: [(runs[a][2] - runs[a][0]) / runs[a][2] * 100], work: `(${runs[a][2]} − ${runs[a][0]}) ÷ ${runs[a][0]} × 100` },
+    { q: `What is ${short[b]}'s nameplate capacity in kb/d (to the nearest whole number)?`, ans: runs[b][2] / util[b][2] * 100, dp: 0, unit: ' kb/d', traps: [runs[b][2] * util[b][2] / 100], work: `${runs[b][2]} ÷ ${util[b][2]}%` },
+    { q: `Across all four refineries, how many million barrels were run in 2024 (365 days)?`, ans: tot(1) * 365 / 1000, dp: 1, unit: ' mb', traps: [tot(1) * 30 / 1000 * 12, tot(1) * 360 / 1000], work: `${tot(1)} kb/d × 365 ÷ 1,000` },
+    { q: `What share of the four refineries' combined 2025 runs came from ${short[a]}?`, ans: runs[a][2] / tot(2) * 100, dp: 1, unit: '%', traps: [], work: `${runs[a][2]} ÷ ${tot(2)} × 100` },
+    { q: `If ${short[b]} had run at 95% utilisation in 2025, how many more kb/d would it have processed?`, ans: (runs[b][2] / util[b][2] * 100) * (95 - util[b][2]) / 100, dp: 1, unit: ' kb/d', traps: [runs[b][2] * (95 - util[b][2]) / 100], work: `capacity ${f(runs[b][2] / util[b][2] * 100, 1)} × (95% − ${util[b][2]}%)` }
+  ]};
+},
+() => { // Crude exports chart
+  const years = ['2022', '2023', '2024', '2025'];
+  const eu = years.map(() => R(120, 260)), as = years.map(() => R(150, 320));
+  const price = years.map(() => R(62, 98));
+  const html = `<h4>Seaborne crude exports from Country X by destination (million barrels)</h4>${bars(years, [eu, as], ['Europe', 'Asia'], 'Average realised price, $/bbl: ' + years.map((y, i) => `${y}: $${price[i]}`).join(' · '))}`;
+  const i = R(1, 3), j = R(0, 3);
+  return { html, qs: [
+    { q: `What was the total value of exports to Asia in ${years[j]}, in $ billions?`, ans: as[j] * price[j] / 1000, dp: 2, unit: '', traps: [(as[j] + eu[j]) * price[j] / 1000], work: `${as[j]}m bbl × $${price[j]} ÷ 1,000` },
+    { q: `By what percentage did total exports change between ${years[i - 1]} and ${years[i]}?`, ans: ((eu[i] + as[i]) - (eu[i - 1] + as[i - 1])) / (eu[i - 1] + as[i - 1]) * 100, dp: 1, unit: '%', traps: [], work: `(${eu[i] + as[i]} − ${eu[i - 1] + as[i - 1]}) ÷ ${eu[i - 1] + as[i - 1]}` },
+    { q: `In ${years[j]}, what was the ratio of exports to Asia versus Europe? (Asia : Europe, to 1 : x... give Asia ÷ Europe)`, ans: as[j] / eu[j], dp: 2, unit: '', traps: [eu[j] / as[j]], work: `${as[j]} ÷ ${eu[j]}` },
+    { q: `Average daily exports to Europe in ${years[i]}, in kb/d (365 days)?`, ans: eu[i] * 1000 / 365, dp: 0, unit: ' kb/d', traps: [eu[i] * 1000 / 360], work: `${eu[i]} × 1,000 ÷ 365` },
+    { q: `How much did total export revenue change from ${years[i - 1]} to ${years[i]}, in $ billions?`, ans: Math.abs((eu[i] + as[i]) * price[i] - (eu[i - 1] + as[i - 1]) * price[i - 1]) / 1000, dp: 2, unit: '', traps: [], work: `|${eu[i] + as[i]} × ${price[i]} − ${eu[i - 1] + as[i - 1]} × ${price[i - 1]}| ÷ 1,000` }
+  ]};
+},
+() => { // Freight
+  const routes = [['TD3C', 'Middle East Gulf → China', 'VLCC', 270, 2000], ['TD20', 'West Africa → Rotterdam', 'Suezmax', 130, 1000], ['TD25', 'US Gulf → Rotterdam', 'Aframax', 70, 520]];
+  const ws = routes.map(() => R(45, 160)), flat = routes.map(() => R(9, 26) + .5 * R(0, 1));
+  const html = `<h4>Tanker freight assessments (illustrative)</h4><table><tr><th>Route</th><th>Vessel</th><th>Cargo (kt)</th><th>Worldscale (WS)</th><th>Flat rate ($/t)</th></tr>${routes.map((r, i) => `<tr><td>${r[0]} ${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${ws[i]}</td><td>${f(flat[i], 2)}</td></tr>`).join('')}</table><div class="note">Freight $/t = WS ÷ 100 × flat rate. Use 7.3 bbl/t for crude.</div>`;
+  const a = R(0, 2), b = (a + 1) % 3;
+  const rate = i => ws[i] / 100 * flat[i];
+  return { html, qs: [
+    { q: `What is the freight rate on ${routes[a][0]} in $/t?`, ans: rate(a), dp: 2, unit: '', traps: [ws[a] * flat[a] / 1000], work: `${ws[a]} ÷ 100 × ${flat[a]}` },
+    { q: `What is the total freight cost of one ${routes[a][2]} cargo on ${routes[a][0]}, in $ millions?`, ans: rate(a) * routes[a][3] / 1000, dp: 2, unit: '', traps: [rate(a) * routes[a][3] / 100], work: `$${f(rate(a), 2)}/t × ${routes[a][3]},000 t` },
+    { q: `What is the ${routes[b][0]} freight cost in $/bbl?`, ans: rate(b) / 7.3, dp: 2, unit: '', traps: [rate(b) * 7.3 / 10], work: `$${f(rate(b), 2)}/t ÷ 7.3` },
+    { q: `If ${routes[b][0]} rose by 25 WS points, by what percentage would its $/t rate rise?`, ans: 25 / ws[b] * 100, dp: 1, unit: '%', traps: [25], work: `25 ÷ ${ws[b]}` },
+    { q: `How much more (or less), in $/t, does ${routes[a][0]} cost than ${routes[b][0]}? Give the absolute difference.`, ans: Math.abs(rate(a) - rate(b)), dp: 2, unit: '', traps: [Math.abs(flat[a] - flat[b])], work: `|${f(rate(a), 2)} − ${f(rate(b), 2)}|` }
+  ]};
+},
+() => { // Segments
+  const segs = ['Gas & low carbon', 'Oil production & ops', 'Customers & products', 'Trading (within C&P)'];
+  const rev = [R(18, 28), R(30, 45), R(140, 190)], op = [R(2, 6) + .1 * R(0, 9), R(8, 16) + .1 * R(0, 9), R(3, 9) + .1 * R(0, 9)];
+  const trShare = R(18, 40);
+  const html = `<h4>Illustrative group results ($bn)</h4><table><tr><th>Segment</th><th>Revenue</th><th>Underlying operating profit</th></tr>${segs.slice(0, 3).map((s, i) => `<tr><td>${s}</td><td>${rev[i]}</td><td>${f(op[i])}</td></tr>`).join('')}</table><div class="note">Trading contributed ${trShare}% of Customers &amp; products operating profit.</div>`;
+  const totRev = rev.reduce((a, b) => a + b), totOp = op.reduce((a, b) => a + b);
+  return { html, qs: [
+    { q: `What is the operating margin of Oil production & operations?`, ans: op[1] / rev[1] * 100, dp: 1, unit: '%', traps: [rev[1] / op[1]], work: `${f(op[1])} ÷ ${rev[1]}` },
+    { q: `How much operating profit did trading contribute, in $bn?`, ans: op[2] * trShare / 100, dp: 2, unit: '', traps: [totOp * trShare / 100], work: `${f(op[2])} × ${trShare}%` },
+    { q: `What share of group operating profit came from Gas & low carbon?`, ans: op[0] / totOp * 100, dp: 1, unit: '%', traps: [rev[0] / totRev * 100], work: `${f(op[0])} ÷ ${f(totOp)}` },
+    { q: `If Customers & products revenue fell 10% with costs unchanged, what would its operating profit be, in $bn?`, ans: op[2] - rev[2] * 0.1, dp: 1, unit: '', traps: [op[2] * 0.9], work: `${f(op[2])} − 10% × ${rev[2]}` },
+    { q: `What is the group's overall operating margin across the three segments?`, ans: totOp / totRev * 100, dp: 1, unit: '%', traps: [(op[0] / rev[0] + op[1] / rev[1] + op[2] / rev[2]) / 3 * 100], work: `${f(totOp)} ÷ ${totRev}` }
+  ]};
+}
+];
+
+let qs = [], idx = 0, answers = [], left, timer;
+function build(n) {
+  const sets = shuffle(SETS).map(g => g());
+  let all = []; sets.forEach(s => s.qs.forEach(q => all.push({ ...q, html: s.html, opts: options(q.ans, q.dp, q.unit, q.traps) })));
+  // keep questions grouped by dataset, as in the real test
+  return all.slice(0, n);
+}
+function show() {
+  const q = qs[idx];
+  $('n').textContent = `${idx + 1}/${qs.length}`; $('data').innerHTML = q.html; $('q').textContent = q.q;
+  $('opts').innerHTML = q.opts.map((o, k) => `<button class="opt ${answers[idx] === k ? 'sel' : ''}" data-k="${k}">${String.fromCharCode(65 + k)}. ${o.text}</button>`).join('');
+  $('opts').querySelectorAll('.opt').forEach(b => b.onclick = () => { answers[idx] = +b.dataset.k; show(); });
+  $('prev').disabled = idx === 0; $('next').textContent = idx === qs.length - 1 ? 'Finish' : 'Next →';
+}
+const mmss = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+function finish() {
+  clearInterval(timer); $('game').classList.add('hidden'); $('result').classList.remove('hidden');
+  const right = qs.filter((q, i) => answers[i] !== undefined && q.opts[answers[i]].ok).length;
+  const done = answers.filter(a => a !== undefined).length;
+  $('rTitle').textContent = `${right} / ${qs.length}`;
+  $('rHud').innerHTML = `<div><div class="l">Answered</div><div class="v">${done}</div></div><div><div class="l">Accuracy</div><div class="v">${done ? Math.round(100 * right / done) : 0}%</div></div>`;
+  $('review').innerHTML = qs.map((q, i) => { const ok = answers[i] !== undefined && q.opts[answers[i]].ok; const c = q.opts.find(o => o.ok).text;
+    return `<div class="explain"><p style="color:var(--text)">${i + 1}. ${q.q}</p><p>${ok ? '<span class="good">✓ Correct</span>' : `<span class="bad">✗ ${answers[i] === undefined ? 'Not answered' : 'You chose ' + q.opts[answers[i]].text}</span>`} · Answer <span class="good">${c}</span></p><p class="calc">${q.work}</p></div>`; }).join('');
+}
+$('start').onclick = () => {
+  const [n, secs] = $('len').value.split('|').map(Number);
+  qs = build(n); $('intro').classList.add('hidden'); $('game').classList.remove('hidden');
+  if (secs) { left = secs; $('t').textContent = mmss(left); timer = setInterval(() => { left--; $('t').textContent = mmss(left); if (left <= 0) finish(); }, 1000); } else $('t').textContent = '∞';
+  show();
+};
+$('prev').onclick = () => { if (idx > 0) { idx--; show(); } };
+$('next').onclick = () => { if (idx < qs.length - 1) { idx++; show(); } else finish(); };
+</script>
+</body>
+</html>

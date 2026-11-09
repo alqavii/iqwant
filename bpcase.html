@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IQwant — BP Assessment Centre Case</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/bp.css">
+<style>
+  .tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .tabs button { padding: 8px 14px; border-radius: 6px; border: 1px solid var(--border-hover); background: transparent; color: var(--text-muted); cursor: pointer; font-family: inherit; font-size: .85rem; }
+  .tabs button.on { background: var(--text); color: var(--bg); }
+  .qrow { display: grid; grid-template-columns: 1fr 140px 70px; gap: 10px; align-items: center; margin: 8px 0; font-size: .88rem; color: var(--text-muted); }
+  .qrow input { width: 100%; font-family: var(--font-mono); font-size: .9rem; padding: 8px; }
+  .clockbar { position: sticky; top: 60px; z-index: 5; background: var(--bg); padding: 8px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+  @media (max-width: 560px) { .qrow { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<header><div class="nav-container"><a class="brand" href="index.html">IQwant</a><nav class="nav-links"><a href="bp.html">BP hub</a><a href="index.html" class="hide-sm">All tests</a></nav></div></header>
+<main class="wide">
+<div class="panel">
+  <div class="eyebrow">BP · Assessment centre</div>
+  <h1>Case Study: The Suezmax Decision</h1>
+  <p class="lead">An assessment-centre style trading case. Candidate reports describe a case pack (sometimes sent the day before), an analysis period, then a short presentation with questions. Read the brief, do the numbers, write a recommendation, present it in 5 minutes, then check the model answer.</p>
+  <div class="clockbar"><span class="mono" id="clk">45:00</span><div class="row"><button class="btn ghost" id="go">Start 45-min clock</button><button class="btn ghost" id="pres">5-min presentation timer</button></div></div>
+
+  <div class="tabs" id="tabs">
+    <button data-t="brief" class="on">1. Brief</button><button data-t="data">2. Data pack</button><button data-t="tasks">3. Your analysis</button><button data-t="model">4. Model answer</button><button data-t="probe">5. Assessor questions</button>
+  </div>
+
+  <section id="brief">
+    <h2>The situation</h2>
+    <p>You're a graduate analyst on the West Africa crude desk. The desk has bought a <strong>1,000,000 bbl</strong> cargo of a light sweet West African grade ("Grade X"), loading in three weeks on a Suezmax. It was bought at <strong>Dated Brent + $1.20/bbl FOB</strong>.</p>
+    <p>The trader has three disposal options and wants your recommendation by the end of the session:</p>
+    <ol>
+      <li><strong>Rotterdam:</strong> sell delivered to a European refiner.</li>
+      <li><strong>West coast India:</strong> sell delivered to an Indian refiner, a longer voyage at a higher price.</li>
+      <li><strong>Store:</strong> deliver to Rotterdam and put the cargo into tank for two months to capture contango, then sell.</li>
+    </ol>
+    <p>Present your recommendation in five minutes: which option, the expected margin, the main risks and how you'd manage them. Assessors care more about your reasoning and how you handle uncertainty than about getting every decimal right.</p>
+    <div class="info-strip warn-strip">All numbers are illustrative and built for the exercise. Ignore taxes and assume all prices are fixed as stated unless the question asks about sensitivity.</div>
+  </section>
+
+  <section id="data" class="hidden">
+    <h2>Data pack</h2>
+    <table>
+      <tr><th>Item</th><th>Rotterdam</th><th>West coast India</th><th>Store (Rotterdam)</th></tr>
+      <tr><td>Delivered sale price</td><td>Dated + $3.90</td><td>Dated + $5.60</td><td>Dated + $3.90, sold 2 months later</td></tr>
+      <tr><td>Suezmax freight (lump sum)</td><td>$2.10m</td><td>$3.40m</td><td>$2.10m</td></tr>
+      <tr><td>Voyage length</td><td>16 days</td><td>28 days</td><td>16 days + 61 days in tank</td></tr>
+      <tr><td>Insurance &amp; in-transit losses</td><td>$0.15/bbl</td><td>$0.20/bbl</td><td>$0.15/bbl</td></tr>
+      <tr><td>Storage</td><td>–</td><td>–</td><td>$0.40/bbl/month</td></tr>
+      <tr><td>2-month Brent contango</td><td>–</td><td>–</td><td>$1.10/bbl</td></tr>
+    </table>
+    <h3>Other information</h3>
+    <ul>
+      <li>Flat price for financing: assume crude at <strong>$80/bbl</strong>; cost of capital <strong>6% a year</strong> (simple interest, 365-day year), charged on days the cargo is at sea or in tank.</li>
+      <li>Indian refiners have been buying more Atlantic Basin crude after a cut in Middle East term supply. One broker report says two Indian refineries may enter maintenance next month.</li>
+      <li>Suezmax rates on long-haul routes have been volatile: a 10% move in a week is normal.</li>
+      <li>The European refiner is a long-standing customer of the desk.</li>
+      <li>Demurrage at Indian discharge ports has averaged 2–4 days recently; the Suezmax demurrage rate is $45,000/day.</li>
+    </ul>
+  </section>
+
+  <section id="tasks" class="hidden">
+    <h2>Your analysis</h2>
+    <p>Work out the margin per barrel for each option (sale premium − purchase premium − freight − insurance − financing − storage + contango where relevant). Enter to 2 decimal places and check.</p>
+    <div class="qrow"><span>Rotterdam margin ($/bbl)</span><input data-a="0.24" data-tol="0.02"><span class="chk-out"></span></div>
+    <div class="qrow"><span>India margin ($/bbl)</span><input data-a="0.43" data-tol="0.02"><span class="chk-out"></span></div>
+    <div class="qrow"><span>Storage option margin ($/bbl)</span><input data-a="-0.26" data-tol="0.03"><span class="chk-out"></span></div>
+    <div class="qrow"><span>How far can India freight rise (in $k, lump sum) before Rotterdam is better?</span><input data-a="190" data-tol="15"><span class="chk-out"></span></div>
+    <div class="qrow"><span>India margin after 3 days' demurrage ($/bbl)</span><input data-a="0.295" data-tol="0.02"><span class="chk-out"></span></div>
+    <div style="margin:10px 0 18px"><button class="btn ghost" id="check">Check numbers</button></div>
+    <h3>Recommendation and risks (your notes)</h3>
+    <textarea id="notes" placeholder="Recommendation… expected P&L… key risks… how you'd hedge… what would change your mind…"></textarea>
+    <p style="font-size:.8rem;margin-top:6px">Notes are saved in this browser only.</p>
+  </section>
+
+  <section id="model" class="hidden">
+    <h2>Model answer</h2>
+    <h3>Numbers</h3>
+    <table>
+      <tr><th>$/bbl</th><th>Rotterdam</th><th>India</th><th>Store</th></tr>
+      <tr><td>Sale premium</td><td>+3.90</td><td>+5.60</td><td>+3.90</td></tr>
+      <tr><td>Purchase premium</td><td>−1.20</td><td>−1.20</td><td>−1.20</td></tr>
+      <tr><td>Freight</td><td>−2.10</td><td>−3.40</td><td>−2.10</td></tr>
+      <tr><td>Insurance &amp; losses</td><td>−0.15</td><td>−0.20</td><td>−0.15</td></tr>
+      <tr><td>Financing ($80 × 6% × days/365)</td><td>−0.21 (16 d)</td><td>−0.37 (28 d)</td><td>−1.01 (77 d)</td></tr>
+      <tr><td>Contango</td><td>–</td><td>–</td><td>+1.10</td></tr>
+      <tr><td>Storage</td><td>–</td><td>–</td><td>−0.80</td></tr>
+      <tr><td><strong>Margin</strong></td><td><strong>+0.24</strong> ($240k)</td><td><strong>+0.43</strong> ($430k)</td><td><strong>−0.26</strong></td></tr>
+    </table>
+    <h3>Recommendation</h3>
+    <p>On paper India wins by about <strong>$0.19/bbl ($190k)</strong>. But that edge is thin relative to the risks: freight only needs to rise about 5.6% ($190k on $3.4m) to wipe it out, and three days' demurrage at $45k/day costs $135k ($0.135/bbl), cutting the India margin to about $0.30. A strong answer says this out loud.</p>
+    <p>A good recommendation: <strong>go for India only if freight can be fixed now</strong> (lock the Suezmax at $3.40m today) and the buyer confirms the cargo isn't affected by the reported refinery maintenance. If freight can't be fixed or the buyer is uncertain, take Rotterdam: a smaller but more certain margin, a shorter voyage, and it supports a long-standing customer relationship. Storage is clearly uneconomic: the $1.10 contango doesn't cover $0.80 storage plus about $0.80 extra financing.</p>
+    <h3>Risks and hedges a strong candidate mentions</h3>
+    <ul>
+      <li><strong>Flat price:</strong> the cargo is long oil from loading until pricing at the sale. Hedge by selling Brent futures or swaps and unwinding as the sale prices.</li>
+      <li><strong>Dated timing (CFDs):</strong> purchase and sale price against Dated Brent on different dates; the gap can be hedged with Brent CFDs.</li>
+      <li><strong>Freight:</strong> fix the ship now or hedge with freight forward agreements; it's the biggest swing factor for India.</li>
+      <li><strong>Demurrage and operational:</strong> longer voyage, port congestion, quality claims on arrival.</li>
+      <li><strong>Counterparty and credit:</strong> payment terms and letters of credit for a new or less-known buyer.</li>
+      <li><strong>Commercial:</strong> the relationship value of the European customer is real but hard to price; mention it, don't overweight it.</li>
+    </ul>
+    <h3>What assessors look for</h3>
+    <p>A clear recommendation in the first 30 seconds, numbers that are right or nearly right, a sensitivity that shows how fragile the answer is, and a "what would change my mind" line. Hedging the conclusion so much that you never pick an option scores badly.</p>
+  </section>
+
+  <section id="probe" class="hidden">
+    <h2>Assessor follow-up questions</h2>
+    <p>Practise answering these out loud in 60–90 seconds each.</p>
+    <ol>
+      <li>Your India margin depends on freight. What would you do in the next hour to reduce that risk?</li>
+      <li>The trader says "Rotterdam is a sure thing, why bother with India?" Push back or agree?</li>
+      <li>If the 2-month contango widened to $2.50, would you store? Show the maths.</li>
+      <li>How does this cargo's price exposure change between loading and the day it's priced?</li>
+      <li>What information would you most want that isn't in the pack?</li>
+      <li>How would your answer change if Dated Brent fell $10 tomorrow?</li>
+      <li>Which number in your analysis are you least confident about, and why?</li>
+    </ol>
+    <div class="explain"><strong>Q3 hint:</strong> storage margin = Rotterdam 0.24 + contango − storage 0.80 − extra 61 days' financing ≈ 0.80. At $2.50 contango: 0.24 + 2.50 − 0.80 − 0.80 ≈ +1.14, which beats India. Contango needs to exceed about $1.80 before storage beats India.<br><br><strong>Q6 hint:</strong> financing costs fall with flat price ($70 instead of $80), slightly improving every option, and longer voyages benefit most. Premiums against Dated are unchanged, so the ranking holds.</div>
+  </section>
+</div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#tabs button').forEach(x => x.classList.toggle('on', x === b));
+  ['brief', 'data', 'tasks', 'model', 'probe'].forEach(t => $(t).classList.toggle('hidden', t !== b.dataset.t));
+});
+$('check').onclick = () => document.querySelectorAll('.qrow').forEach(r => {
+  const i = r.querySelector('input'), o = r.querySelector('.chk-out'), v = parseFloat(i.value.replace(/[,$k]/g, ''));
+  if (isNaN(v)) { o.textContent = ''; return; }
+  const ok = Math.abs(v - +i.dataset.a) <= +i.dataset.tol;
+  o.innerHTML = ok ? '<span class="good">✓</span>' : '<span class="bad">✗</span>';
+});
+let t, left;
+function run(secs) { clearInterval(t); left = secs; const show = () => $('clk').textContent = Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0'); show();
+  t = setInterval(() => { left--; show(); if (left <= 0) { clearInterval(t); $('clk').innerHTML = '<span class="bad">Time</span>'; } }, 1000); }
+$('go').onclick = () => run(45 * 60); $('pres').onclick = () => run(5 * 60);
+try { $('notes').value = localStorage.getItem('bpcase-notes') || ''; } catch (e) {}
+$('notes').oninput = () => { try { localStorage.setItem('bpcase-notes', $('notes').value); } catch (e) {} };
+</script>
+</body>
+</html>
